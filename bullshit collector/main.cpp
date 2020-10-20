@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <box2d/box2d.h>
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -11,7 +11,7 @@ std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},
  b2Vec2 gravity(0.f, 9.8f);
  b2World world (gravity);
  uint32 FLAGS = 0;
- bool debugging_view = true;
+ bool debugging_view = false;
 
 
 float system_timer(sf::Clock&clock){                       //used for binding to time (not to the processor)
@@ -29,7 +29,7 @@ void enumeration_flags(uint32& flags) {
 }
 
 struct ObjectsEntities {                                          //class for storing objects in the world
-    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine" };
+    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine"};
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
@@ -52,17 +52,57 @@ ObjectsEntities::ObjectsEntities() {
 
 void set_screen_resolution(ObjectsEntities& entity) {
     tgui::String screen_size = entity.small_engine_gui.combo_box->getSelectedItem();
-    if (screen_size == "800x600")       { entity.window.setSize(scr_size[0]); }
-    else if (screen_size == "1024x768") { entity.window.setSize(scr_size[1]); }
-    else if (screen_size == "1280x1024"){ entity.window.setSize(scr_size[2]); }
-    else if (screen_size == "1600x1200"){ entity.window.setSize(scr_size[3]); }
-    else if (screen_size == "1920x1080"){ entity.window.setSize(scr_size[4]); }
+    if (screen_size == "800x600")       { entity.window.setSize(scr_size[0]);
+    tgui::Layout x = 160;
+    tgui::Layout y = 31;
+    tgui::Layout a = 145;
+    tgui::Layout b = 145;
+    entity.small_engine_gui.combo_box->setSize(x, y);
+    entity.small_engine_gui.combo_box->setPosition(a, b);   
+    }
+    else if (screen_size == "1024x768") { entity.window.setSize(scr_size[1]);
+    tgui::Layout x = 160 * 1.28;
+    tgui::Layout y = 31 * 1.28;
+    tgui::Layout a = 145 * 1.28;
+    tgui::Layout b = 145 * 1.28;
+    entity.small_engine_gui.combo_box->setSize(x,y);
+    entity.small_engine_gui.combo_box->setPosition(a,b);
+    }
+    else if (screen_size == "1280x1024"){ entity.window.setSize(scr_size[2]); 
+    tgui::Layout x = 160 * 1.6;
+    tgui::Layout y = 31 * 1.7024;
+    tgui::Layout a = 145 * 1.6;
+    tgui::Layout b = 145 * 1.7024;
+    entity.small_engine_gui.combo_box->setSize(x, y);
+    entity.small_engine_gui.combo_box->setPosition(a, b);
+     
+    }
+    else if (screen_size == "1600x1200"){ entity.window.setSize(scr_size[3]); 
+    tgui::Layout x = 160 * 2;
+    tgui::Layout y = 31 * 1.9918;
+    tgui::Layout a = 145 * 2;
+    tgui::Layout b = 145 * 1.9918;
+    entity.small_engine_gui.combo_box->setSize(x, y);
+    entity.small_engine_gui.combo_box->setPosition(a, b);
+       
+    }
+    else if (screen_size == "1920x1080"){ entity.window.setSize(scr_size[4]);
+    tgui::Layout x = 160 * 2.4;
+    tgui::Layout y = 31 * 1.79262;
+    tgui::Layout a = 145 * 2.4;
+    tgui::Layout b = 145 * 1.79262;
+    entity.small_engine_gui.combo_box->setSize(x, y);
+    entity.small_engine_gui.combo_box->setPosition(a, b);
+    
+    }
 }
 
+// РћР¤РћР РњРРўР¬ РџРћ РќРћР РњРђР›Р¬РќРћРњРЈ РњРђРЎРЁРўРђР‘РР РћР’РђРќРР•!
+
 int main()
-{    
+{
     ObjectsEntities entity;
-    entity.small_engine_gui.combo_box->onItemSelect(set_screen_resolution,std::ref(entity));
+    entity.small_engine_gui.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
 
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
@@ -70,7 +110,6 @@ int main()
         while (entity.window.pollEvent(event)) {
 
             entity.GUI.handleEvent(event);            // event for TGUI
-
             entity.physics_player.keyboard_interaction(entity.graphics_player);
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Left) {
@@ -88,7 +127,7 @@ int main()
                 if (event.key.code == sf::Mouse::Left)
                     entity.transfer_objects.can_be_moved = false;
             }
-        
+
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tab) {
                     if (debugging_view) {
@@ -100,39 +139,63 @@ int main()
                 }
             }
 
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Tilde) {
+                    if (entity.small_engine_gui.menu_view) {
+                        entity.small_engine_gui.menu_view = false;
+                        entity.small_engine_gui.displaying_widgets();
+                    }
+                    else {
+                        entity.small_engine_gui.menu_view = true;
+                        entity.small_engine_gui.displaying_widgets();
+                    }
+                }
+
+            }
+
+            if (event.type == sf::Event::Resized) {
+            //    entity.window.setView(sf::View(sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height)));
+            }
+
+
+
+
             if (event.type == sf::Event::Closed)
                 entity.window.close();
         }
-        
+
         if (entity.transfer_objects.can_be_moved) {
             for (auto const& it : entity.objects_world.list_object) {
                 if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                     static_cast<Rectangle_*>(it)->get_sprite().setPosition(entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX, entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY);
-                    float delta_x = (entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX)/30.f; // дельтаX
-                    float delta_y = (entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY)/30.f; // дельтаY                                
+                    float delta_x = (entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX) / 30.f; // Г¤ГҐГ«ГјГІГ X
+                    float delta_y = (entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY) / 30.f; // Г¤ГҐГ«ГјГІГ Y                                
                     b2Vec2 vector;
-                    vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); //  получить дельтуX и дельтуY. Вычесть из нее координаты верхнего левого угла спрайта.
-                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite(); //  координаты верхнего угла(x,y) инициализируются один раз (во время компиляции)
-                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector,0);
+                    vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); //  ГЇГ®Г«ГіГ·ГЁГІГј Г¤ГҐГ«ГјГІГіX ГЁ Г¤ГҐГ«ГјГІГіY. Г‚Г»Г·ГҐГ±ГІГј ГЁГ§ Г­ГҐГҐ ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» ГўГҐГ°ГµГ­ГҐГЈГ® Г«ГҐГўГ®ГЈГ® ГіГЈГ«Г  Г±ГЇГ°Г Г©ГІГ .
+                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite(); //  ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» ГўГҐГ°ГµГ­ГҐГЈГ® ГіГЈГ«Г (x,y) ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°ГіГѕГІГ±Гї Г®Г¤ГЁГ­ Г°Г Г§ (ГўГ® ГўГ°ГҐГ¬Гї ГЄГ®Г¬ГЇГЁГ«ГїГ¶ГЁГЁ)
+                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, 0);
                 }
             }
 
         }
-        
-        world.Step(1/120.f,8,3);
-        entity.window.clear();
-        entity.window.draw(entity.game_background);
-        entity.GUI.draw();
-        entity.physics_player.jump(world);
-        entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-        entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(3))->get_sprite());
-        entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(4))->get_sprite());
-        entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(5))->get_sprite());
-        if (debugging_view) {
-            world.DebugDraw();
-        }
-        entity.window.display();
+
+    world.Step(1 / 120.f, 8, 3);
+    entity.window.clear();
+    entity.window.draw(entity.game_background);
+    entity.physics_player.jump(world);
+    entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
+    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(3))->get_sprite());
+    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(4))->get_sprite());
+    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(5))->get_sprite());
+    if (entity.small_engine_gui.menu_view) {
+        entity.window.draw(entity.small_engine_gui.get_sprite_fone());
     }
+    entity.GUI.draw();
+    if (debugging_view) {
+        world.DebugDraw();
+    }
+    entity.window.display();
+  }
     return 0;
 }
 
