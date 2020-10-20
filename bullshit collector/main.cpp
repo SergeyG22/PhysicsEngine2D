@@ -51,53 +51,98 @@ ObjectsEntities::ObjectsEntities() {
 }
 
 void set_screen_resolution(ObjectsEntities& entity) {
-    tgui::String screen_size = entity.small_engine_gui.combo_box->getSelectedItem();
-    if (screen_size == "800x600")       { entity.window.setSize(scr_size[0]);
-    tgui::Layout x = 160;
-    tgui::Layout y = 31;
-    tgui::Layout a = 145;
-    tgui::Layout b = 145;
-    entity.small_engine_gui.combo_box->setSize(x, y);
-    entity.small_engine_gui.combo_box->setPosition(a, b);   
-    }
-    else if (screen_size == "1024x768") { entity.window.setSize(scr_size[1]);
-    tgui::Layout x = 160 * 1.28;
-    tgui::Layout y = 31 * 1.28;
-    tgui::Layout a = 145 * 1.28;
-    tgui::Layout b = 145 * 1.28;
-    entity.small_engine_gui.combo_box->setSize(x,y);
-    entity.small_engine_gui.combo_box->setPosition(a,b);
-    }
-    else if (screen_size == "1280x1024"){ entity.window.setSize(scr_size[2]); 
-    tgui::Layout x = 160 * 1.6;
-    tgui::Layout y = 31 * 1.7024;
-    tgui::Layout a = 145 * 1.6;
-    tgui::Layout b = 145 * 1.7024;
-    entity.small_engine_gui.combo_box->setSize(x, y);
-    entity.small_engine_gui.combo_box->setPosition(a, b);
-     
-    }
-    else if (screen_size == "1600x1200"){ entity.window.setSize(scr_size[3]); 
-    tgui::Layout x = 160 * 2;
-    tgui::Layout y = 31 * 1.9918;
-    tgui::Layout a = 145 * 2;
-    tgui::Layout b = 145 * 1.9918;
-    entity.small_engine_gui.combo_box->setSize(x, y);
-    entity.small_engine_gui.combo_box->setPosition(a, b);
-       
-    }
-    else if (screen_size == "1920x1080"){ entity.window.setSize(scr_size[4]);
-    tgui::Layout x = 160 * 2.4;
-    tgui::Layout y = 31 * 1.79262;
-    tgui::Layout a = 145 * 2.4;
-    tgui::Layout b = 145 * 1.79262;
-    entity.small_engine_gui.combo_box->setSize(x, y);
-    entity.small_engine_gui.combo_box->setPosition(a, b);
-    
-    }
+
+      bool check_box = entity.small_engine_gui.check_box_autoscaling->isChecked();
+
+        tgui::String screen_size = entity.small_engine_gui.combo_box->getSelectedItem();
+        if (screen_size == "800x600") {
+            entity.window.setSize(scr_size[0]);
+            if (check_box) {
+                entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box, entity.small_engine_gui.height_combo_box);
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box, entity.small_engine_gui.pos_y_combo_box);
+                entity.small_engine_gui.label_settings->setTextSize(20);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings,entity.small_engine_gui.pos_y_label_settings);
+                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling, entity.small_engine_gui.height_check_box_autoscaling);
+                entity.small_engine_gui.check_box_autoscaling->setTextSize(20);
+                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling,entity.small_engine_gui.pos_y_check_box_autoscaling);
+                entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path,entity.small_engine_gui.height_edit_box_file_path);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20);
+                entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path,entity.small_engine_gui.pos_y_edit_box_file_path);
+
+
+            }
+        }
+        else if (screen_size == "1024x768") {
+            entity.window.setSize(scr_size[1]);
+            if (check_box) {
+                entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.28, entity.small_engine_gui.height_combo_box * 1.28);
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.28, entity.small_engine_gui.pos_y_combo_box * 1.28); 
+                entity.small_engine_gui.label_settings->setTextSize(20 * 1.28);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.28, entity.small_engine_gui.pos_y_label_settings * 1.28);
+                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 1.28, entity.small_engine_gui.height_check_box_autoscaling *1.28);
+                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 1.28);
+                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 1.28, entity.small_engine_gui.pos_y_check_box_autoscaling *1.28);
+                entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 1.28, entity.small_engine_gui.height_edit_box_file_path * 1.28);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20 *1.28);
+                entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 1.28, entity.small_engine_gui.pos_y_edit_box_file_path * 1.28);
+            }
+        }
+        else if (screen_size == "1280x1024") {
+            entity.window.setSize(scr_size[2]);
+            if (check_box) {
+                entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.6, entity.small_engine_gui.height_combo_box * 1.7024);
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.6, entity.small_engine_gui.pos_y_combo_box * 1.7024);
+                entity.small_engine_gui.label_settings->setTextSize(20 * 1.65);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.6, entity.small_engine_gui.pos_y_label_settings * 1.7024);
+                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 1.6, entity.small_engine_gui.height_check_box_autoscaling * 1.7024);
+                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 1.65);
+                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 1.6, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.7024);
+                entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path *1.6, entity.small_engine_gui.height_edit_box_file_path * 1.7024);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 1.65);
+                entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path *1.6, entity.small_engine_gui.pos_y_edit_box_file_path * 1.7024);
+            }
+
+        }
+        else if (screen_size == "1600x1200") {            
+                entity.window.setSize(scr_size[3]);
+             if (check_box) {
+                entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2, entity.small_engine_gui.height_combo_box * 1.9918);
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2, entity.small_engine_gui.pos_y_combo_box * 1.9918);
+                entity.small_engine_gui.label_settings->setTextSize(20 * 2);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2, entity.small_engine_gui.pos_y_label_settings * 1.9918);
+                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 2, entity.small_engine_gui.height_check_box_autoscaling * 1.9918);
+                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 2);
+                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 2, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.9918);
+                entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2, entity.small_engine_gui.height_edit_box_file_path * 1.9918);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2);
+                entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 2, entity.small_engine_gui.pos_y_edit_box_file_path * 1.9918);
+            }
+
+        }
+        else if (screen_size == "1920x1080") {
+            entity.window.setSize(scr_size[4]);
+            if (check_box) {
+                entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2.4, entity.small_engine_gui.height_combo_box * 1.79262);
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2.4, entity.small_engine_gui.pos_y_combo_box * 1.79262);
+                entity.small_engine_gui.label_settings->setTextSize(20 * 2.1);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2.4, entity.small_engine_gui.pos_y_label_settings * 1.79262);
+                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 2.4, entity.small_engine_gui.height_check_box_autoscaling * 1.79262);
+                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 2.1);
+                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 2.4, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.79262);
+                entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2.4, entity.small_engine_gui.height_edit_box_file_path * 1.79262);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2.1);
+                entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 2.4, entity.small_engine_gui.pos_y_edit_box_file_path * 1.79262);
+            }
+
+        }
+
+    // 1.28, 1.6 , 2, 2.4 - the scale factor is obtained by dividing one resolution by another:
+    // 1024/800 = 1.28   
+    // 786/600 = 1.28    
 }
 
-// ОФОРМИТЬ ПО НОРМАЛЬНОМУ МАСШТАБИРОВАНИЕ!
+
+// Убрать баг с масштабированием!!!!!!!!!!!!!
 
 int main()
 {
@@ -153,10 +198,11 @@ int main()
 
             }
 
-            if (event.type == sf::Event::Resized) {
-            //    entity.window.setView(sf::View(sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height)));
+            if (!entity.small_engine_gui.check_box_autoscaling->isChecked()) {
+                if (event.type == sf::Event::Resized) {
+                        entity.window.setView(sf::View(sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height)));
+                }
             }
-
 
 
 
@@ -187,13 +233,14 @@ int main()
     entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(3))->get_sprite());
     entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(4))->get_sprite());
     entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(5))->get_sprite());
+    if (debugging_view) {
+        world.DebugDraw();
+    }
     if (entity.small_engine_gui.menu_view) {
         entity.window.draw(entity.small_engine_gui.get_sprite_fone());
     }
     entity.GUI.draw();
-    if (debugging_view) {
-        world.DebugDraw();
-    }
+    
     entity.window.display();
   }
     return 0;
