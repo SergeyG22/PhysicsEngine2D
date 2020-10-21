@@ -59,7 +59,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box, entity.small_engine_gui.height_combo_box);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box, entity.small_engine_gui.pos_y_combo_box);
                 entity.small_engine_gui.combo_box->setTextSize(20);
-                entity.small_engine_gui.label_settings->setTextSize(20);
+                entity.small_engine_gui.label_settings->setTextSize(30);
                 entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings,entity.small_engine_gui.pos_y_label_settings);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path,entity.small_engine_gui.height_edit_box_file_path);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20);
@@ -86,7 +86,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.28, entity.small_engine_gui.height_combo_box * 1.28);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.28, entity.small_engine_gui.pos_y_combo_box * 1.28);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 1.28);
-                entity.small_engine_gui.label_settings->setTextSize(20 * 1.28);
+                entity.small_engine_gui.label_settings->setTextSize(30 * 1.28);
                 entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.28, entity.small_engine_gui.pos_y_label_settings * 1.28);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 1.28, entity.small_engine_gui.height_edit_box_file_path * 1.28);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 1.28);
@@ -112,7 +112,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.6, entity.small_engine_gui.height_combo_box * 1.7024);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.6, entity.small_engine_gui.pos_y_combo_box * 1.7024);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 1.65);
-                entity.small_engine_gui.label_settings->setTextSize(20 * 1.65);
+                entity.small_engine_gui.label_settings->setTextSize(30 * 1.65);
                 entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.6, entity.small_engine_gui.pos_y_label_settings * 1.7024);             
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path *1.6, entity.small_engine_gui.height_edit_box_file_path * 1.7024);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 1.65);
@@ -138,7 +138,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2, entity.small_engine_gui.height_combo_box * 1.9918);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2, entity.small_engine_gui.pos_y_combo_box * 1.9918);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 2);
-                entity.small_engine_gui.label_settings->setTextSize(20 * 2);
+                entity.small_engine_gui.label_settings->setTextSize(30 * 2);
                 entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2, entity.small_engine_gui.pos_y_label_settings * 1.9918);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2, entity.small_engine_gui.height_edit_box_file_path * 1.9918);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2);
@@ -165,7 +165,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2.4, entity.small_engine_gui.height_combo_box * 1.79262);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2.4, entity.small_engine_gui.pos_y_combo_box * 1.79262);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 2.1);
-                entity.small_engine_gui.label_settings->setTextSize(20 * 2.1);
+                entity.small_engine_gui.label_settings->setTextSize(30 * 2.1);
                 entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2.4, entity.small_engine_gui.pos_y_label_settings * 1.79262);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2.4, entity.small_engine_gui.height_edit_box_file_path * 1.79262);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2.1);

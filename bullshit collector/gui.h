@@ -26,8 +26,8 @@ public:
   //label_settings
   tgui::Layout width_label_settings = 310;
   tgui::Layout height_label_settings = 150;
-  tgui::Layout pos_x_label_settings = 145;
-  tgui::Layout pos_y_label_settings = 60;
+  tgui::Layout pos_x_label_settings = 125;
+  tgui::Layout pos_y_label_settings = 80;
   //edit_box filepath texture
   tgui::Layout width_edit_box_file_path = 310;
   tgui::Layout height_edit_box_file_path = 31;

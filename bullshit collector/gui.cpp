@@ -31,7 +31,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     edit_box_file_path = tgui::EditBox::create();
     edit_box_file_path->setRenderer(theme.getRenderer("EditBox"));
     edit_box_file_path->setSize(width_edit_box_file_path,height_edit_box_file_path);
-    edit_box_file_path->setText("C:\\Users\\Dolba");
+    edit_box_file_path->setText("C:\\Users\\Dolba\\texture.png");
     edit_box_file_path->setTextSize(20);
     edit_box_file_path->setVisible(false);
     edit_box_file_path->setPosition(pos_x_edit_box_file_path,pos_y_edit_box_file_path);
@@ -72,7 +72,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     edit_box_file_path_fone = tgui::EditBox::create();
     edit_box_file_path_fone->setRenderer(theme.getRenderer("EditBox"));
     edit_box_file_path_fone->setSize(width_edit_box_file_path_fone, height_edit_box_file_path_fone);
-    edit_box_file_path_fone->setText("C:\\Users\\Dolba");
+    edit_box_file_path_fone->setText("C:\\Users\\Dolba\\fone.png");
     edit_box_file_path_fone->setTextSize(20);
     edit_box_file_path_fone->setVisible(false);
     edit_box_file_path_fone->setPosition(pos_x_edit_box_file_path_fone, pos_y_edit_box_file_path_fone);
