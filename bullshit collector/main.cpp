@@ -29,7 +29,7 @@ void enumeration_flags(uint32& flags) {
 }
 
 struct ObjectsEntities {                                          //class for storing objects in the world
-    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine"};
+    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
@@ -52,88 +52,139 @@ ObjectsEntities::ObjectsEntities() {
 
 void set_screen_resolution(ObjectsEntities& entity) {
 
-      bool check_box = entity.small_engine_gui.check_box_autoscaling->isChecked();
 
         tgui::String screen_size = entity.small_engine_gui.combo_box->getSelectedItem();
         if (screen_size == "800x600") {
             entity.window.setSize(scr_size[0]);
-            if (check_box) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box, entity.small_engine_gui.height_combo_box);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box, entity.small_engine_gui.pos_y_combo_box);
+                entity.small_engine_gui.combo_box->setTextSize(20);
                 entity.small_engine_gui.label_settings->setTextSize(20);
-                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings,entity.small_engine_gui.pos_y_label_settings);
-                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling, entity.small_engine_gui.height_check_box_autoscaling);
-                entity.small_engine_gui.check_box_autoscaling->setTextSize(20);
-                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling,entity.small_engine_gui.pos_y_check_box_autoscaling);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings,entity.small_engine_gui.pos_y_label_settings);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path,entity.small_engine_gui.height_edit_box_file_path);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20);
                 entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path,entity.small_engine_gui.pos_y_edit_box_file_path);
-
-
-            }
+                entity.small_engine_gui.combo_box_type_body->setSize(entity.small_engine_gui.width_combo_box_typebody,entity.small_engine_gui.height_combo_box_typebody);
+                entity.small_engine_gui.combo_box_type_body->setPosition(entity.small_engine_gui.pos_x_combo_box_typebody,entity.small_engine_gui.pos_y_combo_box_typebody);
+                entity.small_engine_gui.combo_box_type_body->setTextSize(20);
+                entity.small_engine_gui.button_download->setSize(entity.small_engine_gui.width_button_download, entity.small_engine_gui.height_button_download);
+                entity.small_engine_gui.button_download->setPosition(entity.small_engine_gui.pos_x_button_download,entity.small_engine_gui.pos_y_button_download);
+                entity.small_engine_gui.button_download->setTextSize(20);
+                entity.small_engine_gui.combo_box_figure->setSize(entity.small_engine_gui.width_combo_box_figure,entity.small_engine_gui.height_combo_box_figure);
+                entity.small_engine_gui.combo_box_figure->setPosition(entity.small_engine_gui.pos_x_combo_box_figure,entity.small_engine_gui.pos_y_combo_box_figure);
+                entity.small_engine_gui.combo_box_figure->setTextSize(20);
+                entity.small_engine_gui.edit_box_file_path_fone->setSize(entity.small_engine_gui.width_edit_box_file_path_fone, entity.small_engine_gui.height_edit_box_file_path_fone);
+                entity.small_engine_gui.edit_box_file_path_fone->setTextSize(20);
+                entity.small_engine_gui.edit_box_file_path_fone->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path_fone, entity.small_engine_gui.pos_y_edit_box_file_path_fone);
+                entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone, entity.small_engine_gui.height_button_download_fone);
+                entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone, entity.small_engine_gui.pos_y_button_download_fone);
+                entity.small_engine_gui.button_download_fone->setTextSize(20);
+            
         }
         else if (screen_size == "1024x768") {
             entity.window.setSize(scr_size[1]);
-            if (check_box) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.28, entity.small_engine_gui.height_combo_box * 1.28);
-                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.28, entity.small_engine_gui.pos_y_combo_box * 1.28); 
+                entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.28, entity.small_engine_gui.pos_y_combo_box * 1.28);
+                entity.small_engine_gui.combo_box->setTextSize(20 * 1.28);
                 entity.small_engine_gui.label_settings->setTextSize(20 * 1.28);
-                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.28, entity.small_engine_gui.pos_y_label_settings * 1.28);
-                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 1.28, entity.small_engine_gui.height_check_box_autoscaling *1.28);
-                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 1.28);
-                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 1.28, entity.small_engine_gui.pos_y_check_box_autoscaling *1.28);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.28, entity.small_engine_gui.pos_y_label_settings * 1.28);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 1.28, entity.small_engine_gui.height_edit_box_file_path * 1.28);
-                entity.small_engine_gui.edit_box_file_path->setTextSize(20 *1.28);
+                entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 1.28);
                 entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 1.28, entity.small_engine_gui.pos_y_edit_box_file_path * 1.28);
-            }
+                entity.small_engine_gui.combo_box_type_body->setSize(entity.small_engine_gui.width_combo_box_typebody * 1.28, entity.small_engine_gui.height_combo_box_typebody * 1.28);
+                entity.small_engine_gui.combo_box_type_body->setPosition(entity.small_engine_gui.pos_x_combo_box_typebody * 1.28, entity.small_engine_gui.pos_y_combo_box_typebody * 1.28);
+                entity.small_engine_gui.combo_box_type_body->setTextSize(20 * 1.28);
+                entity.small_engine_gui.button_download->setSize(entity.small_engine_gui.width_button_download * 1.28, entity.small_engine_gui.height_button_download * 1.28);
+                entity.small_engine_gui.button_download->setPosition(entity.small_engine_gui.pos_x_button_download * 1.28, entity.small_engine_gui.pos_y_button_download * 1.28);
+                entity.small_engine_gui.button_download->setTextSize(20 * 1.28);
+                entity.small_engine_gui.combo_box_figure->setSize(entity.small_engine_gui.width_combo_box_figure * 1.28, entity.small_engine_gui.height_combo_box_figure * 1.28);
+                entity.small_engine_gui.combo_box_figure->setPosition(entity.small_engine_gui.pos_x_combo_box_figure * 1.28, entity.small_engine_gui.pos_y_combo_box_figure * 1.28);
+                entity.small_engine_gui.combo_box_figure->setTextSize(20 * 1.28);
+                entity.small_engine_gui.edit_box_file_path_fone->setSize(entity.small_engine_gui.width_edit_box_file_path_fone * 1.28, entity.small_engine_gui.height_edit_box_file_path_fone * 1.28);
+                entity.small_engine_gui.edit_box_file_path_fone->setTextSize(20 * 1.28);
+                entity.small_engine_gui.edit_box_file_path_fone->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path_fone * 1.28, entity.small_engine_gui.pos_y_edit_box_file_path_fone * 1.28);
+                entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 1.28, entity.small_engine_gui.height_button_download_fone * 1.28);
+                entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 1.28, entity.small_engine_gui.pos_y_button_download_fone * 1.28);
+                entity.small_engine_gui.button_download_fone->setTextSize(20 * 1.28);
         }
         else if (screen_size == "1280x1024") {
             entity.window.setSize(scr_size[2]);
-            if (check_box) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.6, entity.small_engine_gui.height_combo_box * 1.7024);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.6, entity.small_engine_gui.pos_y_combo_box * 1.7024);
+                entity.small_engine_gui.combo_box->setTextSize(20 * 1.65);
                 entity.small_engine_gui.label_settings->setTextSize(20 * 1.65);
-                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.6, entity.small_engine_gui.pos_y_label_settings * 1.7024);
-                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 1.6, entity.small_engine_gui.height_check_box_autoscaling * 1.7024);
-                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 1.65);
-                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 1.6, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.7024);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 1.6, entity.small_engine_gui.pos_y_label_settings * 1.7024);             
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path *1.6, entity.small_engine_gui.height_edit_box_file_path * 1.7024);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 1.65);
                 entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path *1.6, entity.small_engine_gui.pos_y_edit_box_file_path * 1.7024);
-            }
-
+                entity.small_engine_gui.combo_box_type_body->setSize(entity.small_engine_gui.width_combo_box_typebody * 1.6, entity.small_engine_gui.height_combo_box_typebody * 1.7024);
+                entity.small_engine_gui.combo_box_type_body->setPosition(entity.small_engine_gui.pos_x_combo_box_typebody * 1.6, entity.small_engine_gui.pos_y_combo_box_typebody * 1.7024);
+                entity.small_engine_gui.combo_box_type_body->setTextSize(20 * 1.65);
+                entity.small_engine_gui.button_download->setSize(entity.small_engine_gui.width_button_download * 1.6,entity.small_engine_gui.height_button_download * 1.7024);
+                entity.small_engine_gui.button_download->setPosition(entity.small_engine_gui.pos_x_button_download * 1.6, entity.small_engine_gui.pos_y_button_download * 1.7024);
+                entity.small_engine_gui.button_download->setTextSize(20 * 1.65);
+                entity.small_engine_gui.combo_box_figure->setSize(entity.small_engine_gui.width_combo_box_figure * 1.6, entity.small_engine_gui.height_combo_box_figure * 1.7024);
+                entity.small_engine_gui.combo_box_figure->setPosition(entity.small_engine_gui.pos_x_combo_box_figure * 1.6, entity.small_engine_gui.pos_y_combo_box_figure * 1.7024);
+                entity.small_engine_gui.combo_box_figure->setTextSize(20 * 1.65);
+                entity.small_engine_gui.edit_box_file_path_fone->setSize(entity.small_engine_gui.width_edit_box_file_path_fone * 1.6, entity.small_engine_gui.height_edit_box_file_path_fone * 1.7024);
+                entity.small_engine_gui.edit_box_file_path_fone->setTextSize(20 * 1.65);
+                entity.small_engine_gui.edit_box_file_path_fone->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path_fone * 1.6, entity.small_engine_gui.pos_y_edit_box_file_path_fone * 1.7024);
+                entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 1.6, entity.small_engine_gui.height_button_download_fone * 1.7024);
+                entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 1.6, entity.small_engine_gui.pos_y_button_download_fone * 1.7024);
+                entity.small_engine_gui.button_download_fone->setTextSize(20 * 1.65);
         }
         else if (screen_size == "1600x1200") {            
                 entity.window.setSize(scr_size[3]);
-             if (check_box) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2, entity.small_engine_gui.height_combo_box * 1.9918);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2, entity.small_engine_gui.pos_y_combo_box * 1.9918);
+                entity.small_engine_gui.combo_box->setTextSize(20 * 2);
                 entity.small_engine_gui.label_settings->setTextSize(20 * 2);
-                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2, entity.small_engine_gui.pos_y_label_settings * 1.9918);
-                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 2, entity.small_engine_gui.height_check_box_autoscaling * 1.9918);
-                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 2);
-                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 2, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.9918);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2, entity.small_engine_gui.pos_y_label_settings * 1.9918);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2, entity.small_engine_gui.height_edit_box_file_path * 1.9918);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2);
                 entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 2, entity.small_engine_gui.pos_y_edit_box_file_path * 1.9918);
-            }
+                entity.small_engine_gui.combo_box_type_body->setSize(entity.small_engine_gui.width_combo_box_typebody * 2, entity.small_engine_gui.height_combo_box_typebody * 1.9918);
+                entity.small_engine_gui.combo_box_type_body->setPosition(entity.small_engine_gui.pos_x_combo_box_typebody * 2, entity.small_engine_gui.pos_y_combo_box_typebody * 1.9918);
+                entity.small_engine_gui.combo_box_type_body->setTextSize(20 * 2);
+                entity.small_engine_gui.button_download->setSize(entity.small_engine_gui.width_button_download * 2, entity.small_engine_gui.height_button_download * 1.9918);
+                entity.small_engine_gui.button_download->setPosition(entity.small_engine_gui.pos_x_button_download * 2, entity.small_engine_gui.pos_y_button_download * 1.9918);
+                entity.small_engine_gui.button_download->setTextSize(20 * 2);
+                entity.small_engine_gui.combo_box_figure->setSize(entity.small_engine_gui.width_combo_box_figure * 2, entity.small_engine_gui.height_combo_box_figure * 1.9918);
+                entity.small_engine_gui.combo_box_figure->setPosition(entity.small_engine_gui.pos_x_combo_box_figure * 2, entity.small_engine_gui.pos_y_combo_box_figure * 1.9918);
+                entity.small_engine_gui.combo_box_figure->setTextSize(20 * 2);
+                entity.small_engine_gui.edit_box_file_path_fone->setSize(entity.small_engine_gui.width_edit_box_file_path_fone * 2, entity.small_engine_gui.height_edit_box_file_path_fone * 1.9918);
+                entity.small_engine_gui.edit_box_file_path_fone->setTextSize(20 * 2);
+                entity.small_engine_gui.edit_box_file_path_fone->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path_fone * 2, entity.small_engine_gui.pos_y_edit_box_file_path_fone * 1.9918);
+                entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 2, entity.small_engine_gui.height_button_download_fone * 1.9918);
+                entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 2, entity.small_engine_gui.pos_y_button_download_fone * 1.9918);
+                entity.small_engine_gui.button_download_fone->setTextSize(20 * 2);
 
         }
         else if (screen_size == "1920x1080") {
             entity.window.setSize(scr_size[4]);
-            if (check_box) {
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2.4, entity.small_engine_gui.height_combo_box * 1.79262);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2.4, entity.small_engine_gui.pos_y_combo_box * 1.79262);
+                entity.small_engine_gui.combo_box->setTextSize(20 * 2.1);
                 entity.small_engine_gui.label_settings->setTextSize(20 * 2.1);
-                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2.4, entity.small_engine_gui.pos_y_label_settings * 1.79262);
-                entity.small_engine_gui.check_box_autoscaling->setSize(entity.small_engine_gui.width_check_box_autoscaling * 2.4, entity.small_engine_gui.height_check_box_autoscaling * 1.79262);
-                entity.small_engine_gui.check_box_autoscaling->setTextSize(20 * 2.1);
-                entity.small_engine_gui.check_box_autoscaling->setPosition(entity.small_engine_gui.pos_x_check_box_autoscaling * 2.4, entity.small_engine_gui.pos_y_check_box_autoscaling * 1.79262);
+                entity.small_engine_gui.label_settings->setPosition(entity.small_engine_gui.pos_x_label_settings * 2.4, entity.small_engine_gui.pos_y_label_settings * 1.79262);               
                 entity.small_engine_gui.edit_box_file_path->setSize(entity.small_engine_gui.width_edit_box_file_path * 2.4, entity.small_engine_gui.height_edit_box_file_path * 1.79262);
                 entity.small_engine_gui.edit_box_file_path->setTextSize(20 * 2.1);
                 entity.small_engine_gui.edit_box_file_path->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path * 2.4, entity.small_engine_gui.pos_y_edit_box_file_path * 1.79262);
-            }
-
+                entity.small_engine_gui.combo_box_type_body->setSize(entity.small_engine_gui.width_combo_box_typebody * 2.4, entity.small_engine_gui.height_combo_box_typebody * 1.79262);
+                entity.small_engine_gui.combo_box_type_body->setPosition(entity.small_engine_gui.pos_x_combo_box_typebody * 2.4, entity.small_engine_gui.pos_y_combo_box_typebody * 1.79262);
+                entity.small_engine_gui.combo_box_type_body->setTextSize(20 * 2.1);
+                entity.small_engine_gui.button_download->setSize(entity.small_engine_gui.width_button_download * 2.4, entity.small_engine_gui.height_button_download * 1.79262);
+                entity.small_engine_gui.button_download->setPosition(entity.small_engine_gui.pos_x_button_download * 2.4, entity.small_engine_gui.pos_y_button_download * 1.79262);
+                entity.small_engine_gui.button_download->setTextSize(20 * 2.1);
+                entity.small_engine_gui.combo_box_figure->setSize(entity.small_engine_gui.width_combo_box_figure * 2.4, entity.small_engine_gui.height_combo_box_figure * 1.79262);
+                entity.small_engine_gui.combo_box_figure->setPosition(entity.small_engine_gui.pos_x_combo_box_figure * 2.4, entity.small_engine_gui.pos_y_combo_box_figure * 1.79262);
+                entity.small_engine_gui.combo_box_figure->setTextSize(20 * 2.1);
+                entity.small_engine_gui.edit_box_file_path_fone->setSize(entity.small_engine_gui.width_edit_box_file_path_fone * 2.4, entity.small_engine_gui.height_edit_box_file_path_fone * 1.79262);
+                entity.small_engine_gui.edit_box_file_path_fone->setTextSize(20 * 2.1);
+                entity.small_engine_gui.edit_box_file_path_fone->setPosition(entity.small_engine_gui.pos_x_edit_box_file_path_fone * 2.4, entity.small_engine_gui.pos_y_edit_box_file_path_fone * 1.79262);
+                entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 2.4, entity.small_engine_gui.height_button_download_fone * 1.79262);
+                entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 2.4, entity.small_engine_gui.pos_y_button_download_fone * 1.7962);
+                entity.small_engine_gui.button_download_fone->setTextSize(20 * 2.1);
         }
 
     // 1.28, 1.6 , 2, 2.4 - the scale factor is obtained by dividing one resolution by another:
@@ -142,7 +193,6 @@ void set_screen_resolution(ObjectsEntities& entity) {
 }
 
 
-// Убрать баг с масштабированием!!!!!!!!!!!!!
 
 int main()
 {
@@ -198,11 +248,6 @@ int main()
 
             }
 
-            if (!entity.small_engine_gui.check_box_autoscaling->isChecked()) {
-                if (event.type == sf::Event::Resized) {
-                        entity.window.setView(sf::View(sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height)));
-                }
-            }
 
 
 
