@@ -86,7 +86,13 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     button_download_fone->setSize(width_button_download_fone, height_button_download_fone);
     GUI.add(button_download_fone);
 
-
+    button_fullscreen_mode = tgui::Button::create();
+    button_fullscreen_mode->setVisible(false);
+    button_fullscreen_mode->setTextSize(20);
+    button_fullscreen_mode->setPosition(pos_x_button_fullscreen, pos_y_button_fullscreen);
+    button_fullscreen_mode->setText(L"Полноэкранный режим");
+    button_fullscreen_mode->setSize(width_button_fullscreen, height_button_fullscreen);
+    GUI.add(button_fullscreen_mode);
 
 }
 
@@ -99,4 +105,5 @@ void SmallEngineGUI::displaying_widgets() {
     combo_box_figure->setVisible(menu_view);
     edit_box_file_path_fone->setVisible(menu_view);
     button_download_fone->setVisible(menu_view);
+    button_fullscreen_mode->setVisible(menu_view);
 }

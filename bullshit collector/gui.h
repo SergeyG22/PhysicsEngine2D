@@ -15,6 +15,7 @@ public:
   tgui::Button::Ptr button_download;
   tgui::EditBox::Ptr edit_box_file_path_fone;
   tgui::Button::Ptr button_download_fone;
+  tgui::Button::Ptr button_fullscreen_mode;
   sf::Sprite& get_sprite_fone() { return s_fone_menu; }
   void displaying_widgets();
   bool menu_view = false;
@@ -58,5 +59,10 @@ public:
   tgui::Layout height_button_download_fone = 31;
   tgui::Layout pos_x_button_download_fone = 125;
   tgui::Layout pos_y_button_download_fone = 410;
+  //button fullscreen mode
+  tgui::Layout width_button_fullscreen = 260;
+  tgui::Layout height_button_fullscreen = 31;
+  tgui::Layout pos_x_button_fullscreen = 95;
+  tgui::Layout pos_y_button_fullscreen = 450;
 };
 

@@ -30,6 +30,7 @@ void enumeration_flags(uint32& flags) {
 
 struct ObjectsEntities {                                          //class for storing objects in the world
     sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
+  //  sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Fullscreen };
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
@@ -79,6 +80,9 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone, entity.small_engine_gui.height_button_download_fone);
                 entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone, entity.small_engine_gui.pos_y_button_download_fone);
                 entity.small_engine_gui.button_download_fone->setTextSize(20);
+                entity.small_engine_gui.button_fullscreen_mode->setSize(entity.small_engine_gui.width_button_fullscreen, entity.small_engine_gui.height_button_fullscreen);
+                entity.small_engine_gui.button_fullscreen_mode->setPosition(entity.small_engine_gui.pos_x_button_fullscreen, entity.small_engine_gui.pos_y_button_fullscreen);
+                entity.small_engine_gui.button_fullscreen_mode->setTextSize(20);
             
         }
         else if (screen_size == "1024x768") {
@@ -106,6 +110,9 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 1.28, entity.small_engine_gui.height_button_download_fone * 1.28);
                 entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 1.28, entity.small_engine_gui.pos_y_button_download_fone * 1.28);
                 entity.small_engine_gui.button_download_fone->setTextSize(20 * 1.28);
+                entity.small_engine_gui.button_fullscreen_mode->setSize(entity.small_engine_gui.width_button_fullscreen * 1.28, entity.small_engine_gui.height_button_fullscreen * 1.28);
+                entity.small_engine_gui.button_fullscreen_mode->setPosition(entity.small_engine_gui.pos_x_button_fullscreen * 1.28, entity.small_engine_gui.pos_y_button_fullscreen * 1.28);
+                entity.small_engine_gui.button_fullscreen_mode->setTextSize(20 * 1.28);
         }
         else if (screen_size == "1280x1024") {
             entity.window.setSize(scr_size[2]);
@@ -132,6 +139,9 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 1.6, entity.small_engine_gui.height_button_download_fone * 1.7024);
                 entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 1.6, entity.small_engine_gui.pos_y_button_download_fone * 1.7024);
                 entity.small_engine_gui.button_download_fone->setTextSize(20 * 1.65);
+                entity.small_engine_gui.button_fullscreen_mode->setSize(entity.small_engine_gui.width_button_fullscreen * 1.6, entity.small_engine_gui.height_button_fullscreen * 1.7024);
+                entity.small_engine_gui.button_fullscreen_mode->setPosition(entity.small_engine_gui.pos_x_button_fullscreen * 1.6, entity.small_engine_gui.pos_y_button_fullscreen * 1.7024);
+                entity.small_engine_gui.button_fullscreen_mode->setTextSize(20 * 1.65);
         }
         else if (screen_size == "1600x1200") {            
                 entity.window.setSize(scr_size[3]);
@@ -158,6 +168,9 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 2, entity.small_engine_gui.height_button_download_fone * 1.9918);
                 entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 2, entity.small_engine_gui.pos_y_button_download_fone * 1.9918);
                 entity.small_engine_gui.button_download_fone->setTextSize(20 * 2);
+                entity.small_engine_gui.button_fullscreen_mode->setSize(entity.small_engine_gui.width_button_fullscreen * 2, entity.small_engine_gui.height_button_fullscreen * 1.9918);
+                entity.small_engine_gui.button_fullscreen_mode->setPosition(entity.small_engine_gui.pos_x_button_fullscreen * 2, entity.small_engine_gui.pos_y_button_fullscreen * 1.9918);
+                entity.small_engine_gui.button_fullscreen_mode->setTextSize(20 * 2);
 
         }
         else if (screen_size == "1920x1080") {
@@ -185,6 +198,9 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_download_fone->setSize(entity.small_engine_gui.width_button_download_fone * 2.4, entity.small_engine_gui.height_button_download_fone * 1.79262);
                 entity.small_engine_gui.button_download_fone->setPosition(entity.small_engine_gui.pos_x_button_download_fone * 2.4, entity.small_engine_gui.pos_y_button_download_fone * 1.7962);
                 entity.small_engine_gui.button_download_fone->setTextSize(20 * 2.1);
+                entity.small_engine_gui.button_fullscreen_mode->setSize(entity.small_engine_gui.width_button_fullscreen * 2.4, entity.small_engine_gui.height_button_fullscreen * 1.79262);
+                entity.small_engine_gui.button_fullscreen_mode->setPosition(entity.small_engine_gui.pos_x_button_fullscreen * 2.4, entity.small_engine_gui.pos_y_button_fullscreen * 1.79262);
+                entity.small_engine_gui.button_fullscreen_mode->setTextSize(20 * 2.1);
         }
 
     // 1.28, 1.6 , 2, 2.4 - the scale factor is obtained by dividing one resolution by another:
@@ -192,6 +208,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
     // 786/600 = 1.28    
 }
 
+// ДОДЕЛАТЬ ФУЛЛСКРИН РЕЖИМ - УСТАНОВИТЬ ПОРТ ПРОСМОТРА ДЛЯ КАЖДОГО РАЗРЕШЕНИЯ (см.Ютуб)
 
 
 int main()
