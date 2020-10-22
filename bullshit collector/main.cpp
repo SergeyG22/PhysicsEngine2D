@@ -7,6 +7,8 @@
 #include "scene.h"
 #include "b2GLDraw.h"
 
+
+
 std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},{1920,1080} };
  b2Vec2 gravity(0.f, 9.8f);
  b2World world (gravity);
@@ -30,7 +32,6 @@ void enumeration_flags(uint32& flags) {
 
 struct ObjectsEntities {                                          //class for storing objects in the world
     sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
-  //  sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Fullscreen };
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
@@ -51,12 +52,20 @@ ObjectsEntities::ObjectsEntities() {
     debug_draw_instance.SetFlags(FLAGS);
 }
 
-void set_screen_resolution(ObjectsEntities& entity) {
+void set_window_center_of_screen(ObjectsEntities& entity) {
+    auto desktop = sf::VideoMode::getDesktopMode();
+    sf::Vector2i pos;
+    pos.x = desktop.width / 2 - entity.window.getSize().x / 2;
+    pos.y = desktop.height / 2 - entity.window.getSize().y / 2;
+    entity.window.setPosition(pos);
+}
 
+void set_screen_resolution(ObjectsEntities& entity) {
 
         tgui::String screen_size = entity.small_engine_gui.combo_box->getSelectedItem();
         if (screen_size == "800x600") {
-            entity.window.setSize(scr_size[0]);
+                entity.window.setSize(scr_size[0]);
+                set_window_center_of_screen(entity);
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box, entity.small_engine_gui.height_combo_box);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box, entity.small_engine_gui.pos_y_combo_box);
                 entity.small_engine_gui.combo_box->setTextSize(20);
@@ -86,7 +95,8 @@ void set_screen_resolution(ObjectsEntities& entity) {
             
         }
         else if (screen_size == "1024x768") {
-            entity.window.setSize(scr_size[1]);
+                entity.window.setSize(scr_size[1]);
+                set_window_center_of_screen(entity);
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.28, entity.small_engine_gui.height_combo_box * 1.28);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.28, entity.small_engine_gui.pos_y_combo_box * 1.28);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 1.28);
@@ -115,7 +125,8 @@ void set_screen_resolution(ObjectsEntities& entity) {
                 entity.small_engine_gui.button_fullscreen_mode->setTextSize(20 * 1.28);
         }
         else if (screen_size == "1280x1024") {
-            entity.window.setSize(scr_size[2]);
+                entity.window.setSize(scr_size[2]);
+                set_window_center_of_screen(entity);
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 1.6, entity.small_engine_gui.height_combo_box * 1.7024);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 1.6, entity.small_engine_gui.pos_y_combo_box * 1.7024);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 1.65);
@@ -145,6 +156,7 @@ void set_screen_resolution(ObjectsEntities& entity) {
         }
         else if (screen_size == "1600x1200") {            
                 entity.window.setSize(scr_size[3]);
+                set_window_center_of_screen(entity);
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2, entity.small_engine_gui.height_combo_box * 1.9918);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2, entity.small_engine_gui.pos_y_combo_box * 1.9918);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 2);
@@ -174,7 +186,8 @@ void set_screen_resolution(ObjectsEntities& entity) {
 
         }
         else if (screen_size == "1920x1080") {
-            entity.window.setSize(scr_size[4]);
+                entity.window.setSize(scr_size[4]);
+                set_window_center_of_screen(entity);
                 entity.small_engine_gui.combo_box->setSize(entity.small_engine_gui.width_combo_box * 2.4, entity.small_engine_gui.height_combo_box * 1.79262);
                 entity.small_engine_gui.combo_box->setPosition(entity.small_engine_gui.pos_x_combo_box * 2.4, entity.small_engine_gui.pos_y_combo_box * 1.79262);
                 entity.small_engine_gui.combo_box->setTextSize(20 * 2.1);
@@ -208,14 +221,31 @@ void set_screen_resolution(ObjectsEntities& entity) {
     // 786/600 = 1.28    
 }
 
-// ДОДЕЛАТЬ ФУЛЛСКРИН РЕЖИМ - УСТАНОВИТЬ ПОРТ ПРОСМОТРА ДЛЯ КАЖДОГО РАЗРЕШЕНИЯ (см.Ютуб)
+void set_fullscreen_viewport(ObjectsEntities& entity) {
+    entity.window.create(sf::VideoMode(1900,1080),"2D engine",sf::Style::Fullscreen);
+    sf::View view_port;
+    view_port.setViewport(sf::FloatRect(0.f, 0.f, 1.24f, 1.64f));
+    entity.window.setView(view_port);
+    set_screen_resolution(entity);  
+ // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
+}
 
+void get_supported_fullscreen_modes() {
+    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
+    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
+        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
+    }
+}
+
+
+
+// ПОПРАВИТЬ ЧЕРНЫЕ СТОРОНЫ - ПОРТ ПРОСМОТРА!
 
 int main()
 {
     ObjectsEntities entity;
     entity.small_engine_gui.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
-
+    entity.small_engine_gui.button_fullscreen_mode->onClick(set_fullscreen_viewport,std::ref(entity));   
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
         sf::Event event;
