@@ -1,10 +1,11 @@
 #include <box2d/box2d.h>
 #include <TGUI/TGUI.hpp>
+#include <iostream>
 #include "gui.h"
 
 SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
 
-    if (!t_fone_menu.loadFromFile("menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
+    if (!t_fone_menu.loadFromFile("resources/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
     s_fone_menu.setTexture(t_fone_menu);
     s_fone_menu.setPosition(10,10);
     combo_box = tgui::ComboBox::create();
@@ -90,7 +91,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     button_fullscreen_mode->setVisible(false);
     button_fullscreen_mode->setTextSize(20);
     button_fullscreen_mode->setPosition(pos_x_button_fullscreen, pos_y_button_fullscreen);
-    button_fullscreen_mode->setText(L"Полноэкранный режим");
+    button_fullscreen_mode->setText(L"Экранный режим");
     button_fullscreen_mode->setSize(width_button_fullscreen, height_button_fullscreen);
     GUI.add(button_fullscreen_mode);
 

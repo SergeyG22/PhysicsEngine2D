@@ -19,6 +19,7 @@ public:
   sf::Sprite& get_sprite_fone() { return s_fone_menu; }
   void displaying_widgets();
   bool menu_view = false;
+  bool enable_fullscreen = true;
   //combo_box
   tgui::Layout width_combo_box = 310;
   tgui::Layout height_combo_box = 31;

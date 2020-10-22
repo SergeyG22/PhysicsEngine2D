@@ -222,11 +222,23 @@ void set_screen_resolution(ObjectsEntities& entity) {
 }
 
 void set_fullscreen_viewport(ObjectsEntities& entity) {
-    entity.window.create(sf::VideoMode(1900,1080),"2D engine",sf::Style::Fullscreen);
-    sf::View view_port;
-    view_port.setViewport(sf::FloatRect(0.f, 0.f, 1.24f, 1.64f));
-    entity.window.setView(view_port);
-    set_screen_resolution(entity);  
+
+    if (entity.small_engine_gui.enable_fullscreen) {
+        entity.window.create(sf::VideoMode(1900, 1080), "2D engine", sf::Style::Fullscreen);
+        sf::View view_port;
+        view_port.setViewport(sf::FloatRect(0.f, 0.f, 1.25f, 1.65f));
+        entity.window.setView(view_port);
+        set_screen_resolution(entity);
+        entity.small_engine_gui.button_fullscreen_mode->setText(L"Оконный режим");
+        entity.small_engine_gui.enable_fullscreen = false;
+    }
+    else {
+        entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
+        set_screen_resolution(entity);
+        entity.small_engine_gui.button_fullscreen_mode->setText(L"Экранный режим");
+        entity.small_engine_gui.enable_fullscreen = true;
+    }
+
  // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
 }
 
@@ -239,7 +251,6 @@ void get_supported_fullscreen_modes() {
 
 
 
-// ПОПРАВИТЬ ЧЕРНЫЕ СТОРОНЫ - ПОРТ ПРОСМОТРА!
 
 int main()
 {

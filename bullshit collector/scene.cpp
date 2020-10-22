@@ -5,7 +5,7 @@
 
 
 GameBackground::GameBackground() {
-	upload_background("fone.png");
+	upload_background("resources/fone.png");
 	background_sprite.setTexture(background_texture);
 }
 
@@ -20,7 +20,7 @@ void GameBackground::draw(sf::RenderTarget&target,sf::RenderStates states)const 
 
 GraphicsPlayer::GraphicsPlayer() {
 	player_sprite.setOrigin(45.0, 45.0);
-	upload_texture("face_left.png", "face_right.png");
+	upload_texture("resources/face_left.png", "resources/face_right.png");
 	set_texture();
 }
 
@@ -147,9 +147,9 @@ void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
 	list_object.push_back(new Rectangle_(world, 800, 25, 0, 580));
 	list_object.push_back(new Rectangle_(world, 10, 600, 0, 0));
 	list_object.push_back(new Rectangle_(world, 10, 600, 800, 0));
-	list_object.push_back(new Rectangle_(world, 122, 122, 190, 430, "box.png"));
-	list_object.push_back(new Rectangle_(world, 61, 61, 700, 292, "answer.png"));
-	list_object.push_back(new Rectangle_(world, 47, 47, 530, 500, "wood_box.png"));
+	list_object.push_back(new Rectangle_(world, 122, 122, 190, 430, "resources/box.png"));
+	list_object.push_back(new Rectangle_(world, 61, 61, 700, 292, "resources/answer.png"));
+	list_object.push_back(new Rectangle_(world, 47, 47, 530, 500, "resources/wood_box.png"));
 }
 
 ObjectFactory* ObjectsWorld::get_object_world(int n) {
