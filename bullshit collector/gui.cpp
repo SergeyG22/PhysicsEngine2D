@@ -30,14 +30,14 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     label_settings->setTextSize(30);
     GUI.add(label_settings);
 
-    edit_box_file_path = tgui::EditBox::create();
-    edit_box_file_path->setRenderer(theme.getRenderer("EditBox"));
-    edit_box_file_path->setSize(width_edit_box_file_path,height_edit_box_file_path);
-    edit_box_file_path->setText("resources\\texture.png");
-    edit_box_file_path->setTextSize(20);
-    edit_box_file_path->setVisible(false);
-    edit_box_file_path->setPosition(pos_x_edit_box_file_path,pos_y_edit_box_file_path);
-    GUI.add(edit_box_file_path);
+    combo_box_file_path_texture = tgui::ComboBox::create();
+    combo_box_file_path_texture->setRenderer(theme.getRenderer("ComboBox"));
+    combo_box_file_path_texture->setSize(width_combo_box_file_path_texture,height_combo_box_file_path_texture);
+    SET_OPTIONS_combo_box_texture();
+    combo_box_file_path_texture->setTextSize(20);
+    combo_box_file_path_texture->setVisible(false);
+    combo_box_file_path_texture->setPosition(pos_x_combo_box_file_path_texture,pos_y_combo_box_file_path_texture);
+    GUI.add(combo_box_file_path_texture);
 
     combo_box_type_body = tgui::ComboBox::create();
     combo_box_type_body->setRenderer(theme.getRenderer("ComboBox"));
@@ -74,7 +74,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     combo_box_file_path_fone = tgui::ComboBox::create();
     combo_box_file_path_fone->setRenderer(theme.getRenderer("ComboBox"));
     combo_box_file_path_fone->setSize(width_combo_box_file_path_fone, height_combo_box_file_path_fone);
-    set_options_combo_box_fone();
+    SET_OPTIONS_combo_box_fone();  
     combo_box_file_path_fone->setTextSize(20);
     combo_box_file_path_fone->setVisible(false);
     combo_box_file_path_fone->setPosition(pos_x_combo_box_file_path_fone, pos_y_combo_box_file_path_fone);
@@ -101,7 +101,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
 void SmallEngineGUI::displaying_widgets() {
     combo_box->setVisible(menu_view);
     label_settings->setVisible(menu_view);
-    edit_box_file_path->setVisible(menu_view);
+    combo_box_file_path_texture->setVisible(menu_view);
     combo_box_type_body->setVisible(menu_view);
     button_download->setVisible(menu_view);
     combo_box_figure->setVisible(menu_view);
@@ -110,10 +110,29 @@ void SmallEngineGUI::displaying_widgets() {
     button_fullscreen_mode->setVisible(menu_view);
 }
 
-void SmallEngineGUI::set_options_combo_box_fone() { //searches the background folder for file namesand puts them in the combobox
-    boost::filesystem::path p("background");
+void SmallEngineGUI::SET_OPTIONS_combo_box_fone() {         //searches the background folder for file namesand puts them in the combobox
+   boost::filesystem::path p("background");
+   bool show_first_element = true;
+   for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++) {
+       std::string item = i->path().filename().string();
+       combo_box_file_path_fone->addItem(item);
+       if (show_first_element) {
+           combo_box_file_path_fone->setSelectedItem(item);
+           show_first_element = false;
+       }
+   }
+}
+
+void SmallEngineGUI::SET_OPTIONS_combo_box_texture()           //searches the texture folder for file namesand puts them in the combobox
+{ 
+    boost::filesystem::path p("resources");
+    bool show_first_element = true;
     for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++) {
         std::string item = i->path().filename().string();
-        combo_box_file_path_fone->addItem(item);
+        combo_box_file_path_texture->addItem(item);
+        if (show_first_element) {
+            combo_box_file_path_texture->setSelectedItem(item);
+            show_first_element = false;
+        }
     }
 }
