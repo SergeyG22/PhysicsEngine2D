@@ -1,6 +1,7 @@
 #include <box2d/box2d.h>
 #include <TGUI/TGUI.hpp>
 #include <iostream>
+#include <boost/filesystem.hpp>
 #include "gui.h"
 
 SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
@@ -32,7 +33,7 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     edit_box_file_path = tgui::EditBox::create();
     edit_box_file_path->setRenderer(theme.getRenderer("EditBox"));
     edit_box_file_path->setSize(width_edit_box_file_path,height_edit_box_file_path);
-    edit_box_file_path->setText("C:\\Users\\Dolba\\texture.png");
+    edit_box_file_path->setText("resources\\texture.png");
     edit_box_file_path->setTextSize(20);
     edit_box_file_path->setVisible(false);
     edit_box_file_path->setPosition(pos_x_edit_box_file_path,pos_y_edit_box_file_path);
@@ -70,14 +71,14 @@ SmallEngineGUI::SmallEngineGUI(tgui::GuiSFML& GUI) {
     combo_box_figure->setSelectedItem(L"Полигон");
     GUI.add(combo_box_figure);
 
-    edit_box_file_path_fone = tgui::EditBox::create();
-    edit_box_file_path_fone->setRenderer(theme.getRenderer("EditBox"));
-    edit_box_file_path_fone->setSize(width_edit_box_file_path_fone, height_edit_box_file_path_fone);
-    edit_box_file_path_fone->setText("C:\\Users\\Dolba\\fone.png");
-    edit_box_file_path_fone->setTextSize(20);
-    edit_box_file_path_fone->setVisible(false);
-    edit_box_file_path_fone->setPosition(pos_x_edit_box_file_path_fone, pos_y_edit_box_file_path_fone);
-    GUI.add(edit_box_file_path_fone);
+    combo_box_file_path_fone = tgui::ComboBox::create();
+    combo_box_file_path_fone->setRenderer(theme.getRenderer("ComboBox"));
+    combo_box_file_path_fone->setSize(width_combo_box_file_path_fone, height_combo_box_file_path_fone);
+    set_options_combo_box_fone();
+    combo_box_file_path_fone->setTextSize(20);
+    combo_box_file_path_fone->setVisible(false);
+    combo_box_file_path_fone->setPosition(pos_x_combo_box_file_path_fone, pos_y_combo_box_file_path_fone);
+    GUI.add(combo_box_file_path_fone);
 
     button_download_fone = tgui::Button::create();
     button_download_fone->setVisible(false);
@@ -104,7 +105,15 @@ void SmallEngineGUI::displaying_widgets() {
     combo_box_type_body->setVisible(menu_view);
     button_download->setVisible(menu_view);
     combo_box_figure->setVisible(menu_view);
-    edit_box_file_path_fone->setVisible(menu_view);
+    combo_box_file_path_fone->setVisible(menu_view);
     button_download_fone->setVisible(menu_view);
     button_fullscreen_mode->setVisible(menu_view);
+}
+
+void SmallEngineGUI::set_options_combo_box_fone() { //searches the background folder for file namesand puts them in the combobox
+    boost::filesystem::path p("background");
+    for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++) {
+        std::string item = i->path().filename().string();
+        combo_box_file_path_fone->addItem(item);
+    }
 }

@@ -5,12 +5,12 @@
 
 
 GameBackground::GameBackground() {
-	upload_background("resources/fone.png");
+	upload_background("background/fone.png");
 	background_sprite.setTexture(background_texture);
 }
 
 bool GameBackground::upload_background(std::string path_to_image) {
-	if (!background_texture.loadFromFile(path_to_image)) { return false; }
+	if (!background_texture.loadFromFile(path_to_image)) {  return false; }
 	return true;
 }
 

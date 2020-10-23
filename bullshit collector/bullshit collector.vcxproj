@@ -101,12 +101,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TGUlib\include;D:\GLFW\include\GLFW;D:\box2d-master\extern\glfw\src;D:\box2d-master\extern\glad\src;D:\box2d-master\extern\sajson;D:\box2d-master\extern\glfw\include;D:\box2d-master\extern\imgui;D:\box2d-master\extern\glad\include;D:\box2d\x64\include;D:\SFML 2.5.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TGUlib\include;D:\box2d\x64\include;D:\SFML 2.5.0\include;D:\boost_1_74_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\TGUlib\Debug;D:\SFML 2.5.0\lib-x64;D:\box2d\x64\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\TGUlib\Debug;D:\SFML 2.5.0\lib-x64;D:\box2d\x64\lib\Debug;D:\boost_1_74_0\lib64-msvc-14.2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;opengl32.lib;tgui-d.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -135,14 +135,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TGUlib\include;D:\GLFW\include\GLFW;D:\box2d-master\extern\glfw\src;D:\box2d-master\extern\glad\src;D:\box2d-master\extern\sajson;D:\box2d-master\extern\glfw\include;D:\box2d-master\extern\imgui;D:\box2d-master\extern\glad\include;D:\box2d\x64\include;D:\SFML 2.5.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TGUlib\include;D:\box2d\x64\include;D:\SFML 2.5.0\include;D:\boost_1_74_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\TGUlib\Release;D:\SFML 2.5.0\lib-x64;D:\box2d\x64\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\TGUlib\Release;D:\SFML 2.5.0\lib-x64;D:\box2d\x64\lib\Release;D:\boost_1_74_0\lib64-msvc-14.2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>tgui.lib;sfml-graphics.lib;sfml-window.lib;sfml-audio.lib;sfml-system.lib;opengl32.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
