@@ -80,7 +80,6 @@ void call_offset(ObjectsEntities& entity,std::string size) {
     entity.combo_box_file_path_texture.set_offset(size);
     entity.label_settings.set_offset(size);
     entity.combo_box.set_offset(size);
-
 }
 
 void set_screen_resolution(ObjectsEntities& entity) {
@@ -149,7 +148,7 @@ void get_supported_fullscreen_modes() {
 
 void show_widgets(ObjectsEntities& entity, bool state) {
     entity.menu.menu_view = state;
-    entity.button_download_texture.button_download->setVisible(state);
+    entity.button_download_texture.button_download_texture->setVisible(state);
     entity.button_download_fone.button_download_fone->setVisible(state);
     entity.button_fullscreen_mode.button_fullscreen_mode->setVisible(state);
     entity.combo_box.combo_box->setVisible(state);
@@ -159,6 +158,15 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.combo_box_type_body.combo_box_type_body->setVisible(state);
 }
 
+void add_object_to_world(ObjectsEntities& entity) {
+    std::string path = "resources/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
+    sf::Texture texture;              //temporary texture for getting width and height
+    if (!texture.loadFromFile(path)) {
+        std::cout << "The texture path is not correct\n";
+    }
+    sf::Vector2u object_size = texture.getSize();
+    entity.objects_world.list_object.push_back(new Rectangle_(world,object_size.x/2,object_size.y/2,200,200,path));
+}
 
 int main()
 {        
@@ -166,6 +174,8 @@ int main()
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport,std::ref(entity)); 
     entity.button_download_fone.button_download_fone->onClick(set_new_fone,std::ref(entity));
+    entity.button_download_texture.button_download_texture->onClick(add_object_to_world,std::ref(entity));
+
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
         sf::Event event;
@@ -239,9 +249,12 @@ int main()
     entity.window.draw(entity.game_background);
     entity.physics_player.jump(world);
     entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(3))->get_sprite());
-    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(4))->get_sprite());
-    entity.window.draw(static_cast<Rectangle_*>(entity.objects_world.get_object_world(5))->get_sprite());
+
+    for (auto const& index : entity.objects_world.list_object) {
+         entity.window.draw(static_cast<Rectangle_*>(index)->get_sprite());
+    }
+
+
     if (debugging_view) {
         world.DebugDraw();
     }

@@ -20,7 +20,7 @@ void GameBackground::draw(sf::RenderTarget&target,sf::RenderStates states)const 
 
 GraphicsPlayer::GraphicsPlayer() {
 	player_sprite.setOrigin(45.0, 45.0);
-	upload_texture("resources/face_left.png", "resources/face_right.png");
+	upload_texture("scin_player/face_left.png", "scin_player/face_right.png");
 	set_texture();
 }
 
@@ -104,6 +104,8 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	center.x = x/SCALE;
 	center.y = y/SCALE;
 	bshape_rect.SetAsBox(height_shape/SCALE, width_shape/SCALE,center,0);
+	std::cout << height_shape<<'\n';
+	std::cout << width_shape << '\n';
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect,1);
 	x_top_left = s_rect.getPosition().x/SCALE;

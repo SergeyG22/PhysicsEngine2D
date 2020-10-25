@@ -180,40 +180,40 @@ void Combo_box_figure::set_offset(std::string screen_size) {
 }
 
 Button_download_texture::Button_download_texture(tgui::GuiSFML& GUI) {
-    button_download = tgui::Button::create();
-    button_download->setVisible(false);
-    button_download->setTextSize(20);
-    button_download->setPosition(pos_x_button_download, pos_y_button_download);
-    button_download->setText(L"Создать тело");
-    button_download->setSize(width_button_download, height_button_download);
-    GUI.add(button_download);
+    button_download_texture = tgui::Button::create();
+    button_download_texture->setVisible(false);
+    button_download_texture->setTextSize(20);
+    button_download_texture->setPosition(pos_x_button_download, pos_y_button_download);
+    button_download_texture->setText(L"Создать тело");
+    button_download_texture->setSize(width_button_download, height_button_download);
+    GUI.add(button_download_texture);
 }
 
 void Button_download_texture::set_offset(std::string screen_size) {
     if (screen_size == "800x600") {
-        button_download->setSize(width_button_download, height_button_download);
-        button_download->setPosition(pos_x_button_download, pos_y_button_download);
-        button_download->setTextSize(20);
+        button_download_texture->setSize(width_button_download, height_button_download);
+        button_download_texture->setPosition(pos_x_button_download, pos_y_button_download);
+        button_download_texture->setTextSize(20);
     }
     else if (screen_size == "1024x768") {
-        button_download->setSize(width_button_download * 1.28, height_button_download * 1.28);
-        button_download->setPosition(pos_x_button_download * 1.28, pos_y_button_download * 1.28);
-        button_download->setTextSize(20 * 1.28);
+        button_download_texture->setSize(width_button_download * 1.28, height_button_download * 1.28);
+        button_download_texture->setPosition(pos_x_button_download * 1.28, pos_y_button_download * 1.28);
+        button_download_texture->setTextSize(20 * 1.28);
     }
     else if (screen_size == "1280x1024") {
-        button_download->setSize(width_button_download * 1.6, height_button_download * 1.7024);
-        button_download->setPosition(pos_x_button_download * 1.6, pos_y_button_download * 1.7024);
-        button_download->setTextSize(20 * 1.65);
+        button_download_texture->setSize(width_button_download * 1.6, height_button_download * 1.7024);
+        button_download_texture->setPosition(pos_x_button_download * 1.6, pos_y_button_download * 1.7024);
+        button_download_texture->setTextSize(20 * 1.65);
     }
     else  if (screen_size == "1600x1200") {
-        button_download->setSize(width_button_download * 2, height_button_download * 1.9918);
-        button_download->setPosition(pos_x_button_download * 2,pos_y_button_download * 1.9918);
-        button_download->setTextSize(20 * 2);
+        button_download_texture->setSize(width_button_download * 2, height_button_download * 1.9918);
+        button_download_texture->setPosition(pos_x_button_download * 2,pos_y_button_download * 1.9918);
+        button_download_texture->setTextSize(20 * 2);
     }
     else if (screen_size == "1920x1080") {
-        button_download->setSize(width_button_download * 2.4, height_button_download * 1.79262);
-        button_download->setPosition(pos_x_button_download * 2.4,pos_y_button_download * 1.79262);
-        button_download->setTextSize(20 * 2.1);
+        button_download_texture->setSize(width_button_download * 2.4, height_button_download * 1.79262);
+        button_download_texture->setPosition(pos_x_button_download * 2.4,pos_y_button_download * 1.79262);
+        button_download_texture->setTextSize(20 * 2.1);
     }
 }
 

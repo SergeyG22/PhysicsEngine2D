@@ -46,7 +46,7 @@ struct Combo_box_figure {
 };
 
 struct Button_download_texture {
-    tgui::Button::Ptr button_download;
+    tgui::Button::Ptr button_download_texture;
     tgui::Layout width_button_download = 190;
     tgui::Layout height_button_download = 31;
     tgui::Layout pos_x_button_download = 125;
