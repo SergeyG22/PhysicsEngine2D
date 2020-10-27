@@ -97,6 +97,7 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	center.y = 0 / SCALE;
 	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
 	bdef_rect.type = bdef;
+//	body_rect->SetAwake(true);
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, 1.0);
 }
@@ -144,7 +145,6 @@ void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
 	list_object.push_back(new Rectangle_(world, 800, 25, 0, 580,b2_staticBody));
 	list_object.push_back(new Rectangle_(world, 10, 600, 0, 0, b2_staticBody));
 	list_object.push_back(new Rectangle_(world, 10, 600, 800, 0,b2_staticBody));
-//	list_object.push_back(new Rectangle_(world, 95, 95, 0, 0, "resources/wood_box.png" ,b2_dynamicBody));
 }		                                           
 
 ObjectFactory* ObjectsWorld::get_object_world(int n) {

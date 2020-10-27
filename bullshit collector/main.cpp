@@ -249,7 +249,8 @@ int main()
                     b2Vec2 vector;
                     vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); //  ïîëó÷èòü äåëüòóX è äåëüòóY. Âû÷åñòü èç íåå êîîðäèíàòû âåðõíåãî ëåâîãî óãëà ñïðàéòà.
                     vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite(); //  êîîðäèíàòû âåðõíåãî óãëà(x,y) èíèöèàëèçèðóþòñÿ îäèí ðàç (âî âðåìÿ êîìïèëÿöèè)
-                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, 0);
+                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, 0); 
+                    static_cast<Rectangle_*>(it)->body_rect->SetAwake(true);
                 }
             }
 
