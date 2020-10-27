@@ -165,11 +165,22 @@ void add_object_to_world(ObjectsEntities& entity) {
         std::cout << "The texture path is not correct\n";
     }
     sf::Vector2u object_size = texture.getSize();
-    entity.objects_world.list_object.push_back(new Rectangle_(world,object_size.x/2,object_size.y/2,200,200,path));
+    std::string type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItem().toAnsiString();
+
+    if (type_body == "РЎС‚Р°С‚РёС‡РµСЃРєРѕРµ") {
+        entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x , object_size.y , 0, 0, path, b2_staticBody));
+    }
+    else if (type_body == "Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ") {
+        entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x , object_size.y , 0, 0, path, b2_dynamicBody));
+    }
+
+    
 }
+
 
 int main()
 {        
+    setlocale(LC_ALL, "russian");
     ObjectsEntities entity;
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport,std::ref(entity)); 
@@ -244,16 +255,18 @@ int main()
 
         }
 
+
     world.Step(1/120.f, 8, 3);
     entity.window.clear();
     entity.window.draw(entity.game_background);
     entity.physics_player.jump(world);
     entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
 
-    for (auto const& index : entity.objects_world.list_object) {
-         entity.window.draw(static_cast<Rectangle_*>(index)->get_sprite());
+    for (auto const& it : entity.objects_world.list_object) {
+         static_cast<Rectangle_*>(it)->update_position(entity.window,static_cast<Rectangle_*>(it)->get_sprite());       
     }
 
+    
 
     if (debugging_view) {
         world.DebugDraw();
@@ -269,7 +282,37 @@ int main()
 
 
 
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 
 
 
 

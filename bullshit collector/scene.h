@@ -57,21 +57,22 @@ struct ObjectFactory {
 class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawable {
 	b2PolygonShape bshape_rect;
 	b2BodyDef bdef_rect;
-	sf::Texture t_rect;
-	sf::Sprite s_rect;
 	float pos_x;
 	float pos_y;
     float x_top_left;
-	float y_top_left;
+    float y_top_left;
 	float height_shape;
 	float width_shape;
+	b2Vec2 center;
+	sf::Texture t_rect;
+	sf::Sprite s_rect;
 public:
-	Rectangle_() { };
 	b2Body* body_rect;	
 	sf::Sprite& get_sprite() {  return s_rect; }
-	Rectangle_(b2World&, float, float, float, float);
+	void update_position(sf::RenderWindow&, sf::Sprite&);
+	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-	Rectangle_(b2World& world,float h,float w,float x,float y,std::string);	
+	Rectangle_(b2World& world,float h,float w,float x,float y,std::string, b2BodyType bdef);
 	float x_initial_coordinates_of_the_sprite()const{ return x_top_left; 
 	}
 	float y_initial_coordinates_of_the_sprite()const { return y_top_left; 

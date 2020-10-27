@@ -87,36 +87,25 @@ void PhysicsPlayer::update(sf::RenderWindow& window, sf::Sprite& sprite) {
 	window.draw(sprite);
 }
 
-Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
-	
-		if (!t_rect.loadFromFile(path_to_file)) {
-			try{
-				throw "The texture path is not correct\n";
-			}
-			catch (const char* exception) {
-				std::cerr << "The texture path " + path_to_file + " is not correct\n";
-			}
-		}
-	s_rect.setTexture(t_rect);
-	s_rect.setPosition(pos_x - t_rect.getSize().x / 2, pos_y - t_rect.getSize().y / 2);
-
-	b2Vec2 center;
-	center.x = x/SCALE;
-	center.y = y/SCALE;
-	bshape_rect.SetAsBox(height_shape/SCALE, width_shape/SCALE,center,0);
-	std::cout << height_shape<<'\n';
-	std::cout << width_shape << '\n';
+Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file, b2BodyType bdef):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
+	s_rect.setOrigin(height_shape/2,width_shape/2);
+	if (!t_rect.loadFromFile(path_to_file)) {
+         std::cout << "The texture path is not correct\n";
+	}
+	s_rect.setTexture(t_rect);	
+	center.x = 0 / SCALE;
+	center.y = 0 / SCALE;
+	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
+	bdef_rect.type = bdef;
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect,1);
-	x_top_left = s_rect.getPosition().x/SCALE;
-	y_top_left = s_rect.getPosition().y/SCALE;
+	body_rect->CreateFixture(&bshape_rect, 1.0);
 }
 
-Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
-	bdef_rect.type = b2_kinematicBody;
+Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
 	b2Vec2 center;
 	center.x = x / SCALE;
 	center.y = y / SCALE;
+	bdef_rect.type = bdef; 
 	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE, center, 0);
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, 1);
@@ -139,6 +128,12 @@ void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
+void Rectangle_::update_position(sf::RenderWindow& window, sf::Sprite& sprite) {   
+	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
+	s_rect.setRotation(DEG * body_rect->GetAngle());
+	window.draw(sprite);
+}
+
 sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 	sf::Vector2i pixel_position = sf::Mouse::getPosition(window);
 	sf::Vector2f pos = window.mapPixelToCoords(pixel_position);
@@ -146,19 +141,38 @@ sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 }
 
 void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
-	list_object.push_back(new Rectangle_(world, 800, 25, 0, 580));
-	list_object.push_back(new Rectangle_(world, 10, 600, 0, 0));
-	list_object.push_back(new Rectangle_(world, 10, 600, 800, 0));
-	list_object.push_back(new Rectangle_(world, 122, 122, 190, 430, "resources/box.png"));
-	list_object.push_back(new Rectangle_(world, 61, 61, 700, 292, "resources/answer.png"));
-	list_object.push_back(new Rectangle_(world, 47, 47, 530, 500, "resources/wood_box.png"));
-}
+	list_object.push_back(new Rectangle_(world, 800, 25, 0, 580,b2_staticBody));
+	list_object.push_back(new Rectangle_(world, 10, 600, 0, 0, b2_staticBody));
+	list_object.push_back(new Rectangle_(world, 10, 600, 800, 0,b2_staticBody));
+//	list_object.push_back(new Rectangle_(world, 95, 95, 0, 0, "resources/wood_box.png" ,b2_dynamicBody));
+}		                                           
 
 ObjectFactory* ObjectsWorld::get_object_world(int n) {
 	auto it = list_object.begin();
 	std::advance(it, n);
 	return *it;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
