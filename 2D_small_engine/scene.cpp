@@ -3,6 +3,7 @@
 #include <box2d/box2d.h>
 #include "scene.h"
 
+//
 
 GameBackground::GameBackground() {
 	upload_background("background/fone.png");
