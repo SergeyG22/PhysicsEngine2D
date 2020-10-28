@@ -163,24 +163,29 @@ void show_widgets(ObjectsEntities& entity, bool state) {
 
 void add_object_to_world(ObjectsEntities& entity) {
 
-        std::string type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItem().toAnsiString();
+        int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
+        int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
+
         std::string path = "resources/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
-        sf::Texture texture;              //temporary texture for getting width and height
+        sf::Texture texture;                                   //temporary texture for getting width and height
         if (!texture.loadFromFile(path)) {
             std::cout << "The texture path is not correct\n";
         }
         sf::Vector2u object_size = texture.getSize();
         
-        if (type_body == "РЎС‚Р°С‚РёС‡РµСЃРєРѕРµ") {
-             entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_staticBody));
+        switch (id_type_body) {
+        case 1: {
+            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_staticBody, id_visible_object));
+            break;
+           }
+        case 2: {
+            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_dynamicBody, id_visible_object));
+            break;
+           }
         }
-        else if (type_body == "Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ") {
-             entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_dynamicBody));            
-        }
+
 }
 
-
-//Создать комбобокс В конструктор передать Color Transparent Установить цвет для спрайта 
 
 int main()
 {        

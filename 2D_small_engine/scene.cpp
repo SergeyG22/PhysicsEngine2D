@@ -3,7 +3,8 @@
 #include <box2d/box2d.h>
 #include "scene.h"
 
-//
+
+
 
 GameBackground::GameBackground() {
 	upload_background("background/fone.png");
@@ -88,15 +89,23 @@ void PhysicsPlayer::update(sf::RenderWindow& window, sf::Sprite& sprite) {
 	window.draw(sprite);
 }
 
-Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file, b2BodyType bdef):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
+Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file, b2BodyType bdef,int id_visible_object):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
 	s_rect.setOrigin(height_shape/2,width_shape/2);
 	if (!t_rect.loadFromFile(path_to_file)) {
          std::cout << "The texture path is not correct\n";
 	}
 	s_rect.setTexture(t_rect);	
 	center.x = 0 / SCALE;
-	s_rect.setColor(sf::Color::Transparent);
-	s_rect.setColor(sf::Color::White);
+
+	switch (id_visible_object) {
+	case 1: {
+		s_rect.setColor(sf::Color::Transparent);
+		break;
+	}
+	case 2:
+		s_rect.setColor(sf::Color::White);
+		break;
+	}
 	center.y = 0 / SCALE;
 	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
 	bdef_rect.type = bdef;
@@ -114,7 +123,7 @@ Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2Bod
 	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
-bool Rectangle_::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file) {
+bool Rectangle_::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
 		if (!t_rect.loadFromFile(path_to_file)) {
 			try {
 				throw "The texture path is not correct\n";

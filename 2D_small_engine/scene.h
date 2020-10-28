@@ -3,6 +3,7 @@
 #include <box2d/box2d.h>
 #include <list>
 
+
 class PhysicsPlayer;
 
 struct Physics_parameters {
@@ -72,7 +73,7 @@ public:
 	void update_position(sf::RenderWindow&, sf::Sprite&);
 	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-	Rectangle_(b2World& world,float h,float w,float x,float y,std::string, b2BodyType bdef);
+	Rectangle_(b2World& world,float h,float w,float x,float y,std::string, b2BodyType bdef,int);
 	float x_initial_coordinates_of_the_sprite()const{ return x_top_left; 
 	}
 	float y_initial_coordinates_of_the_sprite()const { return y_top_left; 

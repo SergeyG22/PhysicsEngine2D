@@ -99,8 +99,8 @@ Combo_box_invisible_object::Combo_box_invisible_object(tgui::GuiSFML& GUI) {
     combo_box_invisible_object = tgui::ComboBox::create();
     combo_box_invisible_object->setRenderer(theme.getRenderer("ComboBox"));
     combo_box_invisible_object->setSize(width_combo_box_invisible_object, height_combo_box_invisible_object);
-    combo_box_invisible_object->addItem(L"Объект без текстуры");
-    combo_box_invisible_object->addItem(L"Объект с текстурой");
+    combo_box_invisible_object->addItem(L"Объект без текстуры","1");
+    combo_box_invisible_object->addItem(L"Объект с текстурой", "2");
     combo_box_invisible_object->setSelectedItem(L"Объект с текстурой");
     combo_box_invisible_object->setTextSize(20);
     combo_box_invisible_object->setVisible(false);
@@ -265,8 +265,8 @@ Combo_box_typebody::Combo_box_typebody(tgui::GuiSFML& GUI) {
     combo_box_type_body->setTextSize(20);
     combo_box_type_body->setSize(width_combo_box_typebody, height_combo_box_typebody);
     combo_box_type_body->setPosition(pos_x_combo_box_typebody, pos_y_combo_box_typebody);
-    combo_box_type_body->addItem(L"Статическое");
-    combo_box_type_body->addItem(L"Динамическое");
+    combo_box_type_body->addItem(L"Статическое","1");
+    combo_box_type_body->addItem(L"Динамическое","2");
     combo_box_type_body->setSelectedItem(L"Статическое");
     GUI.add(combo_box_type_body);
 }
