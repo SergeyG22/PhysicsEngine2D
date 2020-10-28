@@ -95,6 +95,47 @@ Combo_box_filepath_fone::Combo_box_filepath_fone(tgui::GuiSFML& GUI) {
     GUI.add(combo_box_file_path_fone);
 }
 
+Combo_box_invisible_object::Combo_box_invisible_object(tgui::GuiSFML& GUI) {
+    combo_box_invisible_object = tgui::ComboBox::create();
+    combo_box_invisible_object->setRenderer(theme.getRenderer("ComboBox"));
+    combo_box_invisible_object->setSize(width_combo_box_invisible_object, height_combo_box_invisible_object);
+    combo_box_invisible_object->addItem(L"Объект без текстуры");
+    combo_box_invisible_object->addItem(L"Объект с текстурой");
+    combo_box_invisible_object->setSelectedItem(L"Объект с текстурой");
+    combo_box_invisible_object->setTextSize(20);
+    combo_box_invisible_object->setVisible(false);
+    combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object, pos_y_combo_box_invisible_object);
+    GUI.add(combo_box_invisible_object);
+}
+
+void Combo_box_invisible_object::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        combo_box_invisible_object->setSize(width_combo_box_invisible_object, height_combo_box_invisible_object);
+        combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object, pos_y_combo_box_invisible_object);
+        combo_box_invisible_object->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        combo_box_invisible_object->setSize(width_combo_box_invisible_object * 1.28, height_combo_box_invisible_object * 1.28);
+        combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object * 1.28, pos_y_combo_box_invisible_object * 1.28);
+        combo_box_invisible_object->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        combo_box_invisible_object->setSize(width_combo_box_invisible_object * 1.6, height_combo_box_invisible_object * 1.7024);
+        combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object * 1.6, pos_y_combo_box_invisible_object * 1.7024);
+        combo_box_invisible_object->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        combo_box_invisible_object->setSize(width_combo_box_invisible_object * 2, height_combo_box_invisible_object * 1.9918);
+        combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object * 2, pos_y_combo_box_invisible_object * 1.9918);
+        combo_box_invisible_object->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        combo_box_invisible_object->setSize(width_combo_box_invisible_object * 2.4, height_combo_box_invisible_object * 1.79262);
+        combo_box_invisible_object->setPosition(pos_x_combo_box_invisible_object * 2.4, pos_y_combo_box_invisible_object * 1.79262);
+        combo_box_invisible_object->setTextSize(20 * 2.1);
+    }
+}
+
 void Combo_box_filepath_fone::set_offset(std::string screen_size) {
     if (screen_size == "800x600") {
         combo_box_file_path_fone->setSize(width_combo_box_file_path_fone, height_combo_box_file_path_fone);

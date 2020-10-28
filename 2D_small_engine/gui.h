@@ -22,6 +22,17 @@ struct Button_download_fone {
     Button_download_fone(tgui::GuiSFML&);
 };
 
+struct Combo_box_invisible_object {
+    tgui::ComboBox::Ptr combo_box_invisible_object;
+    tgui::Layout width_combo_box_invisible_object = 310;
+    tgui::Layout height_combo_box_invisible_object = 31;
+    tgui::Layout pos_x_combo_box_invisible_object = 65;
+    tgui::Layout pos_y_combo_box_invisible_object = 125;
+    tgui::Theme theme{ "themes/Black.txt" };
+    void set_offset(std::string);
+    Combo_box_invisible_object(tgui::GuiSFML&);
+};
+
 struct Combo_box_filepath_fone {
     tgui::ComboBox::Ptr combo_box_file_path_fone;
     tgui::Layout width_combo_box_file_path_fone = 310;

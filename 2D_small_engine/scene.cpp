@@ -95,12 +95,13 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	}
 	s_rect.setTexture(t_rect);	
 	center.x = 0 / SCALE;
+	s_rect.setColor(sf::Color::Transparent);
+	s_rect.setColor(sf::Color::White);
 	center.y = 0 / SCALE;
 	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
 	bdef_rect.type = bdef;
-//	body_rect->SetAwake(true);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 1.0);
+	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
 Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
@@ -110,7 +111,7 @@ Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2Bod
 	bdef_rect.type = bdef; 
 	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE, center, 0);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 1);
+	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
 bool Rectangle_::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file) {

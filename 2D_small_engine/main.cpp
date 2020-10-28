@@ -40,6 +40,7 @@ struct ObjectsEntities {                                          //class for st
     Button_fullscreen_mode button_fullscreen_mode{ GUI };
     Button_download_fone button_download_fone{ GUI};
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
+    Combo_box_invisible_object combo_box_invisible_object{ GUI};
     Combo_box_figure combo_box_figure { GUI };
     Button_download_texture button_download_texture { GUI };
     Combo_box_typebody combo_box_type_body{ GUI };
@@ -74,6 +75,7 @@ void call_offset(ObjectsEntities& entity,std::string size) {
     entity.button_fullscreen_mode.set_offset(size);
     entity.button_download_fone.set_offset(size);
     entity.combo_box_file_path_fone.set_offset(size);
+    entity.combo_box_invisible_object.set_offset(size);
     entity.combo_box_figure.set_offset(size);
     entity.button_download_texture.set_offset(size);
     entity.combo_box_type_body.set_offset(size);
@@ -154,29 +156,31 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.combo_box.combo_box->setVisible(state);
     entity.combo_box_figure.combo_box_figure->setVisible(state);
     entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
+    entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
     entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
     entity.combo_box_type_body.combo_box_type_body->setVisible(state);
 }
 
 void add_object_to_world(ObjectsEntities& entity) {
-    std::string path = "resources/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
-    sf::Texture texture;              //temporary texture for getting width and height
-    if (!texture.loadFromFile(path)) {
-        std::cout << "The texture path is not correct\n";
-    }
-    sf::Vector2u object_size = texture.getSize();
-    std::string type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItem().toAnsiString();
 
-    if (type_body == "РЎС‚Р°С‚РёС‡РµСЃРєРѕРµ") {
-        entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x , object_size.y , 0, 0, path, b2_staticBody));
-    }
-    else if (type_body == "Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ") {
-        entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x , object_size.y , 0, 0, path, b2_dynamicBody));
-    }
-
-    
+        std::string type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItem().toAnsiString();
+        std::string path = "resources/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
+        sf::Texture texture;              //temporary texture for getting width and height
+        if (!texture.loadFromFile(path)) {
+            std::cout << "The texture path is not correct\n";
+        }
+        sf::Vector2u object_size = texture.getSize();
+        
+        if (type_body == "РЎС‚Р°С‚РёС‡РµСЃРєРѕРµ") {
+             entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_staticBody));
+        }
+        else if (type_body == "Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ") {
+             entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_dynamicBody));            
+        }
 }
 
+
+//Создать комбобокс В конструктор передать Color Transparent Установить цвет для спрайта 
 
 int main()
 {        
