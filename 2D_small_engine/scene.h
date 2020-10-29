@@ -64,11 +64,11 @@ class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawa
     float y_top_left;
 	float height_shape;
 	float width_shape;
-	b2Vec2 center;
-	sf::Texture t_rect;
+	b2Vec2 center;	
 	sf::Sprite s_rect;
 public:
 	b2Body* body_rect;	
+	sf::Texture t_rect;
 	sf::Sprite& get_sprite() {  return s_rect; }
 	void update_position(sf::RenderWindow&, sf::Sprite&);
 	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
@@ -82,6 +82,7 @@ public:
 };
 
 class TransferObjects {
+
 public:
 sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
  bool can_be_moved = false;
@@ -93,5 +94,4 @@ struct ObjectsWorld {
 	void to_generate_objects_in_the_world(b2World&);
 	ObjectFactory* get_object_world(int);
 	std::list<ObjectFactory*>list_object; 
-private:
 };

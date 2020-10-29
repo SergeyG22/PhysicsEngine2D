@@ -428,9 +428,19 @@ void Combo_box::set_offset(std::string screen_size) {
 
 }
 
-SmallEngineGUI::SmallEngineGUI() {
-    if (!t_fone_menu.loadFromFile("resources/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
+Decorative_elements::Decorative_elements() {
+    if (!t_fone_menu.loadFromFile("decorative element/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
     s_fone_menu.setTexture(t_fone_menu);
-    s_fone_menu.setPosition(10,10);    
+    s_fone_menu.setPosition(10,10); 
+    v_red_points.push_back(new Red_point);
+    v_red_points.push_back(new Red_point);
+    v_red_points.push_back(new Red_point);
+    v_red_points.push_back(new Red_point);
+}
+
+Red_point::Red_point() {
+    if (!t_red_point.loadFromFile("decorative element/red_point.png")) { std::cout << "t_red_point error loading texture\n"; };
+    s_red_point.setTexture(t_red_point);
+    s_red_point.setPosition(0,0);
 }
 
