@@ -55,18 +55,18 @@ struct ObjectFactory {
   virtual ~ObjectFactory(){ }
 };
 
-class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawable {
-	b2PolygonShape bshape_rect;
-	b2BodyDef bdef_rect;
+class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawable {	
 	float pos_x;
 	float pos_y;
     float x_top_left;
     float y_top_left;
 	float height_shape;
-	float width_shape;
-	b2Vec2 center;	
-	sf::Sprite s_rect;
+	float width_shape;		
 public:
+	b2Vec2 center;
+	b2PolygonShape bshape_rect;
+	sf::Sprite s_rect;
+	b2BodyDef bdef_rect;
 	b2Body* body_rect;	
 	sf::Texture t_rect;
 	sf::Sprite& get_sprite() {  return s_rect; }
