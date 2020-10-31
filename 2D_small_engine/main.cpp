@@ -200,8 +200,12 @@ float get_the_extension_radius(ObjectsEntities& entity, std::list<ObjectFactory*
 }
 
 
+// Написать функцию вращения обьекта
+// Исправить баг с отображением файла в комбобокс
 
-
+void update_combo_box_items(ObjectsEntities& entity) {
+    entity.combo_box_file_path_texture.set_options_texture();
+}
 
 
 int main()
@@ -212,6 +216,7 @@ int main()
     entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport,std::ref(entity)); 
     entity.button_download_fone.button_download_fone->onClick(set_new_fone,std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world,std::ref(entity));
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(update_combo_box_items,std::ref(entity));
 
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
@@ -227,6 +232,7 @@ int main()
                                 entity.transfer_objects.deltaY = entity.transfer_objects.get_mouse_coordinte(entity.window).y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
                                 entity.transfer_objects.can_be_moved = true;
                                 static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
+
                             }
                         }
                     }
@@ -259,24 +265,6 @@ int main()
                 }
             }
 
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Delete) {
-
-                    for (int i = 0; i < entity.objects_world.list_object.size(); ++i)
-                        if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->s_rect.getColor() == sf::Color::Red) {
-                                world.DestroyBody(static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);                               
-                                std::list<ObjectFactory*>::iterator it = entity.objects_world.list_object.begin();
-                                std::advance(it,i);
-                                entity.objects_world.list_object.erase(it);
-                            }
-
-                        }
-                }
-            }
-
-
-
 
             if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
@@ -303,7 +291,38 @@ int main()
 
               }
 
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Middle) {
+                    for (const auto& it : entity.objects_world.list_object) {
+                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            std::cout << "click\n";
+                        }
 
+                    }
+
+                }
+            }
+
+
+
+
+
+
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Delete) {
+                    for (int i = 0; i < entity.objects_world.list_object.size(); ++i)
+                        if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->s_rect.getColor() == sf::Color::Red) {
+                                world.DestroyBody(static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);
+                                std::list<ObjectFactory*>::iterator it = entity.objects_world.list_object.begin();
+                                std::advance(it, i);
+                                entity.objects_world.list_object.erase(it);
+                            }
+
+                        }
+                }
+            }
 
 
 

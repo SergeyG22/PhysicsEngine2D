@@ -140,7 +140,8 @@ void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
-void Rectangle_::update_position(sf::RenderWindow& window) {   
+void Rectangle_::update_position(sf::RenderWindow& window) {
+	//body_rect->SetTransform(body_rect->GetPosition(), angle / 57.29577f);
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
 	window.draw(s_rect);

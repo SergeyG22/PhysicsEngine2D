@@ -311,6 +311,7 @@ Combo_box_file_path_texture::Combo_box_file_path_texture(tgui::GuiSFML& GUI) {
 }
 
 void Combo_box_file_path_texture::set_options_texture() {
+    combo_box_file_path_texture->removeAllItems();
     boost::filesystem::path path_to_folder("resources");
     bool show_first_element = true;
     for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
