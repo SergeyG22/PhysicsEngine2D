@@ -432,15 +432,15 @@ Decorative_elements::Decorative_elements() {
     if (!t_fone_menu.loadFromFile("decorative element/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
     s_fone_menu.setTexture(t_fone_menu);
     s_fone_menu.setPosition(10,10); 
-    v_red_points.push_back(new Red_point);
-    v_red_points.push_back(new Red_point);
-    v_red_points.push_back(new Red_point);
-    v_red_points.push_back(new Red_point);
 }
 
-Red_point::Red_point() {
-    if (!t_red_point.loadFromFile("decorative element/red_point.png")) { std::cout << "t_red_point error loading texture\n"; };
-    s_red_point.setTexture(t_red_point);
-    s_red_point.setPosition(0,0);
+DisplayingSelectedItem::DisplayingSelectedItem() {
+    RectangleShape.setFillColor(sf::Color(100,250,50));
+}
+
+void DisplayingSelectedItem::update_position(sf::RenderWindow& window,sf::RectangleShape& shape, std::list<ObjectFactory*>::iterator::value_type it) {
+    shape.setPosition(static_cast<Rectangle_*>(it)->body_rect->GetPosition().x * 30.f, static_cast<Rectangle_*>(it)->body_rect->GetPosition().y * 30.f);
+    shape.setRotation(57.29577f * static_cast<Rectangle_*>(it)->body_rect->GetAngle());
+    window.draw(shape);
 }
 

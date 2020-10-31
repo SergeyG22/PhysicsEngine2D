@@ -186,23 +186,6 @@ void add_object_to_world(ObjectsEntities& entity) {
 
 }
 
-void set_point_position(ObjectsEntities& entity, std::list<ObjectFactory*>::iterator::value_type it) {
-    int half_point_size = 8;
-    float x_top_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().x - static_cast<Rectangle_*>(it)->t_rect.getSize().x / 2 - half_point_size;
-    float y_top_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().y - half_point_size;
-    float x_bottom_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().x + static_cast<Rectangle_*>(it)->t_rect.getSize().x / 2 - half_point_size;
-    float y_bottom_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().y - half_point_size;
-    float x_left_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().x - half_point_size;
-    float y_left_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().y - static_cast<Rectangle_*>(it)->t_rect.getSize().y / 2 - half_point_size;
-    float x_right_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().x - half_point_size;
-    float y_right_point = static_cast<Rectangle_*>(it)->get_sprite().getPosition().y + static_cast<Rectangle_*>(it)->t_rect.getSize().y / 2 - half_point_size;
-
-    entity.decorative_elements.v_red_points[0]->s_red_point.setPosition(x_top_point, y_top_point);
-    entity.decorative_elements.v_red_points[1]->s_red_point.setPosition(x_bottom_point, y_bottom_point);
-    entity.decorative_elements.v_red_points[2]->s_red_point.setPosition(x_left_point, y_left_point);
-    entity.decorative_elements.v_red_points[3]->s_red_point.setPosition(x_right_point, y_right_point);
-}
-
 float get_the_extension_radius(ObjectsEntities& entity, std::list<ObjectFactory*>::iterator::value_type it){
     float current_width_sprite_with_scale = static_cast<Rectangle_*>(it)->t_rect.getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
     float current_height_sprite_with_scale = static_cast<Rectangle_*>(it)->t_rect.getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
@@ -213,7 +196,7 @@ float get_the_extension_radius(ObjectsEntities& entity, std::list<ObjectFactory*
     float scale = 30.f;
     float upper_radius = radius_x /2/scale;
     float left_radius = radius_y /2/scale;
-    return upper_radius;
+    return upper_radius;  //radius between the object and the borders of the frame
 }
 
 
@@ -240,11 +223,9 @@ int main()
                     if (event.key.code == sf::Mouse::Left) {
                         for (auto const& it : entity.objects_world.list_object) {
                             if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                                set_point_position(entity, it);
                                 entity.transfer_objects.deltaX = entity.transfer_objects.get_mouse_coordinte(entity.window).x - static_cast<Rectangle_*>(it)->get_sprite().getPosition().x;
                                 entity.transfer_objects.deltaY = entity.transfer_objects.get_mouse_coordinte(entity.window).y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
                                 entity.transfer_objects.can_be_moved = true;
-                                entity.decorative_elements.red_points_view = true;
                                 static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
                             }
                         }
@@ -254,18 +235,53 @@ int main()
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.key.code == sf::Mouse::Left) {
                     entity.transfer_objects.can_be_moved = false;
-                    entity.decorative_elements.red_points_view = false;
+                 
                     for (auto const& it : entity.objects_world.list_object) {
                          static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(1.0);
                     }
                 }
             }
 
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Right) {
+                    for (auto const& it : entity.objects_world.list_object) {
+                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (static_cast<Rectangle_*>(it)->s_rect.getColor() == sf::Color::Red) {
+                                static_cast<Rectangle_*>(it)->s_rect.setColor(sf::Color::White);
+                            }
+                            else {
+                                static_cast<Rectangle_*>(it)->s_rect.setColor(sf::Color::Red);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Delete) {
+
+                    for (int i = 0; i < entity.objects_world.list_object.size(); ++i)
+                        if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->s_rect.getColor() == sf::Color::Red) {
+                                world.DestroyBody(static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);                               
+                                std::list<ObjectFactory*>::iterator it = entity.objects_world.list_object.begin();
+                                std::advance(it,i);
+                                entity.objects_world.list_object.erase(it);
+                            }
+
+                        }
+                }
+            }
+
+
+
+
             if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                       for (auto const& it : entity.objects_world.list_object) {
                         if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            set_point_position(entity, it);
                                if (event.mouseWheelScroll.delta > 0) {
                                    sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
                                    scale.x += 0.1;
@@ -326,12 +342,11 @@ int main()
             for (auto const& it : entity.objects_world.list_object) {
                 if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                     static_cast<Rectangle_*>(it)->get_sprite().setPosition(entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX, entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY);
-                    set_point_position(entity, it);
                     float delta_x = (entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX) / 30.f; 
                     float delta_y = (entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY) / 30.f; 
                     b2Vec2 vector;
                     vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); 
-                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite();                     
+                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite();                                   
                     static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, 0); 
                     static_cast<Rectangle_*>(it)->body_rect->SetAwake(true);
                 }
@@ -342,24 +357,19 @@ int main()
 
 
     world.Step(1/120.f, 8, 3);
-    entity.window.clear();
-    entity.window.draw(entity.game_background);
+    entity.window.clear();    
+    entity.window.draw(entity.game_background);   
     entity.physics_player.jump(world);
     entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-
-        for (auto const& it : entity.objects_world.list_object) {
-            static_cast<Rectangle_*>(it)->update_position(entity.window, static_cast<Rectangle_*>(it)->get_sprite());
-        }
     
+        for (auto const& it : entity.objects_world.list_object) {
+            static_cast<Rectangle_*>(it)->update_position(entity.window);        
+        }
 
     if (debugging_view) {
         world.DebugDraw();
     }
-    if (entity.decorative_elements.red_points_view) {
-        for (auto const& it : entity.decorative_elements.v_red_points) {
-           // entity.window.draw(it->s_red_point);
-        }
-    }
+    entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
 
     if (entity.decorative_elements.menu_view) {
         entity.window.draw(entity.decorative_elements.get_sprite_fone());
@@ -374,21 +384,6 @@ int main()
     return 0;
 }
 
-/*
-world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);
-static_cast<Rectangle_*>(it)->center.x = static_cast<Rectangle_*>(it)->get_sprite().getPosition().x / 30;
-static_cast<Rectangle_*>(it)->center.y = static_cast<Rectangle_*>(it)->get_sprite().getPosition().y / 30;
-static_cast<Rectangle_*>(it)->bdef_rect.type = b2_dynamicBody;
-
-float x = static_cast<Rectangle_*>(it)->t_rect.getSize().x * scale.x;
-float y = static_cast<Rectangle_*>(it)->t_rect.getSize().y * scale.y;
-std::cout << "x= " << x << '\n';
-std::cout << "y= " << y << '\n';
-
-static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(x / 30, y / 30, static_cast<Rectangle_*>(it)->center, 0);
-static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
-static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
-*/
 
 
 
@@ -402,10 +397,6 @@ static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>
 
 
 
-
-//  std::cout << static_cast<Rectangle_*>(it)->get_sprite().getPosition().x <<'\n';
-//  std::cout << static_cast<Rectangle_*>(it)->get_sprite().getPosition().y <<'\n';
-//  entity.decorative_elements.v_red_points[0]->s_red_point.setPosition(static_cast<Rectangle_*>(it)->get_sprite().getPosition().x - static_cast<Rectangle_*>(it)->t_rect.getSize().x / 2-half_point_size, static_cast<Rectangle_*>(it)->get_sprite().getPosition().y-half_point_size);
 
 
 

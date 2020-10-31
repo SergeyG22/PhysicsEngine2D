@@ -96,7 +96,7 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	}
 	s_rect.setTexture(t_rect);	
 	center.x = 0 / SCALE;
-
+	center.y = 0 / SCALE;
 	switch (id_visible_object) {
 	case 1: {
 		s_rect.setColor(sf::Color::Transparent);
@@ -106,7 +106,7 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 		s_rect.setColor(sf::Color::White);
 		break;
 	}
-	center.y = 0 / SCALE;
+	
 	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
 	bdef_rect.type = bdef;
 	body_rect = world.CreateBody(&bdef_rect);
@@ -140,10 +140,10 @@ void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
-void Rectangle_::update_position(sf::RenderWindow& window, sf::Sprite& sprite) {   
+void Rectangle_::update_position(sf::RenderWindow& window) {   
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
-	window.draw(sprite);
+	window.draw(s_rect);
 }
 
 sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {

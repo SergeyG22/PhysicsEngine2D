@@ -110,18 +110,18 @@ struct Combo_box {
     Combo_box(tgui::GuiSFML&);
 };
 
-class Red_point { 
+class DisplayingSelectedItem { 
 public:  
-    sf::Texture t_red_point;
-    sf::Sprite s_red_point;
-    Red_point();
+    DisplayingSelectedItem();
+    sf::RectangleShape RectangleShape;
+    void update_position(sf::RenderWindow&,sf::RectangleShape&, std::list<ObjectFactory*>::iterator::value_type it);
 };
 class Decorative_elements
 {
    sf::Texture t_fone_menu;
-   sf::Sprite s_fone_menu;
+   sf::Sprite s_fone_menu; 
 public:
-  std::vector<Red_point*>v_red_points;
+  DisplayingSelectedItem DisplayingItemRectangleShape;
   Decorative_elements();
   sf::Sprite& get_sprite_fone() { return s_fone_menu; }
   bool menu_view = false;
