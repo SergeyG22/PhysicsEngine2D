@@ -311,16 +311,18 @@ Combo_box_file_path_texture::Combo_box_file_path_texture(tgui::GuiSFML& GUI) {
 }
 
 void Combo_box_file_path_texture::set_options_texture() {
+    tgui::String str = combo_box_file_path_texture->getSelectedItem();
     combo_box_file_path_texture->removeAllItems();
-    boost::filesystem::path path_to_folder("resources");
-    bool show_first_element = true;
+    boost::filesystem::path path_to_folder("resources");   
     for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
         std::string item = i->path().filename().string();
         combo_box_file_path_texture->addItem(item);
-        if (show_first_element) {
-            combo_box_file_path_texture->setSelectedItem(item);
-            show_first_element = false;
-        }
+    }
+    if (show_first_element) {
+        combo_box_file_path_texture->setSelectedItemByIndex(0);
+        show_first_element = false;
+    }
+    else { combo_box_file_path_texture->setSelectedItem(str);
     }
 }
 

@@ -87,6 +87,7 @@ struct Combo_box_file_path_texture {
     void set_options_texture();
     void set_offset(std::string);
     Combo_box_file_path_texture(tgui::GuiSFML&);
+    bool show_first_element = true;
 };
 
 struct Label_settings {
