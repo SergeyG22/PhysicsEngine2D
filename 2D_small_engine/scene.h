@@ -70,6 +70,8 @@ public:
 	b2Body* body_rect;	
 	sf::Texture t_rect;
 	sf::Sprite& get_sprite() {  return s_rect; }
+	float current_angle;
+	void update_position(sf::RenderWindow&,float);
 	void update_position(sf::RenderWindow&);
 	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;

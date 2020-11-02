@@ -200,8 +200,10 @@ float get_the_extension_radius(ObjectsEntities& entity, std::list<ObjectFactory*
 }
 
 
-// Написать функцию вращения обьекта
-// Исправить баг с отображением файла в комбобокс
+
+//исправить баг с шириной платформы
+//исправить баг с начальным отображением координат
+//исправить баг с информацией об угле (сделать сброс на пробел)
 
 void update_combo_box_items(ObjectsEntities& entity) {
     entity.combo_box_file_path_texture.set_options_texture();
@@ -232,7 +234,6 @@ int main()
                                 entity.transfer_objects.deltaY = entity.transfer_objects.get_mouse_coordinte(entity.window).y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
                                 entity.transfer_objects.can_be_moved = true;
                                 static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
-
                             }
                         }
                     }
@@ -241,7 +242,7 @@ int main()
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.key.code == sf::Mouse::Left) {
                     entity.transfer_objects.can_be_moved = false;
-                 
+                    
                     for (auto const& it : entity.objects_world.list_object) {
                          static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(1.0);
                     }
@@ -294,20 +295,14 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Middle) {
                     for (const auto& it : entity.objects_world.list_object) {
-                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            std::cout << "click\n";
+                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {                          
+                            static_cast<Rectangle_*>(it)->update_position(entity.window, static_cast<Rectangle_*>(it)->current_angle+=6);
                         }
 
                     }
 
                 }
             }
-
-
-
-
-
-
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Delete) {
@@ -365,8 +360,9 @@ int main()
                     float delta_y = (entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY) / 30.f; 
                     b2Vec2 vector;
                     vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); 
-                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite();                                   
-                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, 0); 
+                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite();
+                    
+                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, static_cast<Rectangle_*>(it)->current_angle/57.29577f);
                     static_cast<Rectangle_*>(it)->body_rect->SetAwake(true);
                 }
 

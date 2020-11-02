@@ -140,12 +140,21 @@ void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
-void Rectangle_::update_position(sf::RenderWindow& window) {
-	//body_rect->SetTransform(body_rect->GetPosition(), angle / 57.29577f);
+
+void Rectangle_ ::update_position(sf::RenderWindow& window) {
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
 	window.draw(s_rect);
 }
+
+void Rectangle_::update_position(sf::RenderWindow& window, float angle) {
+	body_rect->SetTransform(body_rect->GetPosition(), angle / DEG);
+	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
+	s_rect.setRotation(DEG * body_rect->GetAngle());
+	window.draw(s_rect);
+}
+
+
 
 sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 	sf::Vector2i pixel_position = sf::Mouse::getPosition(window);
