@@ -61,13 +61,14 @@ class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawa
     float x_top_left;
     float y_top_left;
 	float height_shape;
-	float width_shape;		
+	float width_shape;
+	sf::Sprite s_rect;
+	sf::Texture t_rect;
 public:
 	b2PolygonShape bshape_rect;
-	sf::Sprite s_rect;
 	b2BodyDef bdef_rect;
 	b2Body* body_rect;	
-	sf::Texture t_rect;
+	sf::Texture& get_texture() { return t_rect; }
 	sf::Sprite& get_sprite() {  return s_rect; }
 	float current_angle;
 	void update_position(sf::RenderWindow&,float);
@@ -75,9 +76,11 @@ public:
 	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 	Rectangle_(b2World& world,float h,float w,float x,float y,std::string, b2BodyType bdef,int);
-	float x_initial_coordinates_of_the_sprite()const{ return x_top_left; 
-	}
-	float y_initial_coordinates_of_the_sprite()const { return y_top_left; 
+	sf::Vector2f upperleft_coord_sprite()const{ 
+		sf::Vector2f vec;
+		vec.x = x_top_left;
+		vec.y = y_top_left;
+		return vec;
 	}
 	bool constructor_test(b2World& world,float h,float w,float x,float y,std::string);
 };

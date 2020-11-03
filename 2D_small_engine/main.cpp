@@ -14,6 +14,8 @@ std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},
  b2World world (gravity);
  uint32 FLAGS = 0;
  bool debugging_view = false;
+ const float SCALE = 30.f;
+ const float DEG = 57.29577f;
 
 
 float system_timer(sf::Clock&clock){                       //used for binding to time (not to the processor)
@@ -188,18 +190,29 @@ void add_object_to_world(ObjectsEntities& entity) {
 
 sf::Vector2f get_size_sprite_with_scale(std::list<ObjectFactory*>::iterator::value_type it){
     sf::Vector2f vec;
-    vec.x = static_cast<Rectangle_*>(it)->t_rect.getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
-    vec.y = static_cast<Rectangle_*>(it)->t_rect.getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
+    vec.x = static_cast<Rectangle_*>(it)->get_texture().getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
+    vec.y = static_cast<Rectangle_*>(it)->get_texture().getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
     return vec;  
 }
 
+void create_body(std::list<ObjectFactory*>::iterator::value_type it,b2Vec2 pos) {
+    static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
+    static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x, pos.y);
+    static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
+    static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
 
-//исправить баг с информацией об угле (сделать сброс на пробел)
+}
+
+b2Vec2 get_position(std::list<ObjectFactory*>::iterator::value_type it) {
+    return static_cast<Rectangle_*>(it)->body_rect->GetPosition();
+}
 
 void update_combo_box_items(ObjectsEntities& entity) {
     entity.combo_box_file_path_texture.set_options_texture();
 }
 
+
+//исправить баг с информацией об угле (сделать сброс на пробел)
 
 int main()
 {        
@@ -220,9 +233,12 @@ int main()
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (event.key.code == sf::Mouse::Left) {
                         for (auto const& it : entity.objects_world.list_object) {
-                            if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                                entity.transfer_objects.deltaX = entity.transfer_objects.get_mouse_coordinte(entity.window).x - static_cast<Rectangle_*>(it)->get_sprite().getPosition().x;
-                                entity.transfer_objects.deltaY = entity.transfer_objects.get_mouse_coordinte(entity.window).y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
+                            sf::Vector2f mouse_coord;
+                            mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                            mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                            if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                                entity.transfer_objects.deltaX = mouse_coord.x - static_cast<Rectangle_*>(it)->get_sprite().getPosition().x;
+                                entity.transfer_objects.deltaY = mouse_coord.y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
                                 entity.transfer_objects.can_be_moved = true;
                                 static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
                             }
@@ -244,11 +260,11 @@ int main()
                 if (event.key.code == sf::Mouse::Right) {
                     for (auto const& it : entity.objects_world.list_object) {
                         if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            if (static_cast<Rectangle_*>(it)->s_rect.getColor() == sf::Color::Red) {
-                                static_cast<Rectangle_*>(it)->s_rect.setColor(sf::Color::White);
+                            if (static_cast<Rectangle_*>(it)->get_sprite().getColor() == sf::Color::Red) {
+                                static_cast<Rectangle_*>(it)->get_sprite().setColor(sf::Color::White);
                             }
                             else {
-                                static_cast<Rectangle_*>(it)->s_rect.setColor(sf::Color::Red);
+                                static_cast<Rectangle_*>(it)->get_sprite().setColor(sf::Color::Red);
                             }
 
                         }
@@ -263,33 +279,22 @@ int main()
                       for (auto const& it : entity.objects_world.list_object) {
                         if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                                if (event.mouseWheelScroll.delta > 0) {
-                                   sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
-                                   scale.x += 0.1;
-                                   scale.y += 0.1;
-                                   static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);                                 
-                              
-                                  float angle = static_cast<Rectangle_*>(it)->body_rect->GetAngle();
-                                  b2Vec2 pos = static_cast<Rectangle_*>(it)->body_rect->GetPosition();
-                                  world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);                               
-                                  static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / 30.f, get_size_sprite_with_scale(it).y / 2 / 30.f);
-                                  static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x,pos.y);
-                                  static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
-                                  static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
-     
+                                  sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
+                                  scale.x += 0.1;
+                                  scale.y += 0.1;
+                                  static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);                                                               
+                                  b2Vec2 pos = get_position(it);
+                                  world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect); 
+                                  create_body(it,pos);    
                                }
                                else if (event.mouseWheelScroll.delta < 0) {
                                    sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
                                    scale.x -= 0.1;
                                    scale.y -= 0.1;
                                    static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);
-
-                                   float angle = static_cast<Rectangle_*>(it)->body_rect->GetAngle();
-                                   b2Vec2 pos = static_cast<Rectangle_*>(it)->body_rect->GetPosition();
+                                   b2Vec2 pos = get_position(it);
                                    world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);
-                                   static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / 30.f, get_size_sprite_with_scale(it).y / 2 / 30.f);
-                                   static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x, pos.y);
-                                   static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
-                                   static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
+                                   create_body(it,pos);
                                }
                         }
 
@@ -301,7 +306,10 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Middle) {
                     for (const auto& it : entity.objects_world.list_object) {
-                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {                          
+                        sf::Vector2f mouse_coord;
+                        mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                        mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(mouse_coord.x,mouse_coord.y)) {                          
                             static_cast<Rectangle_*>(it)->update_position(entity.window, static_cast<Rectangle_*>(it)->current_angle+=6);
                         }
 
@@ -314,9 +322,9 @@ int main()
                 if (event.key.code == sf::Keyboard::Delete) {
                     for (int i = 0; i < entity.objects_world.list_object.size(); ++i)
                         if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->s_rect.getColor() == sf::Color::Red) {
+                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getColor() == sf::Color::Red) {
                                 world.DestroyBody(static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);
-                                std::list<ObjectFactory*>::iterator it = entity.objects_world.list_object.begin();
+                                auto it = entity.objects_world.list_object.begin();
                                 std::advance(it, i);
                                 entity.objects_world.list_object.erase(it);
                             }
@@ -324,9 +332,6 @@ int main()
                         }
                 }
             }
-
-
-
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tab) {
@@ -350,25 +355,30 @@ int main()
                 }
 
             }
-
-            
-            
+                     
             if (event.type == sf::Event::Closed)
                 entity.window.close();
         }
 
-        if (entity.transfer_objects.can_be_moved) {
-            
+        if (entity.transfer_objects.can_be_moved) {           
             for (auto const& it : entity.objects_world.list_object) {
-                if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                    static_cast<Rectangle_*>(it)->get_sprite().setPosition(entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX, entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY);
-                    float delta_x = (entity.transfer_objects.get_mouse_coordinte(entity.window).x - entity.transfer_objects.deltaX) / 30.f; 
-                    float delta_y = (entity.transfer_objects.get_mouse_coordinte(entity.window).y - entity.transfer_objects.deltaY) / 30.f; 
+
+                 sf::Vector2f coord;
+                 coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                 coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                 sf::Vector2f del;
+                 del.x = entity.transfer_objects.deltaX;
+                 del.y = entity.transfer_objects.deltaY;
+
+                if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(coord.x,coord.y)) {
+                    static_cast<Rectangle_*>(it)->get_sprite().setPosition(coord.x - del.x, coord.y - del.y);
+                    b2Vec2 delta;
+                    delta.x = (coord.x - del.x) / SCALE; 
+                    delta.y = (coord.y - del.y) / SCALE; 
                     b2Vec2 vector;
-                    vector.x = delta_x - static_cast<Rectangle_*>(it)->x_initial_coordinates_of_the_sprite(); 
-                    vector.y = delta_y - static_cast<Rectangle_*>(it)->y_initial_coordinates_of_the_sprite();
-                    
-                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, static_cast<Rectangle_*>(it)->current_angle/57.29577f);
+                    vector.x = delta.x - static_cast<Rectangle_*>(it)->upperleft_coord_sprite().x;
+                    vector.y = delta.y - static_cast<Rectangle_*>(it)->upperleft_coord_sprite().y;                    
+                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, static_cast<Rectangle_*>(it)->current_angle/DEG);
                     static_cast<Rectangle_*>(it)->body_rect->SetAwake(true);
                 }
 
