@@ -82,8 +82,8 @@ void PhysicsPlayer::jump(b2World& world) {
 }
 
 void PhysicsPlayer::update(sf::RenderWindow& window, sf::Sprite& sprite) {
-	pos = this->body_player->GetPosition();
-	float angle = this->body_player->GetAngle();
+	pos = body_player->GetPosition();
+	float angle = body_player->GetAngle();
 	sprite.setPosition(pos.x * SCALE, pos.y * SCALE);
 	sprite.setRotation(DEG * angle);
 	window.draw(sprite);
@@ -94,9 +94,7 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	if (!t_rect.loadFromFile(path_to_file)) {
          std::cout << "The texture path is not correct\n";
 	}
-	s_rect.setTexture(t_rect);	
-	center.x = 0 / SCALE;
-	center.y = 0 / SCALE;
+	s_rect.setTexture(t_rect);
 	switch (id_visible_object) {
 	case 1: {
 		s_rect.setColor(sf::Color::Transparent);
@@ -106,19 +104,18 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 		s_rect.setColor(sf::Color::White);
 		break;
 	}
-	
-	bshape_rect.SetAsBox(height_shape/2/SCALE,width_shape/2/SCALE,center,0);
+
+	bshape_rect.SetAsBox(height_shape / 2 / SCALE, width_shape / 2 / SCALE);
 	bdef_rect.type = bdef;
+	bdef_rect.position.Set(x/30.f,y/30.f);  
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
 Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
-	b2Vec2 center;
-	center.x = x / SCALE;
-	center.y = y / SCALE;
 	bdef_rect.type = bdef; 
-	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE, center, 0);
+	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE);
+	bdef_rect.position.Set(x/30.f,y/30.f);
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
@@ -140,7 +137,6 @@ void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
-
 void Rectangle_ ::update_position(sf::RenderWindow& window) {
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
@@ -153,8 +149,6 @@ void Rectangle_::update_position(sf::RenderWindow& window, float angle) {
 	s_rect.setRotation(DEG * body_rect->GetAngle());
 	window.draw(s_rect);
 }
-
-
 
 sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 	sf::Vector2i pixel_position = sf::Mouse::getPosition(window);

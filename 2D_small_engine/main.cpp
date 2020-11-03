@@ -175,34 +175,25 @@ void add_object_to_world(ObjectsEntities& entity) {
         switch (id_type_body) 
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
             break;
            }
         case 2: {
-            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 0, 0, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
             break;
            }
         }
 
 }
 
-float get_the_extension_radius(ObjectsEntities& entity, std::list<ObjectFactory*>::iterator::value_type it){
-    float current_width_sprite_with_scale = static_cast<Rectangle_*>(it)->t_rect.getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
-    float current_height_sprite_with_scale = static_cast<Rectangle_*>(it)->t_rect.getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
-    float standart_width_sprite = static_cast<Rectangle_*>(it)->t_rect.getSize().x;
-    float standart_height_sprite = static_cast<Rectangle_*>(it)->t_rect.getSize().y;
-    float radius_x = current_width_sprite_with_scale - standart_width_sprite;
-    float radius_y = current_height_sprite_with_scale - standart_height_sprite;
-    float scale = 30.f;
-    float upper_radius = radius_x /2/scale;
-    float left_radius = radius_y /2/scale;
-    return upper_radius;  //radius between the object and the borders of the frame
+sf::Vector2f get_size_sprite_with_scale(std::list<ObjectFactory*>::iterator::value_type it){
+    sf::Vector2f vec;
+    vec.x = static_cast<Rectangle_*>(it)->t_rect.getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
+    vec.y = static_cast<Rectangle_*>(it)->t_rect.getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
+    return vec;  
 }
 
 
-
-//исправить баг с шириной платформы
-//исправить баг с начальным отображением координат
 //исправить баг с информацией об угле (сделать сброс на пробел)
 
 void update_combo_box_items(ObjectsEntities& entity) {
@@ -276,14 +267,29 @@ int main()
                                    scale.x += 0.1;
                                    scale.y += 0.1;
                                    static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);                                 
-                                   static_cast<Rectangle_*>(it)->body_rect->GetFixtureList()->GetShape()->m_radius = get_the_extension_radius(entity,it);
+                              
+                                  float angle = static_cast<Rectangle_*>(it)->body_rect->GetAngle();
+                                  b2Vec2 pos = static_cast<Rectangle_*>(it)->body_rect->GetPosition();
+                                  world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);                               
+                                  static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / 30.f, get_size_sprite_with_scale(it).y / 2 / 30.f);
+                                  static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x,pos.y);
+                                  static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
+                                  static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
+     
                                }
                                else if (event.mouseWheelScroll.delta < 0) {
                                    sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
                                    scale.x -= 0.1;
                                    scale.y -= 0.1;
                                    static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);
-                                   static_cast<Rectangle_*>(it)->body_rect->GetFixtureList()->GetShape()->m_radius = get_the_extension_radius(entity, it);
+
+                                   float angle = static_cast<Rectangle_*>(it)->body_rect->GetAngle();
+                                   b2Vec2 pos = static_cast<Rectangle_*>(it)->body_rect->GetPosition();
+                                   world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);
+                                   static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / 30.f, get_size_sprite_with_scale(it).y / 2 / 30.f);
+                                   static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x, pos.y);
+                                   static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
+                                   static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
                                }
                         }
 
@@ -398,6 +404,7 @@ int main()
   }
     return 0;
 }
+
 
 
 
