@@ -53,38 +53,50 @@ public:
 
 struct ObjectFactory {
   virtual ~ObjectFactory(){ }
+  virtual sf::Sprite& get_sprite() = 0;
+  virtual sf::Texture& get_texture() = 0;
+  virtual void update_position(sf::RenderWindow&, float) = 0;
+  virtual void update_position(sf::RenderWindow&) = 0;
+  virtual sf::Vector2f upperleft_coord_sprite()const = 0;
+  virtual float set_angle(float) = 0;
+  virtual float get_angle() = 0;
 };
 
-class Rectangle_:public Physics_parameters,public ObjectFactory,public sf::Drawable {	
-	float pos_x;
-	float pos_y;
-    float x_top_left;
-    float y_top_left;
-	float height_shape;
-	float width_shape;
-	sf::Sprite s_rect;
-	sf::Texture t_rect;
-public:
-	b2PolygonShape bshape_rect;
-	b2BodyDef bdef_rect;
-	b2Body* body_rect;	
-	sf::Texture& get_texture() { return t_rect; }
-	sf::Sprite& get_sprite() {  return s_rect; }
-	float current_angle;
-	void update_position(sf::RenderWindow&,float);
-	void update_position(sf::RenderWindow&);
-	Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
-	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-	Rectangle_(b2World& world,float h,float w,float x,float y,std::string, b2BodyType bdef,int);
-	sf::Vector2f upperleft_coord_sprite()const{ 
-		sf::Vector2f vec;
-		vec.x = x_top_left;
-		vec.y = y_top_left;
-		return vec;
-	}
-	bool constructor_test(b2World& world,float h,float w,float x,float y,std::string);
-};
+ //geometric object
+namespace gobj {
 
+	class Rectangle_ :public Physics_parameters, public ObjectFactory, public sf::Drawable {
+		float pos_x;
+		float pos_y;
+		float x_top_left;
+		float y_top_left;
+		float height_shape;
+		float width_shape;
+		sf::Sprite s_rect;
+		sf::Texture t_rect;
+		float current_angle;
+	public:
+		b2Body* body_rect;
+		b2PolygonShape bshape_rect;
+		b2BodyDef bdef_rect;
+		sf::Texture& get_texture()   override { return t_rect; }
+		sf::Sprite& get_sprite()     override { return s_rect; }
+		float set_angle(float angle) override { current_angle += angle; return current_angle; };
+		float get_angle()            override { return current_angle; }
+		void update_position(sf::RenderWindow&, float) override;
+		void update_position(sf::RenderWindow&)        override;
+		Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
+		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+		Rectangle_(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
+		sf::Vector2f upperleft_coord_sprite() const override {
+			sf::Vector2f vec;
+			vec.x = x_top_left;
+			vec.y = y_top_left;
+			return vec;
+		}
+		bool constructor_test(b2World& world, float h, float w, float x, float y, std::string);
+	};
+}
 class TransferObjects {
 
 public:

@@ -442,8 +442,8 @@ DisplayingSelectedItem::DisplayingSelectedItem() {
 }
 
 void DisplayingSelectedItem::update_position(sf::RenderWindow& window,sf::RectangleShape& shape, std::list<ObjectFactory*>::iterator::value_type it) {
-    shape.setPosition(static_cast<Rectangle_*>(it)->body_rect->GetPosition().x * 30.f, static_cast<Rectangle_*>(it)->body_rect->GetPosition().y * 30.f);
-    shape.setRotation(57.29577f * static_cast<Rectangle_*>(it)->body_rect->GetAngle());
+    shape.setPosition(dynamic_cast<gobj::Rectangle_*>(it)->body_rect->GetPosition().x * 30.f, dynamic_cast<gobj::Rectangle_*>(it)->body_rect->GetPosition().y * 30.f);
+    shape.setRotation(57.29577f * dynamic_cast<gobj::Rectangle_*>(it)->body_rect->GetAngle());
     window.draw(shape);
 }
 

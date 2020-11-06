@@ -177,11 +177,11 @@ void add_object_to_world(ObjectsEntities& entity) {
         switch (id_type_body) 
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
             break;
            }
         case 2: {
-            entity.objects_world.list_object.push_back(new Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle_(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
             break;
            }
         }
@@ -190,39 +190,41 @@ void add_object_to_world(ObjectsEntities& entity) {
 
 sf::Vector2f get_size_sprite_with_scale(std::list<ObjectFactory*>::iterator::value_type it){
     sf::Vector2f vec;
-    vec.x = static_cast<Rectangle_*>(it)->get_texture().getSize().x * static_cast<Rectangle_*>(it)->get_sprite().getScale().x;
-    vec.y = static_cast<Rectangle_*>(it)->get_texture().getSize().y * static_cast<Rectangle_*>(it)->get_sprite().getScale().y;
+    vec.x = it->get_texture().getSize().x * it->get_sprite().getScale().x;
+    vec.y = it->get_texture().getSize().y * it->get_sprite().getScale().y;
     return vec;  
 }
 
 void create_body(std::list<ObjectFactory*>::iterator::value_type it,b2Vec2 pos) {
-    static_cast<Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
-    static_cast<Rectangle_*>(it)->bdef_rect.position.Set(pos.x, pos.y);
-    static_cast<Rectangle_*>(it)->body_rect = world.CreateBody(&static_cast<Rectangle_*>(it)->bdef_rect);
-    static_cast<Rectangle_*>(it)->body_rect->CreateFixture(&static_cast<Rectangle_*>(it)->bshape_rect, 5.0);
+    dynamic_cast<gobj::Rectangle_*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
+    dynamic_cast<gobj::Rectangle_*>(it)->bdef_rect.position.Set(pos.x, pos.y);
+    dynamic_cast<gobj::Rectangle_*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle_*>(it)->bdef_rect);
+    dynamic_cast<gobj::Rectangle_*>(it)->body_rect->CreateFixture(&dynamic_cast<gobj::Rectangle_*>(it)->bshape_rect, 5.0);
 
 }
 
 b2Vec2 get_position(std::list<ObjectFactory*>::iterator::value_type it) {
-    return static_cast<Rectangle_*>(it)->body_rect->GetPosition();
+    return dynamic_cast<gobj::Rectangle_*>(it)->body_rect->GetPosition();
 }
 
 void update_combo_box_items(ObjectsEntities& entity) {
     entity.combo_box_file_path_texture.set_options_texture();
 }
 
+void events_called_by_widgets(ObjectsEntities& entity) {
+    entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
+    entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
+    entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
+    entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(update_combo_box_items, std::ref(entity));
+}
 
-//исправить баг с информацией об угле (сделать сброс на пробел)
 
 int main()
 {        
     setlocale(LC_ALL, "russian");
     ObjectsEntities entity;
-    entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
-    entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport,std::ref(entity)); 
-    entity.button_download_fone.button_download_fone->onClick(set_new_fone,std::ref(entity));
-    entity.button_download_texture.button_download_texture->onClick(add_object_to_world,std::ref(entity));
-    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(update_combo_box_items,std::ref(entity));
+    events_called_by_widgets(entity);
 
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
@@ -236,11 +238,11 @@ int main()
                             sf::Vector2f mouse_coord;
                             mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
                             mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                            if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
-                                entity.transfer_objects.deltaX = mouse_coord.x - static_cast<Rectangle_*>(it)->get_sprite().getPosition().x;
-                                entity.transfer_objects.deltaY = mouse_coord.y - static_cast<Rectangle_*>(it)->get_sprite().getPosition().y;
+                            if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                                entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite().getPosition().x;
+                                entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite().getPosition().y;
                                 entity.transfer_objects.can_be_moved = true;
-                                static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
+                                dynamic_cast<gobj::Rectangle_*>(it)->body_rect->SetGravityScale(0.0);
                             }
                         }
                     }
@@ -251,7 +253,7 @@ int main()
                     entity.transfer_objects.can_be_moved = false;
                     
                     for (auto const& it : entity.objects_world.list_object) {
-                         static_cast<Rectangle_*>(it)->body_rect->SetGravityScale(1.0);
+                         dynamic_cast<gobj::Rectangle_*>(it)->body_rect->SetGravityScale(1.0);
                     }
                 }
             }
@@ -259,12 +261,12 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Right) {
                     for (auto const& it : entity.objects_world.list_object) {
-                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            if (static_cast<Rectangle_*>(it)->get_sprite().getColor() == sf::Color::Red) {
-                                static_cast<Rectangle_*>(it)->get_sprite().setColor(sf::Color::White);
+                        if (it->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (it->get_sprite().getColor() == sf::Color::Red) {
+                                it->get_sprite().setColor(sf::Color::White);
                             }
                             else {
-                                static_cast<Rectangle_*>(it)->get_sprite().setColor(sf::Color::Red);
+                                it->get_sprite().setColor(sf::Color::Red);
                             }
 
                         }
@@ -277,23 +279,23 @@ int main()
             if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                       for (auto const& it : entity.objects_world.list_object) {
-                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                        if (it->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                                if (event.mouseWheelScroll.delta > 0) {
-                                  sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
+                                  sf::Vector2f scale = it->get_sprite().getScale();
                                   scale.x += 0.1;
                                   scale.y += 0.1;
-                                  static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);                                                               
+                                  it->get_sprite().setScale(scale);                                                               
                                   b2Vec2 pos = get_position(it);
-                                  world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect); 
+                                  world.DestroyBody(dynamic_cast<gobj::Rectangle_*>(it)->body_rect);
                                   create_body(it,pos);    
                                }
                                else if (event.mouseWheelScroll.delta < 0) {
-                                   sf::Vector2f scale = static_cast<Rectangle_*>(it)->get_sprite().getScale();
+                                   sf::Vector2f scale = it->get_sprite().getScale();
                                    scale.x -= 0.1;
                                    scale.y -= 0.1;
-                                   static_cast<Rectangle_*>(it)->get_sprite().setScale(scale);
+                                   it->get_sprite().setScale(scale);
                                    b2Vec2 pos = get_position(it);
-                                   world.DestroyBody(static_cast<Rectangle_*>(it)->body_rect);
+                                   world.DestroyBody(dynamic_cast<gobj::Rectangle_*>(it)->body_rect);
                                    create_body(it,pos);
                                }
                         }
@@ -309,8 +311,8 @@ int main()
                         sf::Vector2f mouse_coord;
                         mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
                         mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                        if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(mouse_coord.x,mouse_coord.y)) {                          
-                            static_cast<Rectangle_*>(it)->update_position(entity.window, static_cast<Rectangle_*>(it)->current_angle+=6);
+                        if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x,mouse_coord.y)) {                          
+                            it->update_position(entity.window, it->set_angle(6));
                         }
 
                     }
@@ -321,9 +323,9 @@ int main()
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Delete) {
                     for (int i = 0; i < entity.objects_world.list_object.size(); ++i)
-                        if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                            if (static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->get_sprite().getColor() == sf::Color::Red) {
-                                world.DestroyBody(static_cast<Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);
+                        if (entity.objects_world.get_object_world(i)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (entity.objects_world.get_object_world(i)->get_sprite().getColor() == sf::Color::Red) {
+                                world.DestroyBody(dynamic_cast<gobj::Rectangle_*>(entity.objects_world.get_object_world(i))->body_rect);
                                 auto it = entity.objects_world.list_object.begin();
                                 std::advance(it, i);
                                 entity.objects_world.list_object.erase(it);
@@ -362,7 +364,6 @@ int main()
 
         if (entity.transfer_objects.can_be_moved) {           
             for (auto const& it : entity.objects_world.list_object) {
-
                  sf::Vector2f coord;
                  coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
                  coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
@@ -370,16 +371,16 @@ int main()
                  del.x = entity.transfer_objects.deltaX;
                  del.y = entity.transfer_objects.deltaY;
 
-                if (static_cast<Rectangle_*>(it)->get_sprite().getGlobalBounds().contains(coord.x,coord.y)) {
-                    static_cast<Rectangle_*>(it)->get_sprite().setPosition(coord.x - del.x, coord.y - del.y);
+                if (it->get_sprite().getGlobalBounds().contains(coord.x,coord.y)) {
+                    it->get_sprite().setPosition(coord.x - del.x, coord.y - del.y);
                     b2Vec2 delta;
                     delta.x = (coord.x - del.x) / SCALE; 
                     delta.y = (coord.y - del.y) / SCALE; 
                     b2Vec2 vector;
-                    vector.x = delta.x - static_cast<Rectangle_*>(it)->upperleft_coord_sprite().x;
-                    vector.y = delta.y - static_cast<Rectangle_*>(it)->upperleft_coord_sprite().y;                    
-                    static_cast<Rectangle_*>(it)->body_rect->SetTransform(vector, static_cast<Rectangle_*>(it)->current_angle/DEG);
-                    static_cast<Rectangle_*>(it)->body_rect->SetAwake(true);
+                    vector.x = delta.x - it->upperleft_coord_sprite().x;
+                    vector.y = delta.y - it->upperleft_coord_sprite().y;                    
+                    dynamic_cast<gobj::Rectangle_*>(it)->body_rect->SetTransform(vector, it->get_angle()/DEG);
+                    dynamic_cast<gobj::Rectangle_*>(it)->body_rect->SetAwake(true);
                 }
 
             }
@@ -394,7 +395,7 @@ int main()
     entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
     
         for (auto const& it : entity.objects_world.list_object) {
-            static_cast<Rectangle_*>(it)->update_position(entity.window);        
+            it->update_position(entity.window);        
         }
 
     if (debugging_view) {

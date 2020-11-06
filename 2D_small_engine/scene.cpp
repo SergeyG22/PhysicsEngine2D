@@ -89,7 +89,7 @@ void PhysicsPlayer::update(sf::RenderWindow& window, sf::Sprite& sprite) {
 	window.draw(sprite);
 }
 
-Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file, b2BodyType bdef,int id_visible_object):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
+gobj::Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::string path_to_file, b2BodyType bdef,int id_visible_object):height_shape(h),width_shape(w),pos_x(x),pos_y(y) {
 	s_rect.setOrigin(height_shape/2,width_shape/2);
 	if (!t_rect.loadFromFile(path_to_file)) {
          std::cout << "The texture path is not correct\n";
@@ -112,7 +112,7 @@ Rectangle_::Rectangle_(b2World& world,float h,float w,float x,float y, std::stri
 	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
-Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
+gobj::Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y){
 	bdef_rect.type = bdef; 
 	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE);
 	bdef_rect.position.Set(x/30.f,y/30.f);
@@ -120,7 +120,7 @@ Rectangle_::Rectangle_(b2World& world, float h, float w, float x, float y, b2Bod
 	body_rect->CreateFixture(&bshape_rect, 5.0);
 }
 
-bool Rectangle_::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
+bool gobj::Rectangle_::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
 		if (!t_rect.loadFromFile(path_to_file)) {
 			try {
 				throw "The texture path is not correct\n";
@@ -133,17 +133,17 @@ bool Rectangle_::constructor_test(b2World& world, float h, float w, float x, flo
 	return true;
 }
 
-void Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
+void gobj::Rectangle_::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_rect, states);
 }
 
-void Rectangle_ ::update_position(sf::RenderWindow& window) {
+void gobj::Rectangle_ ::update_position(sf::RenderWindow& window) {
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
 	window.draw(s_rect);
 }
 
-void Rectangle_::update_position(sf::RenderWindow& window, float angle) {
+void gobj::Rectangle_::update_position(sf::RenderWindow& window, float angle) {
 	body_rect->SetTransform(body_rect->GetPosition(), angle / DEG);
 	s_rect.setPosition(body_rect->GetPosition().x * SCALE, body_rect->GetPosition().y * SCALE);
 	s_rect.setRotation(DEG * body_rect->GetAngle());
@@ -157,9 +157,9 @@ sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 }
 
 void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
-	list_object.push_back(new Rectangle_(world, 800, 25, 0, 580,b2_staticBody));
-	list_object.push_back(new Rectangle_(world, 10, 600, 0, 0, b2_staticBody));
-	list_object.push_back(new Rectangle_(world, 10, 600, 800, 0,b2_staticBody));
+	list_object.push_back(new gobj::Rectangle_(world, 800, 25, 0, 580,b2_staticBody));
+	list_object.push_back(new gobj::Rectangle_(world, 10, 600, 0, 0, b2_staticBody));
+	list_object.push_back(new gobj::Rectangle_(world, 10, 600, 800, 0,b2_staticBody));
 }		                                           
 
 ObjectFactory* ObjectsWorld::get_object_world(int n) {
