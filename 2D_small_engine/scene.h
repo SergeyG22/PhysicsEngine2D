@@ -51,21 +51,22 @@ public:
 	b2Body* body_player = nullptr;
 };
 
+namespace gobj {
+	//gobj - geometric object
+
 struct ObjectFactory {
-  virtual ~ObjectFactory(){ }
-  virtual sf::Sprite& get_sprite() = 0;
-  virtual sf::Texture& get_texture() = 0;
-  virtual void update_position(sf::RenderWindow&, float) = 0;
-  virtual void update_position(sf::RenderWindow&) = 0;
-  virtual sf::Vector2f upperleft_coord_sprite()const = 0;
-  virtual float set_angle(float) = 0;
-  virtual float get_angle() = 0;
+  virtual ~ObjectFactory() = default;
+  virtual sf::Sprite& get_sprite() =0;
+  virtual sf::Texture& get_texture() =0;
+  virtual void update_position(sf::RenderWindow&, float) =0;
+  virtual void update_position(sf::RenderWindow&) =0;
+  virtual sf::Vector2f upperleft_coord_sprite() =0;
+  virtual float set_angle(float) =0;
+  virtual float get_angle() =0;
 };
 
- //geometric object
-namespace gobj {
 
-	class Rectangle_ :public Physics_parameters, public ObjectFactory, public sf::Drawable {
+	class Rectangle :public Physics_parameters, public ObjectFactory, public sf::Drawable {
 		float pos_x;
 		float pos_y;
 		float x_top_left;
@@ -81,20 +82,52 @@ namespace gobj {
 		b2BodyDef bdef_rect;
 		sf::Texture& get_texture()   override { return t_rect; }
 		sf::Sprite& get_sprite()     override { return s_rect; }
-		float set_angle(float angle) override { current_angle += angle; return current_angle; };
+		float set_angle(float angle) override { current_angle += angle; return current_angle; }
 		float get_angle()            override { return current_angle; }
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
-		Rectangle_(b2World&, float, float, float, float, b2BodyType bdef);
+		Rectangle(b2World&, float, float, float, float, b2BodyType bdef);
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-		Rectangle_(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
-		sf::Vector2f upperleft_coord_sprite() const override {
+		Rectangle(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
+		sf::Vector2f upperleft_coord_sprite() override {
 			sf::Vector2f vec;
 			vec.x = x_top_left;
 			vec.y = y_top_left;
 			return vec;
 		}
 		bool constructor_test(b2World& world, float h, float w, float x, float y, std::string);
+	};
+
+	class Circle :public Physics_parameters, public ObjectFactory, public sf::Drawable {
+		float pos_x;
+		float pos_y;
+		float x_top_left;
+		float y_top_left;
+		float height_circle;
+		float width_circle;
+		float radius;
+		sf::Sprite s_circle;
+		sf::Texture t_circle;
+		float current_angle;
+	public:
+		b2Body* body_circle;
+		b2CircleShape bshape_circle;
+		b2BodyDef bdef_circle;
+		sf::Texture& get_texture()   override { return t_circle; }
+		sf::Sprite& get_sprite()     override { return s_circle; }
+		float set_angle(float angle) override { current_angle += angle; return current_angle; }
+		float get_angle()            override { return current_angle; }
+		void update_position(sf::RenderWindow&, float) override;
+		void update_position(sf::RenderWindow&)        override;
+		Circle(b2World&, float,float,float, b2BodyType bdef);
+		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+		Circle(b2World& world, float x, float y, std::string, b2BodyType bdef, int);
+		sf::Vector2f upperleft_coord_sprite()  override {
+			sf::Vector2f vec;
+			vec.x = x_top_left;
+			vec.y = y_top_left;
+			return vec;
+		}
 	};
 }
 class TransferObjects {
@@ -108,6 +141,6 @@ sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
 
 struct ObjectsWorld {
 	void to_generate_objects_in_the_world(b2World&);
-	ObjectFactory* get_object_world(int);
-	std::list<ObjectFactory*>list_object; 
+	gobj::ObjectFactory* get_object_world(int);
+	std::list<gobj::ObjectFactory*>list_object; 
 };

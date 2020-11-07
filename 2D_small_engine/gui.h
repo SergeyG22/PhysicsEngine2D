@@ -115,8 +115,9 @@ class DisplayingSelectedItem {
 public:  
     DisplayingSelectedItem();
     sf::RectangleShape RectangleShape;
-    void update_position(sf::RenderWindow&,sf::RectangleShape&, std::list<ObjectFactory*>::iterator::value_type it);
+    void update_position(sf::RenderWindow&,sf::RectangleShape&, std::list<gobj::ObjectFactory*>::iterator::value_type it);
 };
+
 class Decorative_elements
 {
    sf::Texture t_fone_menu;
