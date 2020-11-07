@@ -211,8 +211,8 @@ void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
 	list_object.push_back(new gobj::Rectangle(world, 800, 25, 0, 580,b2_staticBody));
 	list_object.push_back(new gobj::Rectangle(world, 10, 600, 0, 0, b2_staticBody));
 	list_object.push_back(new gobj::Rectangle(world, 10, 600, 800, 0,b2_staticBody));
-	list_object.push_back(new gobj::Circle(world, 100, 200, 200, b2_dynamicBody));
-	list_object.push_back(new gobj::Circle(world,200,300,"purple_circle.png",b2_dynamicBody,2));
+//	list_object.push_back(new gobj::Circle(world, 100, 200, 200, b2_dynamicBody));
+	list_object.push_back(new gobj::Circle(world,200,300,"circle/purple_circle.png",b2_dynamicBody,2));
 }		                                           
 
 gobj::ObjectFactory* ObjectsWorld::get_object_world(int n) {

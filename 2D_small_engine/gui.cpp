@@ -313,7 +313,7 @@ Combo_box_file_path_texture::Combo_box_file_path_texture(tgui::GuiSFML& GUI) {
 void Combo_box_file_path_texture::set_options_texture() {
     tgui::String str = combo_box_file_path_texture->getSelectedItem();
     combo_box_file_path_texture->removeAllItems();
-    boost::filesystem::path path_to_folder("resources");   
+    boost::filesystem::path path_to_folder("rectangle");   
     for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
         std::string item = i->path().filename().string();
         combo_box_file_path_texture->addItem(item);

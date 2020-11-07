@@ -168,7 +168,7 @@ void add_object_to_world(ObjectsEntities& entity) {
         int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
         int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
 
-        std::string path = "resources/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
+        std::string path = "rectangle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
         sf::Texture texture;                                   //temporary texture for getting width and height
         if (!texture.loadFromFile(path)) {
             std::cout << "The texture path is not correct\n";
@@ -271,10 +271,6 @@ int main()
                                 else if (get_typename(it) == "class gobj::Circle") {
                                     dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(0.0);
                                 }
-
-
-                             //   dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(0.0);
-                            //    dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(0.0);
                             }
                         }
                     }
@@ -292,9 +288,6 @@ int main()
                         else if (get_typename(it) == "class gobj::Circle") {
                             dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(1.0);
                         }
-
-
-                       //    dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(1.0);
                     }
                 }
             }
@@ -334,7 +327,6 @@ int main()
                                       world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
                                   }
 
-                               //   world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
                                   create_body(it,pos);    
                                }
                                else if (event.mouseWheelScroll.delta < 0) {
@@ -348,9 +340,7 @@ int main()
                                    }
                                    else if (get_typename(it) == "class gobj::Circle") {
                                        world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
-                                   }
-                                
-                               //    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+                                   }                               
                                    create_body(it,pos);
                                }
                         }
