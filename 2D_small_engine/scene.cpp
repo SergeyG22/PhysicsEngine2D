@@ -150,7 +150,6 @@ void gobj::Rectangle::update_position(sf::RenderWindow& window, float angle) {
 	window.draw(s_rect);
 }
 
-
 gobj::Circle::Circle(b2World& world, float x, float y, std::string path_to_file, b2BodyType bdef, int id_visible_object) : pos_x(x), pos_y(y) {
 	s_circle.setOrigin(75, 75);
 	if (!t_circle.loadFromFile(path_to_file)) {
@@ -174,7 +173,6 @@ gobj::Circle::Circle(b2World& world, float x, float y, std::string path_to_file,
 	body_circle->CreateFixture(&bshape_circle, 5.0);
 }
 
-
 gobj::Circle::Circle(b2World& world, float radius_circle, float x, float y, b2BodyType bdef):radius(radius_circle), pos_x(x), pos_y(y) {
 	bdef_circle.type = bdef;
 	bshape_circle.m_radius = radius / 2 / SCALE;
@@ -182,7 +180,6 @@ gobj::Circle::Circle(b2World& world, float radius_circle, float x, float y, b2Bo
 	body_circle = world.CreateBody(&bdef_circle);
 	body_circle->CreateFixture(&bshape_circle, 5.0);
 }
-
 
 void gobj::Circle::draw(sf::RenderTarget& target, sf::RenderStates states)const {
 	target.draw(s_circle, states);
@@ -212,7 +209,7 @@ void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
 	list_object.push_back(new gobj::Rectangle(world, 10, 600, 0, 0, b2_staticBody));
 	list_object.push_back(new gobj::Rectangle(world, 10, 600, 800, 0,b2_staticBody));
 //	list_object.push_back(new gobj::Circle(world, 100, 200, 200, b2_dynamicBody));
-	list_object.push_back(new gobj::Circle(world,200,300,"circle/purple_circle.png",b2_dynamicBody,2));
+	list_object.push_back(new gobj::Circle(world,400,100,"circle/purple_circle.png",b2_dynamicBody,2));
 }		                                           
 
 gobj::ObjectFactory* ObjectsWorld::get_object_world(int n) {

@@ -84,7 +84,7 @@ struct Combo_box_file_path_texture {
     tgui::Layout pos_x_combo_box_file_path_texture = 65;
     tgui::Layout pos_y_combo_box_file_path_texture = 285;
     tgui::Theme theme{ "themes/Black.txt" };
-    void set_options_texture();
+    void set_options_texture(std::string);
     void set_offset(std::string);
     Combo_box_file_path_texture(tgui::GuiSFML&);
     bool show_first_element = true;

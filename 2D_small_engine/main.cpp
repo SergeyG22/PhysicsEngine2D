@@ -222,22 +222,37 @@ b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     }
 }
 
-void update_combo_box_items(ObjectsEntities& entity) {
-    entity.combo_box_file_path_texture.set_options_texture();
+
+void test(ObjectsEntities& entity) {
+    switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex()) {
+    case 0: {
+        entity.combo_box_file_path_texture.set_options_texture("circle");
+        entity.combo_box_file_path_texture.combo_box_file_path_texture->setSelectedItemByIndex(0);
+        break;
+    }
+    case 1: {
+        entity.combo_box_file_path_texture.set_options_texture("rectangle");
+        entity.combo_box_file_path_texture.combo_box_file_path_texture->setSelectedItemByIndex(0);
+        break;
+    }
+   }
+
 }
 
-void events_called_by_widgets(ObjectsEntities& entity) {
-    entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
+
+void events_called_by_widgets(ObjectsEntities& entity) { 
     entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
     entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
-    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(update_combo_box_items, std::ref(entity));
+    entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
+    entity.combo_box_figure.combo_box_figure->onItemSelect(test,std::ref(entity));
 }
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     std::string str(typeid(*it).name());
     return str;
 }
+
 
 
 

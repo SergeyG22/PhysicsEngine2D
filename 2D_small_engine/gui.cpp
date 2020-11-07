@@ -185,10 +185,8 @@ Combo_box_figure::Combo_box_figure(tgui::GuiSFML& GUI) {
     combo_box_figure->setSize(width_combo_box_figure, height_combo_box_figure);
     combo_box_figure->setPosition(pos_x_combo_box_figure, pos_y_combo_box_figure);
     combo_box_figure->addItem(L"Круг");
-    combo_box_figure->addItem(L"Угол");
-    combo_box_figure->addItem(L"Полигон");
-    combo_box_figure->addItem(L"Цепь");
-    combo_box_figure->setSelectedItem(L"Полигон");
+    combo_box_figure->addItem(L"Квадрат");
+    combo_box_figure->setSelectedItem(L"Квадрат");
     GUI.add(combo_box_figure);
 }
 
@@ -303,28 +301,32 @@ Combo_box_file_path_texture::Combo_box_file_path_texture(tgui::GuiSFML& GUI) {
     combo_box_file_path_texture = tgui::ComboBox::create();
     combo_box_file_path_texture->setRenderer(theme.getRenderer("ComboBox"));
     combo_box_file_path_texture->setSize(width_combo_box_file_path_texture, height_combo_box_file_path_texture);
-    set_options_texture();
+    set_options_texture("rectangle");
     combo_box_file_path_texture->setTextSize(20);
     combo_box_file_path_texture->setVisible(false);
     combo_box_file_path_texture->setPosition(pos_x_combo_box_file_path_texture, pos_y_combo_box_file_path_texture);
     GUI.add(combo_box_file_path_texture);
 }
 
-void Combo_box_file_path_texture::set_options_texture() {
-    tgui::String str = combo_box_file_path_texture->getSelectedItem();
-    combo_box_file_path_texture->removeAllItems();
-    boost::filesystem::path path_to_folder("rectangle");   
-    for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
-        std::string item = i->path().filename().string();
-        combo_box_file_path_texture->addItem(item);
-    }
-    if (show_first_element) {
-        combo_box_file_path_texture->setSelectedItemByIndex(0);
-        show_first_element = false;
-    }
-    else { combo_box_file_path_texture->setSelectedItem(str);
-    }
+void Combo_box_file_path_texture::set_options_texture(std::string folder_figure) {
+
+        tgui::String str = combo_box_file_path_texture->getSelectedItem();
+        combo_box_file_path_texture->removeAllItems();
+        boost::filesystem::path path_to_folder(folder_figure);
+        for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
+            std::string item = i->path().filename().string();
+            combo_box_file_path_texture->addItem(item);
+        }
+        if (show_first_element) {
+            combo_box_file_path_texture->setSelectedItemByIndex(0);
+            show_first_element = false;
+        }
+        else {
+            combo_box_file_path_texture->setSelectedItem(str);
+        }
 }
+
+
 
 void Combo_box_file_path_texture::set_offset(std::string screen_size) {
     if (screen_size == "800x600") {
