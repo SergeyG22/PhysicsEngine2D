@@ -2,9 +2,10 @@
 #include <cstdio>
 #include <cstdarg>
 #include <cstring>
+#include <iostream>
 
 void b2GLDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-
+	
 	glColor4f(color.r, color.g, color.b, 0.5f);
 	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < vertexCount; i++) {
@@ -82,7 +83,6 @@ void b2GLDraw::DrawString(int x, int y, const char *string, ...) {
 }
 
 void b2GLDraw::DrawAABB(b2AABB* aabb, const b2Color& c) {
-
 	glColor4f(c.r, c.g, c.b, 1);
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(aabb->lowerBound.x * 30, aabb->lowerBound.y * 30);
@@ -93,13 +93,10 @@ void b2GLDraw::DrawAABB(b2AABB* aabb, const b2Color& c) {
 }
 
 void b2GLDraw::DrawTransform(const b2Transform& xf) {
-
 	b2Vec2 p1 = xf.p, p2;
 	const float k_axisScale = 0.0f;
-
 	p2 = p1 + k_axisScale * xf.q.GetXAxis();
 	DrawSegment(p1, p2, b2Color(1, 0, 0));
-
 	p2 = p1 + k_axisScale * xf.q.GetYAxis();
 	DrawSegment(p1, p2, b2Color(0, 1, 0));
 }

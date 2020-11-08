@@ -65,8 +65,7 @@ struct ObjectFactory {
   virtual float get_angle() =0;
 };
 
-
-	class Rectangle :public Physics_parameters, public ObjectFactory, public sf::Drawable {
+	class Rectangle :public Physics_parameters, public ObjectFactory {
 		float pos_x;
 		float pos_y;
 		float x_top_left;
@@ -87,7 +86,6 @@ struct ObjectFactory {
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
 		Rectangle(b2World&, float, float, float, float, b2BodyType bdef);
-		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 		Rectangle(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite() override {
 			sf::Vector2f vec;
@@ -98,7 +96,7 @@ struct ObjectFactory {
 		bool constructor_test(b2World& world, float h, float w, float x, float y, std::string);
 	};
 
-	class Circle :public Physics_parameters, public ObjectFactory, public sf::Drawable {
+	class Circle :public Physics_parameters, public ObjectFactory {
 		float pos_x;
 		float pos_y;
 		float x_top_left;
@@ -120,7 +118,6 @@ struct ObjectFactory {
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
 		Circle(b2World&, float,float,float, b2BodyType bdef);
-		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 		Circle(b2World& world, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite()  override {
 			sf::Vector2f vec;
@@ -130,9 +127,8 @@ struct ObjectFactory {
 		}
 	};
 }
-class TransferObjects {
 
-public:
+struct TransferObjects {
 sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
  bool can_be_moved = false;
  float deltaX=0;

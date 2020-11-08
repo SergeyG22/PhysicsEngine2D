@@ -165,6 +165,35 @@ void show_widgets(ObjectsEntities& entity, bool state) {
 
 void add_object_to_world(ObjectsEntities& entity) {
 
+    switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex())
+    {
+    case 0:
+    {
+        int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
+        int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
+
+        std::string path = "circle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
+        sf::Texture texture;                                   //temporary texture for getting width and height
+        if (!texture.loadFromFile(path)) {
+            std::cout << "The texture path is not correct\n";
+        }
+        sf::Vector2u object_size = texture.getSize();
+
+        switch (id_type_body)
+        {
+        case 1: {
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_staticBody, id_visible_object));
+            break;
+        }
+        case 2: {
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_dynamicBody, id_visible_object));
+            break;
+        }
+        }
+        break;
+    }
+    case 1:
+    {
         int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
         int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
 
@@ -174,18 +203,22 @@ void add_object_to_world(ObjectsEntities& entity) {
             std::cout << "The texture path is not correct\n";
         }
         sf::Vector2u object_size = texture.getSize();
-        
-        switch (id_type_body) 
+
+        switch (id_type_body)
         {
         case 1: {
             entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
             break;
-           }
+        }
         case 2: {
             entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
             break;
-           }
         }
+        }
+    }
+    }
+    
+        
 
 }
 
@@ -222,8 +255,7 @@ b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     }
 }
 
-
-void test(ObjectsEntities& entity) {
+void select_item(ObjectsEntities& entity) {
     switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex()) {
     case 0: {
         entity.combo_box_file_path_texture.set_options_texture("circle");
@@ -239,13 +271,28 @@ void test(ObjectsEntities& entity) {
 
 }
 
+void updating_list_with_mouse(ObjectsEntities& entity) {
+    switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex()) {
+    case 0: {
+        entity.combo_box_file_path_texture.set_options_texture("circle");
+        entity.combo_box_file_path_texture.combo_box_file_path_texture->setSelectedItem(entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem());
+        break;
+    }
+    case 1: {
+        entity.combo_box_file_path_texture.set_options_texture("rectangle");
+        entity.combo_box_file_path_texture.combo_box_file_path_texture->setSelectedItem(entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem());
+        break;
+    }
+    }
+}
 
 void events_called_by_widgets(ObjectsEntities& entity) { 
     entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
     entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
-    entity.combo_box_figure.combo_box_figure->onItemSelect(test,std::ref(entity));
+    entity.combo_box_figure.combo_box_figure->onItemSelect(select_item,std::ref(entity));
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse,std::ref(entity));
 }
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
@@ -261,7 +308,6 @@ int main()
     setlocale(LC_ALL, "russian");
     ObjectsEntities entity;
     events_called_by_widgets(entity);
-
 
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
@@ -463,31 +509,34 @@ int main()
 
         }
 
-
+        
     world.Step(1/120.f, 8, 3);
     entity.window.clear();    
-    entity.window.draw(entity.game_background);   
-    entity.physics_player.jump(world);
+    entity.window.draw(entity.game_background);    
+    entity.physics_player.jump(world);   
     entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-    
-        for (auto const& it : entity.objects_world.list_object) {
-            it->update_position(entity.window);        
-        }
-
-    if (debugging_view) {
-        world.DebugDraw();
+   
+    for (auto const& it : entity.objects_world.list_object) {
+        it->update_position(entity.window);
     }
-    entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
 
+    
+    
+
+    entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
+    
     if (entity.decorative_elements.menu_view) {
         entity.window.draw(entity.decorative_elements.get_sprite_fone());
     }
 
-   
-
+    if (debugging_view) {
+        world.DebugDraw();
+    }
 
     entity.GUI.draw();    
     entity.window.display();
+
+    
   }
     return 0;
 }
