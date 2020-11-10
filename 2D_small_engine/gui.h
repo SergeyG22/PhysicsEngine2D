@@ -1,15 +1,15 @@
 #pragma once
 #include "scene.h"
 
-struct Button_fullscreen_mode {
-    tgui::Button::Ptr button_fullscreen_mode;
-    tgui::Layout width_button_fullscreen = 260;
-    tgui::Layout height_button_fullscreen = 31;
-    tgui::Layout pos_x_button_fullscreen = 95;
-    tgui::Layout pos_y_button_fullscreen = 450;
+struct Button_screen_mode {
+    tgui::Button::Ptr button_screen_mode;
+    tgui::Layout width_button_screen = 260;
+    tgui::Layout height_button_screen = 31;
+    tgui::Layout pos_x_button_screen = 95;
+    tgui::Layout pos_y_button_screen = 450;
     bool enable_fullscreen = true;
     void set_offset(std::string);
-    Button_fullscreen_mode(tgui::GuiSFML&);
+    Button_screen_mode(tgui::GuiSFML&);
 };
 
 struct Button_download_fone {   
@@ -20,6 +20,16 @@ struct Button_download_fone {
     tgui::Layout pos_y_button_download_fone = 410;
     void set_offset(std::string);
     Button_download_fone(tgui::GuiSFML&);
+};
+
+struct Button_switching_fullscreen {
+    tgui::Button::Ptr button_switching_fullscreen;
+    tgui::Layout width_button_switching_fullscreen = 260;
+    tgui::Layout height_button_switching_fullscreen = 35;
+    tgui::Layout pos_x_button_switching_fullscreen = 95;
+    tgui::Layout pos_y_button_switching_fullscreen = 490;
+    void set_offset(std::string);
+    Button_switching_fullscreen(tgui::GuiSFML&);
 };
 
 struct Combo_box_invisible_object {
