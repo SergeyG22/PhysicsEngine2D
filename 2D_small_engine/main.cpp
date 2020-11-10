@@ -6,53 +6,49 @@
 #include <boost/filesystem.hpp>
 #include "gui.h"
 #include "scene.h"
-#include "window_view.h"
-#include "objects_entities.h"
 #include "b2GLDraw.h"
 
 
 std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},{1920,1080} };
-// b2Vec2 gravity(0.f, 9.8f);
-// b2World world (gravity);
-// uint32 FLAGS = 0;
- bool debugging_view = false;
-// const float SCALE = 30.f;
-// const float DEG = 57.29577f;
+b2Vec2 gravity(0.f, 9.8f);
+b2World world(gravity);
+uint32 FLAGS = 0;
+bool debugging_view = false;
+const float SCALE = 30.f;
+const float DEG = 57.29577f;
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
-//struct ObjectsEntities;
+struct ObjectsEntities;
 void TGUI_set_view(ObjectsEntities&);
 void TGUI_set_viewport(ObjectsEntities&);
 
-float system_timer(sf::Clock&clock){                       //used for binding to time (not to the processor)
+float system_timer(sf::Clock& clock) {                       //used for binding to time (not to the processor)
     float t = clock.getElapsedTime().asMicroseconds();
-    t = t/8000;
+    t = t / 8000;
     return t;
 }
 
-/*void enumeration_flags(uint32& flags) {
+void enumeration_flags(uint32& flags) {
     flags += b2Draw::e_shapeBit;
     flags += b2Draw::e_jointBit;
     flags += b2Draw::e_aabbBit;
     flags += b2Draw::e_pairBit;
     flags += b2Draw::e_centerOfMassBit;
 }
-*/
-/*
+
 struct ObjectsEntities {                                          //class for storing objects in the world
-    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar};
-    Window_view window_view;
+    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
     Decorative_elements decorative_elements;
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
-    Button_download_fone button_download_fone{ GUI};
+    Button_download_fone button_download_fone{ GUI };
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
-    Combo_box_invisible_object combo_box_invisible_object{ GUI};
-    Combo_box_figure combo_box_figure { GUI };
-    Button_download_texture button_download_texture { GUI };
+    Combo_box_invisible_object combo_box_invisible_object{ GUI };
+    Combo_box_figure combo_box_figure{ GUI };
+    Button_download_texture button_download_texture{ GUI };
     Combo_box_typebody combo_box_type_body{ GUI };
     Combo_box_file_path_texture combo_box_file_path_texture{ GUI };
     Label_settings label_settings{ GUI };
@@ -72,7 +68,6 @@ ObjectsEntities::ObjectsEntities() {
     enumeration_flags(FLAGS);
     debug_draw_instance.SetFlags(FLAGS);
 }
-*/
 
 void set_window_center_of_screen(ObjectsEntities& entity) {
     auto desktop = sf::VideoMode::getDesktopMode();
@@ -82,7 +77,7 @@ void set_window_center_of_screen(ObjectsEntities& entity) {
     entity.window.setPosition(pos);
 }
 
-void call_offset(ObjectsEntities& entity,std::string size) {
+void call_offset(ObjectsEntities& entity, std::string size) {
     entity.button_switching_fullscreen.set_offset(size);
     entity.button_screen_mode.set_offset(size);
     entity.button_download_fone.set_offset(size);
@@ -99,33 +94,33 @@ void call_offset(ObjectsEntities& entity,std::string size) {
 void set_screen_resolution(ObjectsEntities& entity) {
     tgui::String screen_size = entity.combo_box.combo_box->getSelectedItem();
     std::string size = screen_size.toAnsiString();
-       if (screen_size=="800x600") {
-                entity.window.setSize(scr_size[0]);
-                set_window_center_of_screen(entity); 
-                call_offset(entity,size);
-        }
-        
-         else if (screen_size=="1024x768") {
-                entity.window.setSize(scr_size[1]);
-                set_window_center_of_screen(entity);                
-                call_offset(entity,size);
-        }
-       
-        else if (screen_size=="1280x1024") {
-                entity.window.setSize(scr_size[2]);
-                set_window_center_of_screen(entity);
-                call_offset(entity,size);
-        }
-        else  if (screen_size=="1600x1200") {
-                entity.window.setSize(scr_size[3]);
-                set_window_center_of_screen(entity);
-                call_offset(entity,size);              
-        }
-        else if (screen_size=="1920x1080") {
-                entity.window.setSize(scr_size[4]);
-                set_window_center_of_screen(entity);
-                call_offset(entity,size);
-        }   
+    if (screen_size == "800x600") {
+        entity.window.setSize(scr_size[0]);
+        set_window_center_of_screen(entity);
+        call_offset(entity, size);
+    }
+
+    else if (screen_size == "1024x768") {
+        entity.window.setSize(scr_size[1]);
+        set_window_center_of_screen(entity);
+        call_offset(entity, size);
+    }
+
+    else if (screen_size == "1280x1024") {
+        entity.window.setSize(scr_size[2]);
+        set_window_center_of_screen(entity);
+        call_offset(entity, size);
+    }
+    else  if (screen_size == "1600x1200") {
+        entity.window.setSize(scr_size[3]);
+        set_window_center_of_screen(entity);
+        call_offset(entity, size);
+    }
+    else if (screen_size == "1920x1080") {
+        entity.window.setSize(scr_size[4]);
+        set_window_center_of_screen(entity);
+        call_offset(entity, size);
+    }
 }
 
 void get_supported_fullscreen_modes() {
@@ -149,33 +144,33 @@ void set_fullscreen_viewport(ObjectsEntities& entity) {
         TGUI_set_viewport(entity);
     }
     else {
-            entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
-            set_screen_resolution(entity);
-            entity.button_screen_mode.button_screen_mode->setText(L"Экранный режим");
-            entity.button_screen_mode.enable_fullscreen = true;
-            TGUI_set_view(entity);
-            entity.combo_box.combo_box->setEnabled(true);
+        entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
+        set_screen_resolution(entity);
+        entity.button_screen_mode.button_screen_mode->setText(L"Экранный режим");
+        entity.button_screen_mode.enable_fullscreen = true;
+        TGUI_set_view(entity);
+        entity.combo_box.combo_box->setEnabled(true);
     }
 
- // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
+    // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
 }
 
 void set_new_fone(ObjectsEntities& entity) {
-    entity.game_background.upload_background("background/"+entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
+    entity.game_background.upload_background("background/" + entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
 }
 
 void show_widgets(ObjectsEntities& entity, bool state) {
-        entity.decorative_elements.menu_view = state;
-        entity.button_download_texture.button_download_texture->setVisible(state);
-        entity.button_download_fone.button_download_fone->setVisible(state);
-        entity.button_screen_mode.button_screen_mode->setVisible(state);
-        entity.button_switching_fullscreen.button_switching_fullscreen->setVisible(state);
-        entity.combo_box.combo_box->setVisible(state);
-        entity.combo_box_figure.combo_box_figure->setVisible(state);
-        entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
-        entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
-        entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
-        entity.combo_box_type_body.combo_box_type_body->setVisible(state);
+    entity.decorative_elements.menu_view = state;
+    entity.button_download_texture.button_download_texture->setVisible(state);
+    entity.button_download_fone.button_download_fone->setVisible(state);
+    entity.button_screen_mode.button_screen_mode->setVisible(state);
+    entity.button_switching_fullscreen.button_switching_fullscreen->setVisible(state);
+    entity.combo_box.combo_box->setVisible(state);
+    entity.combo_box_figure.combo_box_figure->setVisible(state);
+    entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
+    entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
+    entity.combo_box_type_body.combo_box_type_body->setVisible(state);
 }
 
 void add_object_to_world(ObjectsEntities& entity) {
@@ -197,11 +192,11 @@ void add_object_to_world(ObjectsEntities& entity) {
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(entity.world, object_size.x, object_size.y, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(entity.world, object_size.x, object_size.y, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -222,41 +217,36 @@ void add_object_to_world(ObjectsEntities& entity) {
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(entity.world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(entity.world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
     }
     }
-    
-        
+
+
 
 }
 
-/*
-sf::Vector2f get_size_sprite_with_scale(std::list<gobj::ObjectFactory*>::iterator::value_type it){
+sf::Vector2f get_size_sprite_with_scale(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     sf::Vector2f vec;
     vec.x = it->get_texture().getSize().x * it->get_sprite().getScale().x;
     vec.y = it->get_texture().getSize().y * it->get_sprite().getScale().y;
     return vec;
-    
 }
-*/
 
-/*
-void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it,b2Vec2 pos) {
+void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos) {
 
     if (get_typename(it) == "class gobj::Rectangle") {
         dynamic_cast<gobj::Rectangle*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
         dynamic_cast<gobj::Rectangle*>(it)->bdef_rect.position.Set(pos.x, pos.y);
         dynamic_cast<gobj::Rectangle*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle*>(it)->bdef_rect);
         dynamic_cast<gobj::Rectangle*>(it)->body_rect->CreateFixture(&dynamic_cast<gobj::Rectangle*>(it)->bshape_rect, 5.0);
-    } 
+    }
     else if (get_typename(it) == "class gobj::Circle") {
         dynamic_cast<gobj::Circle*>(it)->bshape_circle.m_radius = get_size_sprite_with_scale(it).x / 2 / SCALE;
         dynamic_cast<gobj::Circle*>(it)->bdef_circle.position.Set(pos.x, pos.y);
@@ -264,7 +254,6 @@ void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it,b2Vec2
         dynamic_cast<gobj::Circle*>(it)->body_circle->CreateFixture(&dynamic_cast<gobj::Circle*>(it)->bshape_circle, 5.0);
     }
 }
-*/
 
 b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
 
@@ -288,7 +277,7 @@ void select_item(ObjectsEntities& entity) {
         entity.combo_box_file_path_texture.combo_box_file_path_texture->setSelectedItemByIndex(0);
         break;
     }
-   }
+    }
 
 }
 
@@ -325,36 +314,35 @@ void TGUI_set_viewport(ObjectsEntities& entity) {
     entity.GUI.setAbsoluteViewport(rect);
 }
 
-void enable_fullscreen_mode(ObjectsEntities& entity) { 
-      entity.window.setSize(scr_size[0]);
-      set_window_center_of_screen(entity);
-      call_offset(entity, "800x600");
-      entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
-      TGUI_set_view(entity);
-      entity.combo_box.combo_box->setEnabled(false);
+void enable_fullscreen_mode(ObjectsEntities& entity) {
+    entity.window.setSize(scr_size[0]);
+    set_window_center_of_screen(entity);
+    call_offset(entity, "800x600");
+    entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
+    TGUI_set_view(entity);
+    entity.combo_box.combo_box->setEnabled(false);
 }
 
-void events_called_by_widgets(ObjectsEntities& entity) { 
+void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
     entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
-    entity.combo_box_figure.combo_box_figure->onItemSelect(select_item,std::ref(entity));
-    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse,std::ref(entity));
-    entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode,std::ref(entity));
+    entity.combo_box_figure.combo_box_figure->onItemSelect(select_item, std::ref(entity));
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
+    entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
 }
 
-/*
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     std::string str(typeid(*it).name());
     return str;
 }
-*/
+
 
 
 
 int main()
-{        
+{
     setlocale(LC_ALL, "russian");
     ObjectsEntities entity;
     events_called_by_widgets(entity);
@@ -365,32 +353,32 @@ int main()
         while (entity.window.pollEvent(event)) {
             entity.GUI.handleEvent(event);            // event for TGUI
             entity.physics_player.keyboard_interaction(entity.graphics_player);
-                if (event.type == sf::Event::MouseButtonPressed) {
-                    if (event.key.code == sf::Mouse::Left) {
-                        for (auto const& it : entity.objects_world.list_object) {
-                            sf::Vector2f mouse_coord;
-                            mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
-                            mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                            if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
-                                entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite().getPosition().x;
-                                entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite().getPosition().y;
-                                entity.transfer_objects.can_be_moved = true;
-                                
-                                if (get_typename(it) == "class gobj::Rectangle") {
-                                     dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(0.0);
-                                 }
-                                else if (get_typename(it) == "class gobj::Circle") {
-                                    dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(0.0);
-                                }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Left) {
+                    for (auto const& it : entity.objects_world.list_object) {
+                        sf::Vector2f mouse_coord;
+                        mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                        mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                        if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                            entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite().getPosition().x;
+                            entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite().getPosition().y;
+                            entity.transfer_objects.can_be_moved = true;
+
+                            if (get_typename(it) == "class gobj::Rectangle") {
+                                dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(0.0);
+                            }
+                            else if (get_typename(it) == "class gobj::Circle") {
+                                dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(0.0);
                             }
                         }
                     }
                 }
-                             
+            }
+
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.key.code == sf::Mouse::Left) {
                     entity.transfer_objects.can_be_moved = false;
-                    
+
                     for (auto const& it : entity.objects_world.list_object) {
 
                         if (get_typename(it) == "class gobj::Rectangle") {
@@ -423,43 +411,43 @@ int main()
 
             if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                      for (auto const& it : entity.objects_world.list_object) {
+                    for (auto const& it : entity.objects_world.list_object) {
                         if (it->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
-                               if (event.mouseWheelScroll.delta > 0) {
-                                  sf::Vector2f scale = it->get_sprite().getScale();
-                                  scale.x += 0.1;
-                                  scale.y += 0.1;
-                                  it->get_sprite().setScale(scale);                                                               
-                                  b2Vec2 pos = get_position(it);
-                                  if (get_typename(it) == "class gobj::Rectangle") {
-                                      entity.world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
-                                  }
-                                  else if (get_typename(it) == "class gobj::Circle") {
-                                      entity.world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
-                                  }
+                            if (event.mouseWheelScroll.delta > 0) {
+                                sf::Vector2f scale = it->get_sprite().getScale();
+                                scale.x += 0.1;
+                                scale.y += 0.1;
+                                it->get_sprite().setScale(scale);
+                                b2Vec2 pos = get_position(it);
+                                if (get_typename(it) == "class gobj::Rectangle") {
+                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+                                }
+                                else if (get_typename(it) == "class gobj::Circle") {
+                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
+                                }
 
-                                  entity.create_body(it,pos);    
-                               }
-                               else if (event.mouseWheelScroll.delta < 0) {
-                                   sf::Vector2f scale = it->get_sprite().getScale();
-                                   scale.x -= 0.1;
-                                   scale.y -= 0.1;
-                                   it->get_sprite().setScale(scale);
-                                   b2Vec2 pos = get_position(it);
-                                   if (get_typename(it) == "class gobj::Rectangle") {
-                                       entity.world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
-                                   }
-                                   else if (get_typename(it) == "class gobj::Circle") {
-                                       entity.world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
-                                   }                               
-                                   entity.create_body(it,pos);
-                               }
+                                create_body(it, pos);
+                            }
+                            else if (event.mouseWheelScroll.delta < 0) {
+                                sf::Vector2f scale = it->get_sprite().getScale();
+                                scale.x -= 0.1;
+                                scale.y -= 0.1;
+                                it->get_sprite().setScale(scale);
+                                b2Vec2 pos = get_position(it);
+                                if (get_typename(it) == "class gobj::Rectangle") {
+                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+                                }
+                                else if (get_typename(it) == "class gobj::Circle") {
+                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
+                                }
+                                create_body(it, pos);
+                            }
                         }
 
-                      }
-                  }
+                    }
+                }
 
-              }
+            }
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Middle) {
@@ -467,7 +455,7 @@ int main()
                         sf::Vector2f mouse_coord;
                         mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
                         mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                        if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x,mouse_coord.y)) {                          
+                        if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
                             it->update_position(entity.window, it->set_angle(6));
                         }
 
@@ -482,13 +470,13 @@ int main()
                         if (entity.objects_world.get_object_world(i)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                             if (entity.objects_world.get_object_world(i)->get_sprite().getColor() == sf::Color::Red) {
                                 if (get_typename(entity.objects_world.get_object_world(i)) == "class gobj::Rectangle") {
-                                    entity.world.DestroyBody(dynamic_cast<gobj::Rectangle*>(entity.objects_world.get_object_world(i))->body_rect); // dynamic maybe remove
+                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(entity.objects_world.get_object_world(i))->body_rect); // dynamic maybe remove
                                     auto it = entity.objects_world.list_object.begin();
                                     std::advance(it, i);
                                     entity.objects_world.list_object.erase(it);
                                 }
                                 else if (get_typename(entity.objects_world.get_object_world(i)) == "class gobj::Circle") {
-                                    entity.world.DestroyBody(dynamic_cast<gobj::Circle*>(entity.objects_world.get_object_world(i))->body_circle); // dynamic maybe remove
+                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(entity.objects_world.get_object_world(i))->body_circle); // dynamic maybe remove
                                     auto it = entity.objects_world.list_object.begin();
                                     std::advance(it, i);
                                     entity.objects_world.list_object.erase(it);
@@ -510,11 +498,11 @@ int main()
                     }
                 }
             }
-  
+
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tilde) {
                     if (entity.decorative_elements.menu_view) {
-                        show_widgets(entity,false);
+                        show_widgets(entity, false);
                     }
                     else {
                         show_widgets(entity, true);
@@ -522,25 +510,25 @@ int main()
                 }
 
             }
-                     
+
             if (event.type == sf::Event::Closed)
                 entity.window.close();
         }
 
-        if (entity.transfer_objects.can_be_moved) {           
+        if (entity.transfer_objects.can_be_moved) {
             for (auto const& it : entity.objects_world.list_object) {
-                 sf::Vector2f coord;
-                 coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
-                 coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                 sf::Vector2f del;
-                 del.x = entity.transfer_objects.deltaX;
-                 del.y = entity.transfer_objects.deltaY;
+                sf::Vector2f coord;
+                coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                sf::Vector2f del;
+                del.x = entity.transfer_objects.deltaX;
+                del.y = entity.transfer_objects.deltaY;
 
-                if (it->get_sprite().getGlobalBounds().contains(coord.x,coord.y)) {
+                if (it->get_sprite().getGlobalBounds().contains(coord.x, coord.y)) {
                     it->get_sprite().setPosition(coord.x - del.x, coord.y - del.y);
                     b2Vec2 delta;
-                    delta.x = (coord.x - del.x) / SCALE; 
-                    delta.y = (coord.y - del.y) / SCALE; 
+                    delta.x = (coord.x - del.x) / SCALE;
+                    delta.y = (coord.y - del.y) / SCALE;
                     b2Vec2 vector;
                     vector.x = delta.x - it->upperleft_coord_sprite().x;
                     vector.y = delta.y - it->upperleft_coord_sprite().y;
@@ -559,37 +547,38 @@ int main()
 
         }
 
-        
-    entity.world.Step(1/120.f, 8, 3);
-    entity.window.clear();    
-    entity.window.draw(entity.game_background);    
-    entity.physics_player.jump(entity.world);   
-    entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-   
-    for (auto const& it : entity.objects_world.list_object) {
-        it->update_position(entity.window);
+
+        world.Step(1 / 120.f, 8, 3);
+        entity.window.clear();
+        entity.window.draw(entity.game_background);
+        entity.physics_player.jump(world);
+        entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
+
+        for (auto const& it : entity.objects_world.list_object) {
+            it->update_position(entity.window);
+        }
+
+
+
+
+        entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
+
+        if (entity.decorative_elements.menu_view) {
+            entity.window.draw(entity.decorative_elements.get_sprite_fone());
+        }
+
+        if (debugging_view) {
+            world.DebugDraw();
+        }
+
+        entity.GUI.draw();
+        entity.window.display();
+
+
     }
-
-    
-    
-
-    entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
-    
-    if (entity.decorative_elements.menu_view) {
-        entity.window.draw(entity.decorative_elements.get_sprite_fone());
-    }
-
-    if (debugging_view) {
-        entity.world.DebugDraw();
-    }
-
-    entity.GUI.draw();    
-    entity.window.display();
-
-    
-  }
     return 0;
 }
+
 
 
 

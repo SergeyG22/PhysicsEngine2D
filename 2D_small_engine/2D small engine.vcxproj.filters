@@ -27,12 +27,6 @@
     <ClCompile Include="gui.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="window_view.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="objects_entities.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="b2GLDraw.h">
@@ -46,12 +40,6 @@
     </ClInclude>
     <ClInclude Include="gui.h">
       <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="window_view.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="objects_entities.h">
-      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
