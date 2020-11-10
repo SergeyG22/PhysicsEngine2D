@@ -7,7 +7,7 @@
 #include "gui.h"
 #include "scene.h"
 #include "b2GLDraw.h"
-//
+
 
 std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},{1920,1080} };
 b2Vec2 gravity(0.f, 9.8f);
