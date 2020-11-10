@@ -18,6 +18,9 @@ std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},
  const float DEG = 57.29577f;
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
+struct ObjectsEntities;
+void TGUI_set_view(ObjectsEntities&);
+void TGUI_set_viewport(ObjectsEntities&);
 
 float system_timer(sf::Clock&clock){                       //used for binding to time (not to the processor)
     float t = clock.getElapsedTime().asMicroseconds();
@@ -34,12 +37,13 @@ void enumeration_flags(uint32& flags) {
 }
 
 struct ObjectsEntities {                                          //class for storing objects in the world
-    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
+    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar};
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
     Decorative_elements decorative_elements;
-    Button_fullscreen_mode button_fullscreen_mode{ GUI };
+    Button_switching_fullscreen button_switching_fullscreen{ GUI };
+    Button_screen_mode button_screen_mode{ GUI };
     Button_download_fone button_download_fone{ GUI};
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
     Combo_box_invisible_object combo_box_invisible_object{ GUI};
@@ -74,7 +78,8 @@ void set_window_center_of_screen(ObjectsEntities& entity) {
 }
 
 void call_offset(ObjectsEntities& entity,std::string size) {
-    entity.button_fullscreen_mode.set_offset(size);
+    entity.button_switching_fullscreen.set_offset(size);
+    entity.button_screen_mode.set_offset(size);
     entity.button_download_fone.set_offset(size);
     entity.combo_box_file_path_fone.set_offset(size);
     entity.combo_box_invisible_object.set_offset(size);
@@ -89,13 +94,13 @@ void call_offset(ObjectsEntities& entity,std::string size) {
 void set_screen_resolution(ObjectsEntities& entity) {
     tgui::String screen_size = entity.combo_box.combo_box->getSelectedItem();
     std::string size = screen_size.toAnsiString();
-        if (screen_size=="800x600") {
+       if (screen_size=="800x600") {
                 entity.window.setSize(scr_size[0]);
                 set_window_center_of_screen(entity); 
                 call_offset(entity,size);
         }
         
-        else if (screen_size=="1024x768") {
+         else if (screen_size=="1024x768") {
                 entity.window.setSize(scr_size[1]);
                 set_window_center_of_screen(entity);                
                 call_offset(entity,size);
@@ -118,22 +123,33 @@ void set_screen_resolution(ObjectsEntities& entity) {
         }   
 }
 
+void get_supported_fullscreen_modes() {
+    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
+    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
+        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
+    }
+}
+
 void set_fullscreen_viewport(ObjectsEntities& entity) {
 
-    if (entity.button_fullscreen_mode.enable_fullscreen) {
-        entity.window.create(sf::VideoMode(1900, 1080), "2D engine", sf::Style::Fullscreen);
+    if (entity.button_screen_mode.enable_fullscreen) {
+        entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
         sf::View view_port;
         view_port.setViewport(sf::FloatRect(0.f, 0.f, 1.25f, 1.65f));
         entity.window.setView(view_port);
         set_screen_resolution(entity);
-        entity.button_fullscreen_mode.button_fullscreen_mode->setText(L"Оконный режим");
-        entity.button_fullscreen_mode.enable_fullscreen = false;
+        entity.button_screen_mode.button_screen_mode->setText(L"Оконный режим");
+        entity.button_screen_mode.enable_fullscreen = false;
+        entity.combo_box.combo_box->setEnabled(true);
+        TGUI_set_viewport(entity);
     }
     else {
-        entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
-        set_screen_resolution(entity);
-        entity.button_fullscreen_mode.button_fullscreen_mode->setText(L"Экранный режим");
-        entity.button_fullscreen_mode.enable_fullscreen = true;
+            entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
+            set_screen_resolution(entity);
+            entity.button_screen_mode.button_screen_mode->setText(L"Экранный режим");
+            entity.button_screen_mode.enable_fullscreen = true;
+            TGUI_set_view(entity);
+            entity.combo_box.combo_box->setEnabled(true);
     }
 
  // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
@@ -143,24 +159,18 @@ void set_new_fone(ObjectsEntities& entity) {
     entity.game_background.upload_background("background/"+entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
 }
 
-void get_supported_fullscreen_modes() {
-    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
-    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
-        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
-    }
-}
-
 void show_widgets(ObjectsEntities& entity, bool state) {
-    entity.decorative_elements.menu_view = state;
-    entity.button_download_texture.button_download_texture->setVisible(state);
-    entity.button_download_fone.button_download_fone->setVisible(state);
-    entity.button_fullscreen_mode.button_fullscreen_mode->setVisible(state);
-    entity.combo_box.combo_box->setVisible(state);
-    entity.combo_box_figure.combo_box_figure->setVisible(state);
-    entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
-    entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
-    entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
-    entity.combo_box_type_body.combo_box_type_body->setVisible(state);
+        entity.decorative_elements.menu_view = state;
+        entity.button_download_texture.button_download_texture->setVisible(state);
+        entity.button_download_fone.button_download_fone->setVisible(state);
+        entity.button_screen_mode.button_screen_mode->setVisible(state);
+        entity.button_switching_fullscreen.button_switching_fullscreen->setVisible(state);
+        entity.combo_box.combo_box->setVisible(state);
+        entity.combo_box_figure.combo_box_figure->setVisible(state);
+        entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
+        entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
+        entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
+        entity.combo_box_type_body.combo_box_type_body->setVisible(state);
 }
 
 void add_object_to_world(ObjectsEntities& entity) {
@@ -286,13 +296,41 @@ void updating_list_with_mouse(ObjectsEntities& entity) {
     }
 }
 
+void TGUI_set_view(ObjectsEntities& entity) {
+    tgui::FloatRect rect;
+    tgui::Vector2f view_port_size;
+    view_port_size.x = 1920;
+    view_port_size.y = 1080;
+    rect.setSize(view_port_size);
+    entity.GUI.setAbsoluteView(rect);
+}
+
+void TGUI_set_viewport(ObjectsEntities& entity) {
+    tgui::FloatRect rect;
+    tgui::Vector2f view_port_size;
+    view_port_size.x = 1920;
+    view_port_size.y = 1080;
+    rect.setSize(view_port_size);
+    entity.GUI.setAbsoluteViewport(rect);
+}
+
+void enable_fullscreen_mode(ObjectsEntities& entity) { 
+      entity.window.setSize(scr_size[0]);
+      set_window_center_of_screen(entity);
+      call_offset(entity, "800x600");
+      entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
+      TGUI_set_view(entity);
+      entity.combo_box.combo_box->setEnabled(false);
+}
+
 void events_called_by_widgets(ObjectsEntities& entity) { 
-    entity.button_fullscreen_mode.button_fullscreen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
+    entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
     entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.combo_box_figure.combo_box_figure->onItemSelect(select_item,std::ref(entity));
     entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse,std::ref(entity));
+    entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode,std::ref(entity));
 }
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {

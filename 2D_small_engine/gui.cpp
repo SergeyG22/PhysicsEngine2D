@@ -5,45 +5,86 @@
 #include "gui.h"
 
 
-Button_fullscreen_mode::Button_fullscreen_mode(tgui::GuiSFML& GUI) {
-    button_fullscreen_mode = tgui::Button::create();
-    button_fullscreen_mode->setVisible(false);
-    button_fullscreen_mode->setTextSize(20);
-    button_fullscreen_mode->setPosition(pos_x_button_fullscreen, pos_y_button_fullscreen);
-    button_fullscreen_mode->setText(L"Ёкранный режим");
-    button_fullscreen_mode->setSize(width_button_fullscreen, height_button_fullscreen);
-    GUI.add(button_fullscreen_mode);
+Button_screen_mode::Button_screen_mode(tgui::GuiSFML& GUI) {
+    button_screen_mode = tgui::Button::create();
+    button_screen_mode->setVisible(false);
+    button_screen_mode->setTextSize(20);
+    button_screen_mode->setPosition(pos_x_button_screen, pos_y_button_screen);
+    button_screen_mode->setText(L"Ёкранный режим");
+    button_screen_mode->setSize(width_button_screen, height_button_screen);
+    GUI.add(button_screen_mode);
 }
 
-void Button_fullscreen_mode::set_offset(std::string screen_size) {
+void Button_screen_mode::set_offset(std::string screen_size) {
     if (screen_size == "800x600") {
-        button_fullscreen_mode->setSize(width_button_fullscreen,height_button_fullscreen);
-        button_fullscreen_mode->setPosition(pos_x_button_fullscreen, pos_y_button_fullscreen);
-        button_fullscreen_mode->setTextSize(20);
+        button_screen_mode->setSize(width_button_screen,height_button_screen);
+        button_screen_mode->setPosition(pos_x_button_screen, pos_y_button_screen);
+        button_screen_mode->setTextSize(20);
     }
     else if (screen_size == "1024x768") {
-        button_fullscreen_mode->setSize(width_button_fullscreen * 1.28, height_button_fullscreen * 1.28);
-        button_fullscreen_mode->setPosition(pos_x_button_fullscreen * 1.28, pos_y_button_fullscreen * 1.28);
-        button_fullscreen_mode->setTextSize(20 * 1.28);
+        button_screen_mode->setSize(width_button_screen * 1.28, height_button_screen * 1.28);
+        button_screen_mode->setPosition(pos_x_button_screen * 1.28, pos_y_button_screen * 1.28);
+        button_screen_mode->setTextSize(20 * 1.28);
     }
     else if (screen_size == "1280x1024") {
-        button_fullscreen_mode->setSize(width_button_fullscreen * 1.6, height_button_fullscreen * 1.7024);
-        button_fullscreen_mode->setPosition(pos_x_button_fullscreen * 1.6, pos_y_button_fullscreen * 1.7024);
-        button_fullscreen_mode->setTextSize(20 * 1.65);
+        button_screen_mode->setSize(width_button_screen * 1.6, height_button_screen * 1.7024);
+        button_screen_mode->setPosition(pos_x_button_screen * 1.6, pos_y_button_screen * 1.7024);
+        button_screen_mode->setTextSize(20 * 1.65);
     }
     else  if (screen_size == "1600x1200") {
-        button_fullscreen_mode->setSize(width_button_fullscreen * 2, height_button_fullscreen * 1.9918);
-        button_fullscreen_mode->setPosition(pos_x_button_fullscreen * 2, pos_y_button_fullscreen * 1.9918);
-        button_fullscreen_mode->setTextSize(20 * 2);
+        button_screen_mode->setSize(width_button_screen * 2, height_button_screen * 1.9918);
+        button_screen_mode->setPosition(pos_x_button_screen * 2, pos_y_button_screen * 1.9918);
+        button_screen_mode->setTextSize(20 * 2);
     }
     else if (screen_size == "1920x1080") {
-        button_fullscreen_mode->setSize(width_button_fullscreen * 2.4, height_button_fullscreen * 1.79262);
-        button_fullscreen_mode->setPosition(pos_x_button_fullscreen * 2.4, pos_y_button_fullscreen * 1.79262);
-        button_fullscreen_mode->setTextSize(20 * 2.1);
+        button_screen_mode->setSize(width_button_screen * 2.4, height_button_screen * 1.79262);
+        button_screen_mode->setPosition(pos_x_button_screen * 2.4, pos_y_button_screen * 1.79262);
+        button_screen_mode->setTextSize(20 * 2.1);
     }
+
+
     // 1.28, 1.6 , 2, 2.4 - the scale factor is obtained by dividing one resolution by another:
     // 1024/800 = 1.28   
     // 786/600 = 1.28 
+}
+
+Button_switching_fullscreen::Button_switching_fullscreen(tgui::GuiSFML& GUI) {
+    button_switching_fullscreen = tgui::Button::create();
+    button_switching_fullscreen->setVisible(false);
+    button_switching_fullscreen->setTextSize(20);
+    button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen, pos_y_button_switching_fullscreen);
+    button_switching_fullscreen->setText(L"ѕолноэкранный режим");
+    button_switching_fullscreen->setSize(width_button_switching_fullscreen, height_button_switching_fullscreen);
+    GUI.add(button_switching_fullscreen);
+}
+
+void Button_switching_fullscreen::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        button_switching_fullscreen->setSize(width_button_switching_fullscreen, height_button_switching_fullscreen);
+        button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen, pos_y_button_switching_fullscreen);
+        button_switching_fullscreen->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        button_switching_fullscreen->setSize(width_button_switching_fullscreen * 1.28, height_button_switching_fullscreen * 1.28);
+        button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen * 1.28, pos_y_button_switching_fullscreen * 1.28);
+        button_switching_fullscreen->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        button_switching_fullscreen->setSize(width_button_switching_fullscreen * 1.6, height_button_switching_fullscreen * 1.7024);
+        button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen * 1.6, pos_y_button_switching_fullscreen * 1.7024);
+        button_switching_fullscreen->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        button_switching_fullscreen->setSize(width_button_switching_fullscreen * 2, height_button_switching_fullscreen * 1.9918);
+        button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen * 2, pos_y_button_switching_fullscreen * 1.9918);
+        button_switching_fullscreen->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        button_switching_fullscreen->setSize(width_button_switching_fullscreen * 2.4, height_button_switching_fullscreen * 1.79262);
+        button_switching_fullscreen->setPosition(pos_x_button_switching_fullscreen * 2.4, pos_y_button_switching_fullscreen * 1.79262);
+        button_switching_fullscreen->setTextSize(20 * 2.1);
+    }
+
 }
 
 Button_download_fone::Button_download_fone(tgui::GuiSFML& GUI) {
@@ -82,6 +123,7 @@ void Button_download_fone::set_offset(std::string screen_size) {
         button_download_fone->setPosition(pos_x_button_download_fone * 2.4, pos_y_button_download_fone * 1.7962);
         button_download_fone->setTextSize(20 * 2.1);
     }
+
 }
 
 Combo_box_filepath_fone::Combo_box_filepath_fone(tgui::GuiSFML& GUI) {
@@ -162,6 +204,8 @@ void Combo_box_filepath_fone::set_offset(std::string screen_size) {
         combo_box_file_path_fone->setTextSize(20 * 2.1);
         combo_box_file_path_fone->setPosition(pos_x_combo_box_file_path_fone * 2.4, pos_y_combo_box_file_path_fone * 1.79262);
     }
+
+
 }
 
 void Combo_box_filepath_fone::set_options_fone() {
@@ -254,6 +298,7 @@ void Button_download_texture::set_offset(std::string screen_size) {
         button_download_texture->setPosition(pos_x_button_download * 2.4,pos_y_button_download * 1.79262);
         button_download_texture->setTextSize(20 * 2.1);
     }
+
 }
 
 Combo_box_typebody::Combo_box_typebody(tgui::GuiSFML& GUI) {
@@ -295,6 +340,7 @@ void Combo_box_typebody::set_offset(std::string screen_size) {
         combo_box_type_body->setPosition(pos_x_combo_box_typebody * 2.4, pos_y_combo_box_typebody * 1.79262);
         combo_box_type_body->setTextSize(20 * 2.1);
     }
+
 }
 
 Combo_box_file_path_texture::Combo_box_file_path_texture(tgui::GuiSFML& GUI) {
@@ -326,8 +372,6 @@ void Combo_box_file_path_texture::set_options_texture(std::string folder_figure)
         }
 }
 
-
-
 void Combo_box_file_path_texture::set_offset(std::string screen_size) {
     if (screen_size == "800x600") {
         combo_box_file_path_texture->setSize(width_combo_box_file_path_texture, height_combo_box_file_path_texture);
@@ -354,6 +398,7 @@ void Combo_box_file_path_texture::set_offset(std::string screen_size) {
         combo_box_file_path_texture->setTextSize(20 * 2.1);
         combo_box_file_path_texture->setPosition(pos_x_combo_box_file_path_texture * 2.4, pos_y_combo_box_file_path_texture * 1.79262);
     }
+
 }
 
 Label_settings::Label_settings(tgui::GuiSFML& GUI) {
@@ -386,6 +431,7 @@ void Label_settings::set_offset(std::string screen_size) {
         label_settings->setTextSize(30 * 2.1);
         label_settings->setPosition(pos_x_label_settings * 2.4, pos_y_label_settings * 1.79262);
     }
+
 }
 
 Combo_box::Combo_box(tgui::GuiSFML& GUI) {
@@ -430,6 +476,7 @@ void Combo_box::set_offset(std::string screen_size) {
         combo_box->setPosition(pos_x_combo_box * 2.4, pos_y_combo_box * 1.79262);
         combo_box->setTextSize(20 * 2.1);
     }
+
 
 }
 

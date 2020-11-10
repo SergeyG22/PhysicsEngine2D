@@ -4,8 +4,6 @@
 #include "scene.h"
 
 
-
-
 GameBackground::GameBackground() {
 	upload_background("background/fone.png");
 	background_sprite.setTexture(background_texture);
