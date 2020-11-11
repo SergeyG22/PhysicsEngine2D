@@ -41,5 +41,8 @@
     <ClInclude Include="gui.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="window_function.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

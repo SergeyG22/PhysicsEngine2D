@@ -7,43 +7,23 @@
 #include "gui.h"
 #include "scene.h"
 #include "b2GLDraw.h"
-
+#include "window_function.h"
 
 std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},{1920,1080} };
-b2Vec2 gravity(0.f, 9.8f);
-b2World world(gravity);
-uint32 FLAGS = 0;
 bool debugging_view = false;
-const float SCALE = 30.f;
-const float DEG = 57.29577f;
 
-std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
-struct ObjectsEntities;
-struct Window_view;
-
-void TGUI_set_view(ObjectsEntities&);
-void TGUI_set_viewport(ObjectsEntities&);
-
-
-float system_timer(sf::Clock& clock) {                       //used for binding to time (not to the processor)
-    float t = clock.getElapsedTime().asMicroseconds();
-    t = t / 8000;
-    return t;
-}
-
-void enumeration_flags(uint32& flags) {
-    flags += b2Draw::e_shapeBit;
-    flags += b2Draw::e_jointBit;
-    flags += b2Draw::e_aabbBit;
-    flags += b2Draw::e_pairBit;
-    flags += b2Draw::e_centerOfMassBit;
-}
-
-
-struct Window_view {
-    void set_window_center_of_screen(ObjectsEntities&);
-    void get_supported_fullscreen_modes();
-};
+extern void enumeration_flags(uint32& flags);
+extern void get_supported_fullscreen_modes();
+extern float system_timer(sf::Clock& clock);
+extern sf::Vector2f get_size_sprite_with_scale(std::list<gobj::ObjectFactory*>::iterator::value_type it);
+extern void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos);
+extern std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
+extern b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it);
+extern const float SCALE;
+extern const float DEG;
+extern b2Vec2 gravity;
+extern b2World world;
+extern uint32 FLAGS;
 
 
 struct ObjectsEntities {                                          //class for storing objects in the world
@@ -51,7 +31,6 @@ struct ObjectsEntities {                                          //class for st
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
-    Window_view window_view;
     Decorative_elements decorative_elements;
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
@@ -80,7 +59,8 @@ ObjectsEntities::ObjectsEntities() {
     debug_draw_instance.SetFlags(FLAGS);
 }
 
-void Window_view::set_window_center_of_screen(ObjectsEntities& entity) {
+
+void set_window_center_of_screen(ObjectsEntities& entity) {
     auto desktop = sf::VideoMode::getDesktopMode();
     sf::Vector2i pos;
     pos.x = desktop.width / 2 - entity.window.getSize().x / 2;
@@ -88,12 +68,9 @@ void Window_view::set_window_center_of_screen(ObjectsEntities& entity) {
     entity.window.setPosition(pos);
 }
 
-void Window_view::get_supported_fullscreen_modes() {
-    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
-    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
-        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
-    }
-}
+void TGUI_set_view(ObjectsEntities&);
+void TGUI_set_viewport(ObjectsEntities&);
+
 
 void call_offset(ObjectsEntities& entity, std::string size) {
     entity.button_switching_fullscreen.set_offset(size);
@@ -111,7 +88,7 @@ void call_offset(ObjectsEntities& entity, std::string size) {
 
 void enable_fullscreen_mode(ObjectsEntities& entity) {
     entity.window.setSize(scr_size[0]);
-    entity.window_view.set_window_center_of_screen(entity);
+    set_window_center_of_screen(entity);
     call_offset(entity, "800x600");
     entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
     TGUI_set_view(entity);
@@ -124,29 +101,29 @@ void set_screen_resolution(ObjectsEntities& entity) {
     std::string size = screen_size.toAnsiString();
     if (screen_size == "800x600") {
         entity.window.setSize(scr_size[0]);
-        entity.window_view.set_window_center_of_screen(entity);
+        set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
 
     else if (screen_size == "1024x768") {
         entity.window.setSize(scr_size[1]);
-        entity.window_view.set_window_center_of_screen(entity);
+        set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
 
     else if (screen_size == "1280x1024") {
         entity.window.setSize(scr_size[2]);
-        entity.window_view.set_window_center_of_screen(entity);
+        set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
     else  if (screen_size == "1600x1200") {
         entity.window.setSize(scr_size[3]);
-        entity.window_view.set_window_center_of_screen(entity);
+        set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
     else if (screen_size == "1920x1080") {
         entity.window.setSize(scr_size[4]);
-        entity.window_view.set_window_center_of_screen(entity);
+        set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
 }
@@ -181,7 +158,7 @@ void set_fullscreen_viewport(ObjectsEntities& entity) {
         else if (x == 1920 && y == 1080) { entity.game_background.get_sprite().setScale(2.4,1.8); }
     }
 
-  //   entity.window_view.get_supported_fullscreen_modes();  //disabled (used only for displaying information)
+  //   get_supported_fullscreen_modes();  //disabled (used only for displaying information)
 }
 
 void set_new_fone(ObjectsEntities& entity) {   
@@ -261,38 +238,7 @@ void add_object_to_world(ObjectsEntities& entity) {
 
 }
 
-sf::Vector2f get_size_sprite_with_scale(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
-    sf::Vector2f vec;
-    vec.x = it->get_texture().getSize().x * it->get_sprite().getScale().x;
-    vec.y = it->get_texture().getSize().y * it->get_sprite().getScale().y;
-    return vec;
-}
 
-void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos) {
-
-    if (get_typename(it) == "class gobj::Rectangle") {
-        dynamic_cast<gobj::Rectangle*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
-        dynamic_cast<gobj::Rectangle*>(it)->bdef_rect.position.Set(pos.x, pos.y);
-        dynamic_cast<gobj::Rectangle*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle*>(it)->bdef_rect);
-        dynamic_cast<gobj::Rectangle*>(it)->body_rect->CreateFixture(&dynamic_cast<gobj::Rectangle*>(it)->bshape_rect, 5.0);
-    }
-    else if (get_typename(it) == "class gobj::Circle") {
-        dynamic_cast<gobj::Circle*>(it)->bshape_circle.m_radius = get_size_sprite_with_scale(it).x / 2 / SCALE;
-        dynamic_cast<gobj::Circle*>(it)->bdef_circle.position.Set(pos.x, pos.y);
-        dynamic_cast<gobj::Circle*>(it)->body_circle = world.CreateBody(&dynamic_cast<gobj::Circle*>(it)->bdef_circle);
-        dynamic_cast<gobj::Circle*>(it)->body_circle->CreateFixture(&dynamic_cast<gobj::Circle*>(it)->bshape_circle, 5.0);
-    }
-}
-
-b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
-
-    if (get_typename(it) == "class gobj::Rectangle") {
-        return dynamic_cast<gobj::Rectangle*>(it)->body_rect->GetPosition();
-    }
-    else if (get_typename(it) == "class gobj::Circle") {
-        return dynamic_cast<gobj::Circle*>(it)->body_circle->GetPosition();
-    }
-}
 
 void select_item(ObjectsEntities& entity) {
     switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex()) {
@@ -358,15 +304,6 @@ void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
 }
-
-std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
-    std::string str(typeid(*it).name());
-    return str;
-}
-
-//1)  Исправить баг при запуске программы, когда возможно устанавливать разрешение +
-//2)  Расчитать коэффицент масштабирования для обоев 
-//3)  Продумать от чего фризы при большом разрешении экрана
 
 
 
@@ -600,8 +537,7 @@ int main()
             world.DebugDraw();
         }
 
-        entity.GUI.draw();
-      
+        entity.GUI.draw();      
         entity.window.display();
 
 

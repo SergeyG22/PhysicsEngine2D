@@ -157,6 +157,7 @@
     <ClInclude Include="glext.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="window_function.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
