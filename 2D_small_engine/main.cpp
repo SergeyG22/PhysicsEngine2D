@@ -19,8 +19,11 @@ const float DEG = 57.29577f;
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
 struct ObjectsEntities;
+struct Window_view;
+
 void TGUI_set_view(ObjectsEntities&);
 void TGUI_set_viewport(ObjectsEntities&);
+
 
 float system_timer(sf::Clock& clock) {                       //used for binding to time (not to the processor)
     float t = clock.getElapsedTime().asMicroseconds();
@@ -36,11 +39,19 @@ void enumeration_flags(uint32& flags) {
     flags += b2Draw::e_centerOfMassBit;
 }
 
+
+struct Window_view {
+    void set_window_center_of_screen(ObjectsEntities&);
+    void get_supported_fullscreen_modes();
+};
+
+
 struct ObjectsEntities {                                          //class for storing objects in the world
-    sf::RenderWindow window{ sf::VideoMode{800,600}, "2D engine", sf::Style::Close | sf::Style::Titlebar };
+    sf::RenderWindow window{ sf::VideoMode{1920,1080}, "2D engine", sf::Style::Close | sf::Style::Fullscreen };    
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
+    Window_view window_view;
     Decorative_elements decorative_elements;
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
@@ -69,12 +80,19 @@ ObjectsEntities::ObjectsEntities() {
     debug_draw_instance.SetFlags(FLAGS);
 }
 
-void set_window_center_of_screen(ObjectsEntities& entity) {
+void Window_view::set_window_center_of_screen(ObjectsEntities& entity) {
     auto desktop = sf::VideoMode::getDesktopMode();
     sf::Vector2i pos;
     pos.x = desktop.width / 2 - entity.window.getSize().x / 2;
     pos.y = desktop.height / 2 - entity.window.getSize().y / 2;
     entity.window.setPosition(pos);
+}
+
+void Window_view::get_supported_fullscreen_modes() {
+    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
+    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
+        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
+    }
 }
 
 void call_offset(ObjectsEntities& entity, std::string size) {
@@ -91,42 +109,45 @@ void call_offset(ObjectsEntities& entity, std::string size) {
     entity.combo_box.set_offset(size);
 }
 
+void enable_fullscreen_mode(ObjectsEntities& entity) {
+    entity.window.setSize(scr_size[0]);
+    entity.window_view.set_window_center_of_screen(entity);
+    call_offset(entity, "800x600");
+    entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
+    TGUI_set_view(entity);
+    entity.combo_box.combo_box->setEnabled(false);
+    entity.game_background.set_scale_background();
+}
+
 void set_screen_resolution(ObjectsEntities& entity) {
     tgui::String screen_size = entity.combo_box.combo_box->getSelectedItem();
     std::string size = screen_size.toAnsiString();
     if (screen_size == "800x600") {
         entity.window.setSize(scr_size[0]);
-        set_window_center_of_screen(entity);
+        entity.window_view.set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
 
     else if (screen_size == "1024x768") {
         entity.window.setSize(scr_size[1]);
-        set_window_center_of_screen(entity);
+        entity.window_view.set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
 
     else if (screen_size == "1280x1024") {
         entity.window.setSize(scr_size[2]);
-        set_window_center_of_screen(entity);
+        entity.window_view.set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
     else  if (screen_size == "1600x1200") {
         entity.window.setSize(scr_size[3]);
-        set_window_center_of_screen(entity);
+        entity.window_view.set_window_center_of_screen(entity);
         call_offset(entity, size);
     }
     else if (screen_size == "1920x1080") {
         entity.window.setSize(scr_size[4]);
-        set_window_center_of_screen(entity);
+        entity.window_view.set_window_center_of_screen(entity);
         call_offset(entity, size);
-    }
-}
-
-void get_supported_fullscreen_modes() {
-    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
-    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
-        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
     }
 }
 
@@ -142,6 +163,7 @@ void set_fullscreen_viewport(ObjectsEntities& entity) {
         entity.button_screen_mode.enable_fullscreen = false;
         entity.combo_box.combo_box->setEnabled(true);
         TGUI_set_viewport(entity);
+        entity.game_background.get_sprite().setScale(1, 1);
     }
     else {
         entity.window.create(sf::VideoMode(800, 600), "2D engine", sf::Style::Close | sf::Style::Titlebar);
@@ -150,13 +172,20 @@ void set_fullscreen_viewport(ObjectsEntities& entity) {
         entity.button_screen_mode.enable_fullscreen = true;
         TGUI_set_view(entity);
         entity.combo_box.combo_box->setEnabled(true);
+        float x = entity.window.getSize().x;
+        float y = entity.window.getSize().y;
+        if(x == 800 && y == 600){ entity.game_background.get_sprite().setScale(1,1); }
+        else if(x == 1024 && y == 768){ entity.game_background.get_sprite().setScale(1.28, 1.28); }
+        else if (x == 1280 && y == 1024) { entity.game_background.get_sprite().setScale(1.6, 1.7); }
+        else if (x == 1600 && y == 1200) { entity.game_background.get_sprite().setScale(2,2); }
+        else if (x == 1920 && y == 1080) { entity.game_background.get_sprite().setScale(2.4,1.8); }
     }
 
-    // get_supported_fullscreen_modes();  //disabled (used only for displaying information)
+  //   entity.window_view.get_supported_fullscreen_modes();  //disabled (used only for displaying information)
 }
 
-void set_new_fone(ObjectsEntities& entity) {
-    entity.game_background.upload_background("background/" + entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
+void set_new_fone(ObjectsEntities& entity) {   
+     entity.game_background.upload_background("background/" + entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
 }
 
 void show_widgets(ObjectsEntities& entity, bool state) {
@@ -296,6 +325,10 @@ void updating_list_with_mouse(ObjectsEntities& entity) {
     }
 }
 
+void updating_list_combo_box_fone(ObjectsEntities& entity) {
+    entity.combo_box_file_path_fone.combo_box_file_path_fone->setSelectedItem(entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem());
+}
+
 void TGUI_set_view(ObjectsEntities& entity) {
     tgui::FloatRect rect;
     tgui::Vector2f view_port_size;
@@ -314,29 +347,26 @@ void TGUI_set_viewport(ObjectsEntities& entity) {
     entity.GUI.setAbsoluteViewport(rect);
 }
 
-void enable_fullscreen_mode(ObjectsEntities& entity) {
-    entity.window.setSize(scr_size[0]);
-    set_window_center_of_screen(entity);
-    call_offset(entity, "800x600");
-    entity.window.create(sf::VideoMode(1920, 1080), "2D engine", sf::Style::Fullscreen);
-    TGUI_set_view(entity);
-    entity.combo_box.combo_box->setEnabled(false);
-}
-
 void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
-    entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
+   // entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
+    entity.combo_box_file_path_fone.combo_box_file_path_fone->onItemSelect(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.combo_box_figure.combo_box_figure->onItemSelect(select_item, std::ref(entity));
     entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
     entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
+    entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
 }
 
 std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
     std::string str(typeid(*it).name());
     return str;
 }
+
+//1)  Исправить баг при запуске программы, когда возможно устанавливать разрешение +
+//2)  Расчитать коэффицент масштабирования для обоев 
+//3)  Продумать от чего фризы при большом разрешении экрана
 
 
 
@@ -346,6 +376,8 @@ int main()
     setlocale(LC_ALL, "russian");
     ObjectsEntities entity;
     events_called_by_widgets(entity);
+    entity.game_background.upload_background("background/"+entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem().toAnsiString());
+    entity.game_background.set_scale_background();
 
     while (entity.window.isOpen()) {
         entity.time = system_timer(entity.system_rendering_clock);
@@ -547,7 +579,7 @@ int main()
 
         }
 
-
+        
         world.Step(1 / 120.f, 8, 3);
         entity.window.clear();
         entity.window.draw(entity.game_background);
@@ -558,11 +590,8 @@ int main()
             it->update_position(entity.window);
         }
 
-
-
-
         entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
-
+       
         if (entity.decorative_elements.menu_view) {
             entity.window.draw(entity.decorative_elements.get_sprite_fone());
         }
@@ -572,12 +601,16 @@ int main()
         }
 
         entity.GUI.draw();
+      
         entity.window.display();
 
 
     }
     return 0;
 }
+
+
+
 
 
 

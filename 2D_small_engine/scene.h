@@ -4,6 +4,7 @@
 #include <list>
 
 
+
 class PhysicsPlayer;
 
 struct Physics_parameters {
@@ -17,8 +18,9 @@ class GameBackground: public sf::Drawable
 	sf::Sprite background_sprite;
 	virtual void draw(sf::RenderTarget&,sf::RenderStates)const;
 public:
-	GameBackground();	
 	bool upload_background(std::string);
+	sf::Sprite& get_sprite() { return background_sprite; }
+	void set_scale_background();
 };
 
 class GraphicsPlayer: public Physics_parameters {

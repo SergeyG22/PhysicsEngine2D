@@ -53,6 +53,7 @@ struct Combo_box_filepath_fone {
     void set_options_fone();
     void set_offset(std::string);
     Combo_box_filepath_fone(tgui::GuiSFML&);
+    bool show_first_element = true;
 };
 
 struct Combo_box_figure {

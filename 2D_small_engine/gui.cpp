@@ -209,16 +209,22 @@ void Combo_box_filepath_fone::set_offset(std::string screen_size) {
 }
 
 void Combo_box_filepath_fone::set_options_fone() {
+    tgui::String str = combo_box_file_path_fone->getSelectedItem();
+    combo_box_file_path_fone->removeAllItems();
     boost::filesystem::path path_to_folder("background");
-    bool show_first_element = true;
+
     for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
         std::string item = i->path().filename().string();
         combo_box_file_path_fone->addItem(item);
+    }
         if (show_first_element) {
-            combo_box_file_path_fone->setSelectedItem(item);
+            combo_box_file_path_fone->setSelectedItemByIndex(0);
             show_first_element = false;
         }
-    }
+        else {
+            combo_box_file_path_fone->setSelectedItem(str);
+        }
+    
 }
 
 Combo_box_figure::Combo_box_figure(tgui::GuiSFML& GUI) {
@@ -447,6 +453,7 @@ Combo_box::Combo_box(tgui::GuiSFML& GUI) {
     combo_box->addItem("1600x1200");
     combo_box->addItem("1920x1080");
     combo_box->setSelectedItem("800x600");
+    combo_box->setEnabled(false);
     GUI.add(combo_box);
 }
 

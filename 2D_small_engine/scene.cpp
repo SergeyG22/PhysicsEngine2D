@@ -4,19 +4,27 @@
 #include "scene.h"
 
 
-GameBackground::GameBackground() {
-	upload_background("background/fone.png");
-	background_sprite.setTexture(background_texture);
-}
 
 bool GameBackground::upload_background(std::string path_to_image) {
 	if (!background_texture.loadFromFile(path_to_image)) {  return false; }
-	return true;
+	background_sprite.setTexture(background_texture);
 }
 
 void GameBackground::draw(sf::RenderTarget&target,sf::RenderStates states)const {
 	target.draw(background_sprite,states);
 }
+
+void GameBackground::set_scale_background() {
+	float width = background_texture.getSize().x;
+	float height = background_texture.getSize().y;
+	if (width == 800 && height == 600) {         background_sprite.setScale(2.4,1.8);}
+	else if (width == 1024 && height == 768) { background_sprite.setScale(1.875,1.4); }
+	else if (width == 1280 && height == 1024) { background_sprite.setScale(1.875,1.4); }
+	else if (width == 1600 && height == 1200) { background_sprite.setScale(1.875,1.4);  }
+	else if (width == 1920 && height == 1080) { background_sprite.setScale(1.875,1.4);  }
+}
+
+
 
 GraphicsPlayer::GraphicsPlayer() {
 	player_sprite.setOrigin(45.0, 45.0);
