@@ -4,6 +4,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <boost/filesystem.hpp>
+#include <algorithm>
 #include "gui.h"
 #include "scene.h"
 #include "b2GLDraw.h"
@@ -96,36 +97,23 @@ void enable_fullscreen_mode(ObjectsEntities& entity) {
     entity.game_background.set_scale_background();
 }
 
+void set_size_centreand_extension(int i, ObjectsEntities& entity,std::string& size) {
+    entity.window.setSize(scr_size[i]);
+    set_window_center_of_screen(entity);
+    call_offset(entity, size);
+}
+
 void set_screen_resolution(ObjectsEntities& entity) {
-    tgui::String screen_size = entity.combo_box.combo_box->getSelectedItem();
-    std::string size = screen_size.toAnsiString();
-    if (screen_size == "800x600") {
-        entity.window.setSize(scr_size[0]);
-        set_window_center_of_screen(entity);
-        call_offset(entity, size);
+    std::string size = entity.combo_box.combo_box->getSelectedItem().toAnsiString();
+    int ID = entity.combo_box.combo_box->getSelectedItemIndex();
+    switch (ID) {
+    case 0: { set_size_centreand_extension(0, entity, size); break; }
+    case 1: { set_size_centreand_extension(1, entity, size); break; }
+    case 2: { set_size_centreand_extension(2, entity, size); break; }
+    case 3: { set_size_centreand_extension(3, entity, size); break; }
+    case 4: { set_size_centreand_extension(4, entity, size); break; }
     }
 
-    else if (screen_size == "1024x768") {
-        entity.window.setSize(scr_size[1]);
-        set_window_center_of_screen(entity);
-        call_offset(entity, size);
-    }
-
-    else if (screen_size == "1280x1024") {
-        entity.window.setSize(scr_size[2]);
-        set_window_center_of_screen(entity);
-        call_offset(entity, size);
-    }
-    else  if (screen_size == "1600x1200") {
-        entity.window.setSize(scr_size[3]);
-        set_window_center_of_screen(entity);
-        call_offset(entity, size);
-    }
-    else if (screen_size == "1920x1080") {
-        entity.window.setSize(scr_size[4]);
-        set_window_center_of_screen(entity);
-        call_offset(entity, size);
-    }
 }
 
 void set_fullscreen_viewport(ObjectsEntities& entity) {
@@ -156,9 +144,11 @@ void set_fullscreen_viewport(ObjectsEntities& entity) {
         else if (x == 1280 && y == 1024) { entity.game_background.get_sprite().setScale(1.6, 1.7); }
         else if (x == 1600 && y == 1200) { entity.game_background.get_sprite().setScale(2,2); }
         else if (x == 1920 && y == 1080) { entity.game_background.get_sprite().setScale(2.4,1.8); }
+
+                
     }
 
-  //   get_supported_fullscreen_modes();  //disabled (used only for displaying information)
+   ///  get_supported_fullscreen_modes();  //disabled (used only for displaying information)
 }
 
 void set_new_fone(ObjectsEntities& entity) {   
@@ -181,28 +171,24 @@ void show_widgets(ObjectsEntities& entity, bool state) {
 
 void add_object_to_world(ObjectsEntities& entity) {
 
+    sf::Texture texture; //temporary texture for getting width and height
+    int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
+    int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
+
     switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex())
     {
     case 0:
-    {
-        int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
-        int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
-
-        std::string path = "circle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
-        sf::Texture texture;                                   //temporary texture for getting width and height
-        if (!texture.loadFromFile(path)) {
-            std::cout << "The texture path is not correct\n";
-        }
-        sf::Vector2u object_size = texture.getSize();
-
+    {       
+        std::string path = "circle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();                                        
+        if (!texture.loadFromFile(path)) { std::cout << "The texture path is not correct\n"; }
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, texture.getSize().x, texture.getSize().y, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(world, object_size.x, object_size.y, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, texture.getSize().x, texture.getSize().y, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -210,24 +196,16 @@ void add_object_to_world(ObjectsEntities& entity) {
     }
     case 1:
     {
-        int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
-        int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
-
         std::string path = "rectangle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
-        sf::Texture texture;                                   //temporary texture for getting width and height
-        if (!texture.loadFromFile(path)) {
-            std::cout << "The texture path is not correct\n";
-        }
-        sf::Vector2u object_size = texture.getSize();
-
+        if (!texture.loadFromFile(path)) {  std::cout << "The texture path is not correct\n"; }
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 350, 200, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object_size.x, object_size.y, 350, 200, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 350, 200, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -349,7 +327,6 @@ int main()
                     entity.transfer_objects.can_be_moved = false;
 
                     for (auto const& it : entity.objects_world.list_object) {
-
                         if (get_typename(it) == "class gobj::Rectangle") {
                             dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(1.0);
                         }

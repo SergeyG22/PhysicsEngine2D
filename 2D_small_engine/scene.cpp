@@ -115,7 +115,7 @@ gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, s
 	bdef_rect.type = bdef;
 	bdef_rect.position.Set(x / 30.f, y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 5.0);
+	body_rect->CreateFixture(&bshape_rect, 155.0);
 }
 
 gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y) {
@@ -123,7 +123,7 @@ gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, b
 	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE);
 	bdef_rect.position.Set(x / 30.f, y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 5.0);
+	body_rect->CreateFixture(&bshape_rect, 155.0);
 }
 
 bool gobj::Rectangle::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
@@ -202,9 +202,9 @@ sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 }
 
 void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
-	list_object.push_back(new gobj::Rectangle(world, 800, 25, 0, 580,b2_staticBody));
-	list_object.push_back(new gobj::Rectangle(world, 10, 600, 0, 0, b2_staticBody));
-	list_object.push_back(new gobj::Rectangle(world, 10, 600, 800, 0,b2_staticBody));
+	list_object = { new gobj::Rectangle(world, 1900, 25, 0, 1060,b2_staticBody),
+		            new gobj::Rectangle(world, 20, 1060, 0, 0, b2_staticBody),
+		            new gobj::Rectangle(world, 20, 1060, 1900, 0,b2_staticBody) };
 }		                                           
 
 gobj::ObjectFactory* ObjectsWorld::get_object_world(int n) {

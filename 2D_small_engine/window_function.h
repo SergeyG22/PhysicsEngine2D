@@ -17,9 +17,9 @@ void enumeration_flags(uint32& flags) {
 }
 
 void get_supported_fullscreen_modes() {
-    std::vector<sf::VideoMode> screenResolution = sf::VideoMode::getFullscreenModes();
-    for (std::size_t i = 0; i < screenResolution.size(); ++i) {
-        std::cout << screenResolution[i].width << ":" << screenResolution[i].height << std::endl;
+    std::vector<sf::VideoMode>screen_resolution = sf::VideoMode::getFullscreenModes();
+    for (const auto& i: screen_resolution) {
+        std::cout << i.width<<":"<<i.height<<'\n' ;
     }
 }
 
