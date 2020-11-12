@@ -36,14 +36,15 @@ struct ObjectsEntities {                                          //class for st
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
     Button_download_fone button_download_fone{ GUI };
+    Button_download_texture button_download_texture{ GUI };
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
     Combo_box_invisible_object combo_box_invisible_object{ GUI };
     Combo_box_figure combo_box_figure{ GUI };
-    Button_download_texture button_download_texture{ GUI };
+    Combo_box combo_box{ GUI };
     Combo_box_typebody combo_box_type_body{ GUI };
     Combo_box_file_path_texture combo_box_file_path_texture{ GUI };
-    Label_settings label_settings{ GUI };
-    Combo_box combo_box{ GUI };
+    Slider_weight_setting slider_weight_setting {GUI};
+    Label_weight label_weight{ GUI };
     GameBackground game_background;
     GraphicsPlayer graphics_player;
     TransferObjects transfer_objects;
@@ -77,14 +78,15 @@ void call_offset(ObjectsEntities& entity, std::string size) {
     entity.button_switching_fullscreen.set_offset(size);
     entity.button_screen_mode.set_offset(size);
     entity.button_download_fone.set_offset(size);
+    entity.button_download_texture.set_offset(size);
     entity.combo_box_file_path_fone.set_offset(size);
     entity.combo_box_invisible_object.set_offset(size);
-    entity.combo_box_figure.set_offset(size);
-    entity.button_download_texture.set_offset(size);
+    entity.combo_box_figure.set_offset(size);   
     entity.combo_box_type_body.set_offset(size);
     entity.combo_box_file_path_texture.set_offset(size);
-    entity.label_settings.set_offset(size);
     entity.combo_box.set_offset(size);
+    entity.label_weight.set_offset(size);   
+    entity.slider_weight_setting.set_offset(size);
 }
 
 void enable_fullscreen_mode(ObjectsEntities& entity) {
@@ -167,6 +169,8 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
     entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
     entity.combo_box_type_body.combo_box_type_body->setVisible(state);
+    entity.slider_weight_setting.slider_weight_setting->setVisible(state);
+    entity.label_weight.label_weight->setVisible(state);
 }
 
 void add_object_to_world(ObjectsEntities& entity) {
@@ -271,6 +275,12 @@ void TGUI_set_viewport(ObjectsEntities& entity) {
     entity.GUI.setAbsoluteViewport(rect);
 }
 
+void test(ObjectsEntities& entity) {
+    int x = entity.slider_weight_setting.slider_weight_setting->getValue();
+    tgui::String str(x);
+    entity.label_weight.label_weight->setText(str);
+}
+
 void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
    // entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
@@ -281,6 +291,7 @@ void events_called_by_widgets(ObjectsEntities& entity) {
     entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
     entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
+    entity.slider_weight_setting.slider_weight_setting->onValueChange(test,std::ref(entity));
 }
 
 

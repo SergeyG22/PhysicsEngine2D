@@ -32,6 +32,16 @@ struct Button_switching_fullscreen {
     Button_switching_fullscreen(tgui::GuiSFML&);
 };
 
+struct Button_download_texture {
+    tgui::Button::Ptr button_download_texture;
+    tgui::Layout width_button_download = 190;
+    tgui::Layout height_button_download = 31;
+    tgui::Layout pos_x_button_download = 125;
+    tgui::Layout pos_y_button_download = 370;
+    void set_offset(std::string);
+    Button_download_texture(tgui::GuiSFML&);
+};
+
 struct Combo_box_invisible_object {
     tgui::ComboBox::Ptr combo_box_invisible_object;
     tgui::Layout width_combo_box_invisible_object = 310;
@@ -48,7 +58,7 @@ struct Combo_box_filepath_fone {
     tgui::Layout width_combo_box_file_path_fone = 310;
     tgui::Layout height_combo_box_file_path_fone = 31;
     tgui::Layout pos_x_combo_box_file_path_fone = 65;
-    tgui::Layout pos_y_combo_box_file_path_fone = 325;
+    tgui::Layout pos_y_combo_box_file_path_fone = 285;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_options_fone();
     void set_offset(std::string);
@@ -61,20 +71,10 @@ struct Combo_box_figure {
     tgui::Layout width_combo_box_figure = 310;
     tgui::Layout height_combo_box_figure = 31;
     tgui::Layout pos_x_combo_box_figure = 65;
-    tgui::Layout pos_y_combo_box_figure = 245;
+    tgui::Layout pos_y_combo_box_figure = 205;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_offset(std::string);
     Combo_box_figure(tgui::GuiSFML&);
-};
-
-struct Button_download_texture {
-    tgui::Button::Ptr button_download_texture;
-    tgui::Layout width_button_download = 190;
-    tgui::Layout height_button_download = 31;
-    tgui::Layout pos_x_button_download = 125;
-    tgui::Layout pos_y_button_download = 370;
-    void set_offset(std::string);
-    Button_download_texture(tgui::GuiSFML&);
 };
 
 struct Combo_box_typebody {
@@ -82,7 +82,7 @@ struct Combo_box_typebody {
     tgui::Layout width_combo_box_typebody = 310;
     tgui::Layout height_combo_box_typebody = 31;
     tgui::Layout pos_x_combo_box_typebody = 65;
-    tgui::Layout pos_y_combo_box_typebody = 205;
+    tgui::Layout pos_y_combo_box_typebody = 165;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_offset(std::string);
     Combo_box_typebody(tgui::GuiSFML&);
@@ -93,7 +93,7 @@ struct Combo_box_file_path_texture {
     tgui::Layout width_combo_box_file_path_texture = 310;
     tgui::Layout height_combo_box_file_path_texture = 31;
     tgui::Layout pos_x_combo_box_file_path_texture = 65;
-    tgui::Layout pos_y_combo_box_file_path_texture = 285;
+    tgui::Layout pos_y_combo_box_file_path_texture = 245;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_options_texture(std::string);
     void set_offset(std::string);
@@ -101,25 +101,36 @@ struct Combo_box_file_path_texture {
     bool show_first_element = true;
 };
 
-struct Label_settings {
-    tgui::Label::Ptr label_settings;
-    tgui::Layout width_label_settings = 310;
-    tgui::Layout height_label_settings = 150;
-    tgui::Layout pos_x_label_settings = 125;
-    tgui::Layout pos_y_label_settings = 80;
-    Label_settings(tgui::GuiSFML&);
-    void set_offset(std::string);
-};
-
 struct Combo_box {
     tgui::ComboBox::Ptr combo_box;
     tgui::Layout width_combo_box = 310;
     tgui::Layout height_combo_box = 31;
     tgui::Layout pos_x_combo_box = 65;
-    tgui::Layout pos_y_combo_box = 165;
+    tgui::Layout pos_y_combo_box = 85;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_offset(std::string);
     Combo_box(tgui::GuiSFML&);
+};
+
+struct Slider_weight_setting {
+    tgui::Slider::Ptr slider_weight_setting;
+    tgui::Layout width_slider_weight_setting = 210;
+    tgui::Layout height_slider_weight_setting = 15;
+    tgui::Layout pos_x_slider_weight_setting = 75;
+    tgui::Layout pos_y_slider_weight_setting = 335;
+    tgui::Theme theme{ "themes/Black.txt" };
+    void set_offset(std::string);
+    Slider_weight_setting(tgui::GuiSFML&);
+};
+
+struct Label_weight {
+    tgui::Label::Ptr label_weight;
+    tgui::Layout width_label_weight = 310;
+    tgui::Layout height_label_weight = 150;
+    tgui::Layout pos_x_label_weight = 295;
+    tgui::Layout pos_y_label_weight = 320;
+    Label_weight(tgui::GuiSFML&);
+    void set_offset(std::string);
 };
 
 class DisplayingSelectedItem { 
