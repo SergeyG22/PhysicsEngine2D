@@ -42,20 +42,7 @@ std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type i
 }
 
 
-void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos) {
-    if (get_typename(it) == "class gobj::Rectangle") {
-        dynamic_cast<gobj::Rectangle*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
-        dynamic_cast<gobj::Rectangle*>(it)->bdef_rect.position.Set(pos.x, pos.y);
-        dynamic_cast<gobj::Rectangle*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle*>(it)->bdef_rect);
-        dynamic_cast<gobj::Rectangle*>(it)->body_rect->CreateFixture(&dynamic_cast<gobj::Rectangle*>(it)->bshape_rect, 5.0);
-    }
-    else if (get_typename(it) == "class gobj::Circle") {
-        dynamic_cast<gobj::Circle*>(it)->bshape_circle.m_radius = get_size_sprite_with_scale(it).x / 2 / SCALE;
-        dynamic_cast<gobj::Circle*>(it)->bdef_circle.position.Set(pos.x, pos.y);
-        dynamic_cast<gobj::Circle*>(it)->body_circle = world.CreateBody(&dynamic_cast<gobj::Circle*>(it)->bdef_circle);
-        dynamic_cast<gobj::Circle*>(it)->body_circle->CreateFixture(&dynamic_cast<gobj::Circle*>(it)->bshape_circle, 5.0);
-    }
-}
+
 
 b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it) {
 

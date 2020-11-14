@@ -17,7 +17,6 @@ extern void enumeration_flags(uint32& flags);
 extern void get_supported_fullscreen_modes();
 extern float system_timer(sf::Clock& clock);
 extern sf::Vector2f get_size_sprite_with_scale(std::list<gobj::ObjectFactory*>::iterator::value_type it);
-extern void create_body(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos);
 extern std::string get_typename(std::list<gobj::ObjectFactory*>::iterator::value_type it);
 extern b2Vec2 get_position(std::list<gobj::ObjectFactory*>::iterator::value_type it);
 extern const float SCALE;
@@ -173,6 +172,50 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.label_weight.label_weight->setVisible(state);
 }
 
+void create_body_with_higher_density(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos, ObjectsEntities& obj) {
+    if (get_typename(it) == "class gobj::Rectangle") {
+            dynamic_cast<gobj::Rectangle*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
+            dynamic_cast<gobj::Rectangle*>(it)->bdef_rect.position.Set(pos.x, pos.y);
+            dynamic_cast<gobj::Rectangle*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle*>(it)->bdef_rect);
+            it->get_body_pointer()->CreateFixture(&dynamic_cast<gobj::Rectangle*>(it)->bshape_rect, dynamic_cast<gobj::Rectangle*>(it)->density += 1);
+            obj.slider_weight_setting.slider_weight_setting->setValue(dynamic_cast<gobj::Rectangle*>(it)->density);
+            obj.label_weight.label_weight->setText(tgui::String(dynamic_cast<gobj::Rectangle*>(it)->density));
+        }
+    
+    else if (get_typename(it) == "class gobj::Circle") {
+        dynamic_cast<gobj::Circle*>(it)->bshape_circle.m_radius = get_size_sprite_with_scale(it).x / 2 / SCALE;
+        dynamic_cast<gobj::Circle*>(it)->bdef_circle.position.Set(pos.x, pos.y);
+        dynamic_cast<gobj::Circle*>(it)->body_circle = world.CreateBody(&dynamic_cast<gobj::Circle*>(it)->bdef_circle);
+        it->get_body_pointer()->CreateFixture(&dynamic_cast<gobj::Circle*>(it)->bshape_circle, dynamic_cast<gobj::Circle*>(it)->density += 1);
+        obj.slider_weight_setting.slider_weight_setting->setValue(dynamic_cast<gobj::Circle*>(it)->density);
+        obj.label_weight.label_weight->setText(tgui::String(dynamic_cast<gobj::Circle*>(it)->density));
+    }
+}
+
+void create_body_with_less_density(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos, ObjectsEntities& obj) {
+        if (get_typename(it) == "class gobj::Rectangle") {
+            dynamic_cast<gobj::Rectangle*>(it)->bshape_rect.SetAsBox(get_size_sprite_with_scale(it).x / 2 / SCALE, get_size_sprite_with_scale(it).y / 2 / SCALE);
+            dynamic_cast<gobj::Rectangle*>(it)->bdef_rect.position.Set(pos.x, pos.y);
+            dynamic_cast<gobj::Rectangle*>(it)->body_rect = world.CreateBody(&dynamic_cast<gobj::Rectangle*>(it)->bdef_rect);
+            it->get_body_pointer()->CreateFixture(&dynamic_cast<gobj::Rectangle*>(it)->bshape_rect, dynamic_cast<gobj::Rectangle*>(it)->density -= 1);
+            obj.slider_weight_setting.slider_weight_setting->setValue(dynamic_cast<gobj::Rectangle*>(it)->density);
+            obj.label_weight.label_weight->setText(tgui::String(dynamic_cast<gobj::Rectangle*>(it)->density));
+        }
+    else if (get_typename(it) == "class gobj::Circle") {        
+        dynamic_cast<gobj::Circle*>(it)->bshape_circle.m_radius = get_size_sprite_with_scale(it).x / 2 / SCALE;
+        dynamic_cast<gobj::Circle*>(it)->bdef_circle.position.Set(pos.x, pos.y);
+        dynamic_cast<gobj::Circle*>(it)->body_circle = world.CreateBody(&dynamic_cast<gobj::Circle*>(it)->bdef_circle);
+        it->get_body_pointer()->CreateFixture(&dynamic_cast<gobj::Circle*>(it)->bshape_circle, dynamic_cast<gobj::Circle*>(it)->density -= 1);
+        obj.slider_weight_setting.slider_weight_setting->setValue(dynamic_cast<gobj::Circle*>(it)->density);
+        obj.label_weight.label_weight->setText(tgui::String(dynamic_cast<gobj::Circle*>(it)->density));
+    }
+}
+
+
+
+
+
+
 void add_object_to_world(ObjectsEntities& entity) {
 
     sf::Texture texture; //temporary texture for getting width and height
@@ -205,11 +248,11 @@ void add_object_to_world(ObjectsEntities& entity) {
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 350, 200, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 750, 200, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 350, 200, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 750, 200, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -275,10 +318,30 @@ void TGUI_set_viewport(ObjectsEntities& entity) {
     entity.GUI.setAbsoluteViewport(rect);
 }
 
-void test(ObjectsEntities& entity) {
-    int x = entity.slider_weight_setting.slider_weight_setting->getValue();
-    tgui::String str(x);
-    entity.label_weight.label_weight->setText(str);
+
+void change_weight(ObjectsEntities& entity) {    
+
+    for (const auto& it : entity.objects_world.list_object) {       
+        if (it->get_state()) {            
+            if (get_typename(it) == "class gobj::Rectangle") {     
+                it->get_body_pointer()->GetFixtureList()->SetDensity(entity.slider_weight_setting.slider_weight_setting->getValue());
+                it->get_body_pointer()->ResetMassData();
+                it->get_body_pointer()->SetAwake(true);
+                tgui::String mass(entity.slider_weight_setting.slider_weight_setting->getValue());
+                entity.label_weight.label_weight->setText(mass);
+            }           
+            else if(get_typename(it) == "class gobj::Circle"){
+                it->get_body_pointer()->GetFixtureList()->SetDensity(entity.slider_weight_setting.slider_weight_setting->getValue());
+                it->get_body_pointer()->ResetMassData();
+                it->get_body_pointer()->SetAwake(true);
+                tgui::String mass(entity.slider_weight_setting.slider_weight_setting->getValue());
+                entity.label_weight.label_weight->setText(mass);
+            }
+            
+        }
+        
+    }
+
 }
 
 void events_called_by_widgets(ObjectsEntities& entity) {
@@ -291,9 +354,33 @@ void events_called_by_widgets(ObjectsEntities& entity) {
     entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
     entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
-    entity.slider_weight_setting.slider_weight_setting->onValueChange(test,std::ref(entity));
+    entity.slider_weight_setting.slider_weight_setting->onValueChange(change_weight,std::ref(entity));
 }
 
+void reset_state_all_objects(ObjectsEntities& entity) {
+  for (const auto &it:  entity.objects_world.list_object) { 
+      it->reset_state();
+    }
+}
+
+void init_rectangle(std::list<gobj::ObjectFactory*>::iterator::value_type it,ObjectsEntities& entity)
+{
+    it->get_body_pointer()->SetGravityScale(0.0);
+    reset_state_all_objects(entity);
+    it->set_state_select_object(true);
+    float density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+    entity.slider_weight_setting.slider_weight_setting->setValue(density);
+    entity.label_weight.label_weight->setText(tgui::String(density));
+}
+
+void init_circle(std::list<gobj::ObjectFactory*>::iterator::value_type it, ObjectsEntities& entity) {
+    it->get_body_pointer()->SetGravityScale(0.0);
+    reset_state_all_objects(entity);
+    it->set_state_select_object(true);
+    float density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+    entity.slider_weight_setting.slider_weight_setting->setValue(density);
+    entity.label_weight.label_weight->setText(tgui::String(density));
+}
 
 
 
@@ -323,10 +410,10 @@ int main()
                             entity.transfer_objects.can_be_moved = true;
 
                             if (get_typename(it) == "class gobj::Rectangle") {
-                                dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(0.0);
+                               init_rectangle(it, entity);
                             }
                             else if (get_typename(it) == "class gobj::Circle") {
-                                dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(0.0);
+                                init_circle(it,entity);
                             }
                         }
                     }
@@ -339,10 +426,10 @@ int main()
 
                     for (auto const& it : entity.objects_world.list_object) {
                         if (get_typename(it) == "class gobj::Rectangle") {
-                            dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetGravityScale(1.0);
+                            it->get_body_pointer()->SetGravityScale(1.0);
                         }
-                        else if (get_typename(it) == "class gobj::Circle") {
-                            dynamic_cast<gobj::Circle*>(it)->body_circle->SetGravityScale(1.0);
+                                else if (get_typename(it) == "class gobj::Circle") {
+                            it->get_body_pointer()->SetGravityScale(1.0);
                         }
                     }
                 }
@@ -356,7 +443,7 @@ int main()
                                 it->get_sprite().setColor(sf::Color::White);
                             }
                             else {
-                                it->get_sprite().setColor(sf::Color::Red);
+                                it->get_sprite().setColor(sf::Color::Red);                                
                             }
 
                         }
@@ -377,13 +464,15 @@ int main()
                                 it->get_sprite().setScale(scale);
                                 b2Vec2 pos = get_position(it);
                                 if (get_typename(it) == "class gobj::Rectangle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+                                    dynamic_cast<gobj::Rectangle*>(it)->density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+                                    world.DestroyBody(it->get_body_pointer());
                                 }
                                 else if (get_typename(it) == "class gobj::Circle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
+                                    dynamic_cast<gobj::Circle*>(it)->density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+                                    world.DestroyBody(it->get_body_pointer());
                                 }
-
-                                create_body(it, pos);
+                                
+                                create_body_with_higher_density(it, pos, entity);
                             }
                             else if (event.mouseWheelScroll.delta < 0) {
                                 sf::Vector2f scale = it->get_sprite().getScale();
@@ -392,12 +481,17 @@ int main()
                                 it->get_sprite().setScale(scale);
                                 b2Vec2 pos = get_position(it);
                                 if (get_typename(it) == "class gobj::Rectangle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+                                    dynamic_cast<gobj::Rectangle*>(it)->density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+                                    world.DestroyBody(it->get_body_pointer());
                                 }
                                 else if (get_typename(it) == "class gobj::Circle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);
+                                    dynamic_cast<gobj::Circle*>(it)->density = it->get_body_pointer()->GetFixtureList()->GetDensity();
+                                    world.DestroyBody(it->get_body_pointer());
+
                                 }
-                                create_body(it, pos);
+                                create_body_with_less_density(it, pos, entity);
+        
+                               
                             }
                         }
 
@@ -427,13 +521,19 @@ int main()
                         if (entity.objects_world.get_object_world(i)->get_sprite().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
                             if (entity.objects_world.get_object_world(i)->get_sprite().getColor() == sf::Color::Red) {
                                 if (get_typename(entity.objects_world.get_object_world(i)) == "class gobj::Rectangle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(entity.objects_world.get_object_world(i))->body_rect); // dynamic maybe remove
-                                    auto it = entity.objects_world.list_object.begin();
+                                    world.DestroyBody(dynamic_cast<gobj::Rectangle*>(entity.objects_world.get_object_world(i))->get_body_pointer());
+                                    if (entity.objects_world.get_object_world(i)->get_state()) {
+                                        entity.label_weight.label_weight->setText("0");
+                                    }
+                                    auto it = entity.objects_world.list_object.begin();                                
                                     std::advance(it, i);
                                     entity.objects_world.list_object.erase(it);
                                 }
                                 else if (get_typename(entity.objects_world.get_object_world(i)) == "class gobj::Circle") {
-                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(entity.objects_world.get_object_world(i))->body_circle); // dynamic maybe remove
+                                    world.DestroyBody(dynamic_cast<gobj::Circle*>(entity.objects_world.get_object_world(i))->get_body_pointer());
+                                    if (entity.objects_world.get_object_world(i)->get_state()) {
+                                        entity.label_weight.label_weight->setText("0");
+                                    }
                                     auto it = entity.objects_world.list_object.begin();
                                     std::advance(it, i);
                                     entity.objects_world.list_object.erase(it);
@@ -490,12 +590,12 @@ int main()
                     vector.x = delta.x - it->upperleft_coord_sprite().x;
                     vector.y = delta.y - it->upperleft_coord_sprite().y;
                     if (get_typename(it) == "class gobj::Rectangle") {
-                        dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetTransform(vector, it->get_angle() / DEG);
-                        dynamic_cast<gobj::Rectangle*>(it)->body_rect->SetAwake(true);
+                        it->get_body_pointer()->SetTransform(vector, it->get_angle() / DEG);
+                        it->get_body_pointer()->SetAwake(true);
                     }
                     else if (get_typename(it) == "class gobj::Circle") {
-                        dynamic_cast<gobj::Circle*>(it)->body_circle->SetTransform(vector, it->get_angle() / DEG);
-                        dynamic_cast<gobj::Circle*>(it)->body_circle->SetAwake(true);
+                        it->get_body_pointer()->SetTransform(vector, it->get_angle() / DEG);
+                        it->get_body_pointer()->SetAwake(true);
                     }
 
                 }

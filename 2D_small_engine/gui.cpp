@@ -496,7 +496,6 @@ Slider_weight_setting::Slider_weight_setting(tgui::GuiSFML& GUI) {
     slider_weight_setting->setMinimum(1);
     slider_weight_setting->setMaximum(999);
     slider_weight_setting->setStep(1);
-    slider_weight_setting->setValue(200);
     GUI.add(slider_weight_setting);
 }
 

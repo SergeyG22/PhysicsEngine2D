@@ -65,6 +65,10 @@ struct ObjectFactory {
   virtual sf::Vector2f upperleft_coord_sprite() =0;
   virtual float set_angle(float) =0;
   virtual float get_angle() =0;
+  virtual void set_state_select_object(bool) =0;
+  virtual void reset_state() = 0;
+  virtual bool get_state() = 0;
+  virtual b2Body* get_body_pointer() = 0;
 };
 
 	class Rectangle :public Physics_parameters, public ObjectFactory {
@@ -76,17 +80,24 @@ struct ObjectFactory {
 		float width_shape;
 		sf::Sprite s_rect;
 		sf::Texture t_rect;
-		float current_angle;
-	public:
+		float current_angle;		
+		bool select_mouse = false;		
+	public:	
 		b2Body* body_rect;
 		b2PolygonShape bshape_rect;
 		b2BodyDef bdef_rect;
+		b2Body* get_body_pointer()   override { return body_rect; }		
 		sf::Texture& get_texture()   override { return t_rect; }
 		sf::Sprite& get_sprite()     override { return s_rect; }
+		float density = 10.0;
 		float set_angle(float angle) override { current_angle += angle; return current_angle; }
 		float get_angle()            override { return current_angle; }
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
+		void set_state_select_object(bool condition) override { select_mouse = condition; };
+		void reset_state() override { select_mouse = false; }
+		bool get_state() override { return select_mouse; };
+
 		Rectangle(b2World&, float, float, float, float, b2BodyType bdef);
 		Rectangle(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite() override {
@@ -108,17 +119,23 @@ struct ObjectFactory {
 		float radius;
 		sf::Sprite s_circle;
 		sf::Texture t_circle;
-		float current_angle;
-	public:
+		float current_angle;		
+		bool select_mouse = false;		
+	public:	
 		b2Body* body_circle;
 		b2CircleShape bshape_circle;
 		b2BodyDef bdef_circle;
+		b2Body* get_body_pointer()    override { return body_circle; }
 		sf::Texture& get_texture()   override { return t_circle; }
 		sf::Sprite& get_sprite()     override { return s_circle; }
+		float density = 10.0;
 		float set_angle(float angle) override { current_angle += angle; return current_angle; }
 		float get_angle()            override { return current_angle; }
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
+		void set_state_select_object(bool condition)   override {  select_mouse = condition; };
+		void reset_state() override { select_mouse = false; }
+		bool get_state() override { return select_mouse; }
 		Circle(b2World&, float,float,float, b2BodyType bdef);
 		Circle(b2World& world, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite()  override {

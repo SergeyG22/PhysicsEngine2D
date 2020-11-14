@@ -115,7 +115,8 @@ gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, s
 	bdef_rect.type = bdef;
 	bdef_rect.position.Set(x / 30.f, y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 155.0);
+	body_rect->CreateFixture(&bshape_rect, density);
+
 }
 
 gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y) {
@@ -123,7 +124,7 @@ gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, b
 	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE);
 	bdef_rect.position.Set(x / 30.f, y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
-	body_rect->CreateFixture(&bshape_rect, 155.0);
+	body_rect->CreateFixture(&bshape_rect, density);
 }
 
 bool gobj::Rectangle::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
@@ -172,7 +173,7 @@ gobj::Circle::Circle(b2World& world, float x, float y, std::string path_to_file,
 	bshape_circle.m_radius = t_circle.getSize().x / 2 / SCALE;
 	bdef_circle.position.Set(x / 30.f, y / 30.f);
 	body_circle = world.CreateBody(&bdef_circle);
-	body_circle->CreateFixture(&bshape_circle, 5.0);
+	body_circle->CreateFixture(&bshape_circle, density);
 }
 
 gobj::Circle::Circle(b2World& world, float radius_circle, float x, float y, b2BodyType bdef):radius(radius_circle), pos_x(x), pos_y(y) {
@@ -180,7 +181,7 @@ gobj::Circle::Circle(b2World& world, float radius_circle, float x, float y, b2Bo
 	bshape_circle.m_radius = radius / 2 / SCALE;
 	bdef_circle.position.Set(x / 30.f, y / 30.f);
 	body_circle = world.CreateBody(&bdef_circle);
-	body_circle->CreateFixture(&bshape_circle, 5.0);
+	body_circle->CreateFixture(&bshape_circle, density);
 }
 
 void gobj::Circle::update_position(sf::RenderWindow& window) {
