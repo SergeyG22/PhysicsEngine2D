@@ -31,23 +31,27 @@ struct ObjectsEntities {                                          //class for st
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
-    Decorative_elements decorative_elements;
+    Images_elements images_elements;
+    Decor_elements decor_elements;
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
     Button_download_fone button_download_fone{ GUI };
     Button_download_texture button_download_texture{ GUI };
+    Button_settings_decoration button_settings_decoration{ GUI };
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
     Combo_box_invisible_object combo_box_invisible_object{ GUI };
     Combo_box_figure combo_box_figure{ GUI };
     Combo_box combo_box{ GUI };
     Combo_box_typebody combo_box_type_body{ GUI };
     Combo_box_file_path_texture combo_box_file_path_texture{ GUI };
+    Combo_box_decor combo_box_decor{ GUI };
     Slider_weight_setting slider_weight_setting {GUI};
     Label_weight label_weight{ GUI };
     GameBackground game_background;
     GraphicsPlayer graphics_player;
     TransferObjects transfer_objects;
     ObjectsWorld objects_world;
+    DecorativeObjectsWorld decorative_objects_world;
     b2GLDraw debug_draw_instance;
     float time = 0.0;
     ObjectsEntities();
@@ -86,6 +90,8 @@ void call_offset(ObjectsEntities& entity, std::string size) {
     entity.combo_box.set_offset(size);
     entity.label_weight.set_offset(size);   
     entity.slider_weight_setting.set_offset(size);
+    entity.button_settings_decoration.set_offset(size);
+    entity.combo_box_decor.set_offset(size);
 }
 
 void enable_fullscreen_mode(ObjectsEntities& entity) {
@@ -157,19 +163,22 @@ void set_new_fone(ObjectsEntities& entity) {
 }
 
 void show_widgets(ObjectsEntities& entity, bool state) {
-    entity.decorative_elements.menu_view = state;
+    entity.images_elements.menu_view = state;
     entity.button_download_texture.button_download_texture->setVisible(state);
     entity.button_download_fone.button_download_fone->setVisible(state);
     entity.button_screen_mode.button_screen_mode->setVisible(state);
     entity.button_switching_fullscreen.button_switching_fullscreen->setVisible(state);
+    entity.button_settings_decoration.button_settings_decoration->setVisible(state);
     entity.combo_box.combo_box->setVisible(state);
     entity.combo_box_figure.combo_box_figure->setVisible(state);
     entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
     entity.combo_box_invisible_object.combo_box_invisible_object->setVisible(state);
     entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
     entity.combo_box_type_body.combo_box_type_body->setVisible(state);
+    entity.combo_box_decor.combo_box_decor->setVisible(state);
     entity.slider_weight_setting.slider_weight_setting->setVisible(state);
     entity.label_weight.label_weight->setVisible(state);
+
 }
 
 void create_body_with_higher_density(std::list<gobj::ObjectFactory*>::iterator::value_type it, b2Vec2 pos, ObjectsEntities& obj) {
@@ -213,7 +222,9 @@ void create_body_with_less_density(std::list<gobj::ObjectFactory*>::iterator::va
 
 
 
-
+void add_decorative_object_to_world(ObjectsEntities& entity) {
+    entity.decorative_objects_world.list_decor_elements.push_back(new Decor_elements(entity.combo_box_decor.combo_box_decor->getSelectedItem().toAnsiString()));
+}
 
 
 void add_object_to_world(ObjectsEntities& entity) {
@@ -300,6 +311,11 @@ void updating_list_combo_box_fone(ObjectsEntities& entity) {
     entity.combo_box_file_path_fone.combo_box_file_path_fone->setSelectedItem(entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem());
 }
 
+void updaiting_list_combo_box_decor(ObjectsEntities& entity) {
+    entity.combo_box_decor.combo_box_decor->setSelectedItem(entity.combo_box_decor.combo_box_decor->getSelectedItem());
+}
+
+
 void TGUI_set_view(ObjectsEntities& entity) {
     tgui::FloatRect rect;
     tgui::Vector2f view_port_size;
@@ -346,13 +362,15 @@ void change_weight(ObjectsEntities& entity) {
 
 void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
-   // entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
-    entity.combo_box_file_path_fone.combo_box_file_path_fone->onItemSelect(set_new_fone, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
+    entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
+    entity.button_settings_decoration.button_settings_decoration->onClick(add_decorative_object_to_world,std::ref(entity));
+   // entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
+    entity.combo_box_file_path_fone.combo_box_file_path_fone->onItemSelect(set_new_fone, std::ref(entity));   
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.combo_box_figure.combo_box_figure->onItemSelect(select_item, std::ref(entity));
     entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
-    entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
+    entity.combo_box_decor.combo_box_decor->onMouseEnter(updaiting_list_combo_box_decor,std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
     entity.slider_weight_setting.slider_weight_setting->onValueChange(change_weight,std::ref(entity));
 }
@@ -398,6 +416,30 @@ int main()
         while (entity.window.pollEvent(event)) {
             entity.GUI.handleEvent(event);            // event for TGUI
             entity.physics_player.keyboard_interaction(entity.graphics_player);
+
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Left) {
+                    for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+                        sf::Vector2f mouse_coord;
+                        mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                        mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                        if (it->get_sprite_decor().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                            entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite_decor().getPosition().x;
+                            entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite_decor().getPosition().y;
+                            entity.transfer_objects.can_be_moved_decor_world = true;
+                        }
+
+                    }
+                }
+            }
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.key.code == sf::Mouse::Left) {
+                    entity.transfer_objects.can_be_moved_decor_world = false;
+                }
+            }
+
+
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Left) {
                     for (auto const& it : entity.objects_world.list_object) {
@@ -407,7 +449,7 @@ int main()
                         if (it->get_sprite().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
                             entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite().getPosition().x;
                             entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite().getPosition().y;
-                            entity.transfer_objects.can_be_moved = true;
+                            entity.transfer_objects.can_be_moved_objects_world = true;
 
                             if (get_typename(it) == "class gobj::Rectangle") {
                                init_rectangle(it, entity);
@@ -422,7 +464,7 @@ int main()
 
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.key.code == sf::Mouse::Left) {
-                    entity.transfer_objects.can_be_moved = false;
+                    entity.transfer_objects.can_be_moved_objects_world = false;
 
                     for (auto const& it : entity.objects_world.list_object) {
                         if (get_typename(it) == "class gobj::Rectangle") {
@@ -558,7 +600,7 @@ int main()
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tilde) {
-                    if (entity.decorative_elements.menu_view) {
+                    if (entity.images_elements.menu_view) {
                         show_widgets(entity, false);
                     }
                     else {
@@ -572,7 +614,7 @@ int main()
                 entity.window.close();
         }
 
-        if (entity.transfer_objects.can_be_moved) {
+        if (entity.transfer_objects.can_be_moved_objects_world) {
             for (auto const& it : entity.objects_world.list_object) {
                 sf::Vector2f coord;
                 coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
@@ -604,21 +646,39 @@ int main()
 
         }
 
-        
+        if (entity.transfer_objects.can_be_moved_decor_world) {
+            for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+                sf::Vector2f coord;
+                coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                sf::Vector2f del;
+                del.x = entity.transfer_objects.deltaX;
+                del.y = entity.transfer_objects.deltaY;
+
+                if (it->get_sprite_decor().getGlobalBounds().contains(coord.x, coord.y)) {
+                    it->get_sprite_decor().setPosition(coord.x - del.x, coord.y - del.y);
+                }
+            }
+        }
+
         world.Step(1 / 120.f, 8, 3);
         entity.window.clear();
         entity.window.draw(entity.game_background);
         entity.physics_player.jump(world);
         entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
-
+        entity.window.draw(entity.decor_elements.get_sprite_decor());
         for (auto const& it : entity.objects_world.list_object) {
             it->update_position(entity.window);
         }
 
-        entity.window.draw(entity.decorative_elements.DisplayingItemRectangleShape.RectangleShape);
+        for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+            entity.window.draw(it->get_sprite_decor());
+        }
+
+        entity.window.draw(entity.images_elements.DisplayingItemRectangleShape.RectangleShape);
        
-        if (entity.decorative_elements.menu_view) {
-            entity.window.draw(entity.decorative_elements.get_sprite_fone());
+        if (entity.images_elements.menu_view) {
+            entity.window.draw(entity.images_elements.get_sprite_fone());
         }
 
         if (debugging_view) {

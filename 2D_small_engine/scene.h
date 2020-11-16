@@ -149,13 +149,16 @@ struct ObjectFactory {
 
 struct TransferObjects {
 sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
- bool can_be_moved = false;
+ bool can_be_moved_objects_world = false;
+ bool can_be_moved_decor_world = false;
  float deltaX=0;
  float deltaY=0;
 };
 
+
 struct ObjectsWorld {
 	void to_generate_objects_in_the_world(b2World&);
 	gobj::ObjectFactory* get_object_world(int);
-	std::list<gobj::ObjectFactory*>list_object; 
+	std::list<gobj::ObjectFactory*>list_object;
 };
+

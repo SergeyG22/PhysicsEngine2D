@@ -165,6 +165,44 @@ void Button_download_texture::set_offset(std::string screen_size) {
 
 }
 
+Button_settings_decoration::Button_settings_decoration(tgui::GuiSFML& GUI) {
+    button_settings_decoration = tgui::Button::create();
+    button_settings_decoration->setVisible(false);
+    button_settings_decoration->setTextSize(20);
+    button_settings_decoration->setPosition(pos_x_settings_decoration, pos_y_settings_decoration);
+    button_settings_decoration->setText(L"Создать декорацию");
+    button_settings_decoration->setSize(width_settings_decoration, height_settings_decoration);
+    GUI.add(button_settings_decoration);
+}
+
+void Button_settings_decoration::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        button_settings_decoration->setSize(width_settings_decoration, height_settings_decoration);
+        button_settings_decoration->setPosition(pos_x_settings_decoration, pos_y_settings_decoration);
+        button_settings_decoration->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        button_settings_decoration->setSize(width_settings_decoration * 1.28, height_settings_decoration * 1.28);
+        button_settings_decoration->setPosition(pos_x_settings_decoration * 1.28, pos_y_settings_decoration * 1.28);
+        button_settings_decoration->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        button_settings_decoration->setSize(width_settings_decoration * 1.6, height_settings_decoration * 1.7024);
+        button_settings_decoration->setPosition(pos_x_settings_decoration * 1.6, pos_y_settings_decoration * 1.7024);
+        button_settings_decoration->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        button_settings_decoration->setSize(width_settings_decoration * 2, height_settings_decoration * 1.9918);
+        button_settings_decoration->setPosition(pos_x_settings_decoration * 2, pos_y_settings_decoration * 1.9918);
+        button_settings_decoration->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        button_settings_decoration->setSize(width_settings_decoration * 2.4, height_settings_decoration * 1.79262);
+        button_settings_decoration->setPosition(pos_x_settings_decoration * 2.4, pos_y_settings_decoration * 1.79262);
+        button_settings_decoration->setTextSize(20 * 2.1);
+    }
+}
+
 Combo_box_filepath_fone::Combo_box_filepath_fone(tgui::GuiSFML& GUI) {
     combo_box_file_path_fone = tgui::ComboBox::create();
     combo_box_file_path_fone->setRenderer(theme.getRenderer("ComboBox"));
@@ -454,6 +492,63 @@ Combo_box::Combo_box(tgui::GuiSFML& GUI) {
     GUI.add(combo_box);
 }
 
+Combo_box_decor::Combo_box_decor(tgui::GuiSFML& GUI) {
+    combo_box_decor = tgui::ComboBox::create();
+    combo_box_decor->setRenderer(theme.getRenderer("ComboBox"));
+    set_options_decor();
+    combo_box_decor->setVisible(false);
+    combo_box_decor->setTextSize(20);
+    combo_box_decor->setSize(width_combo_box_decor, height_combo_box_decor);
+    combo_box_decor->setPosition(pos_x_combo_box_decor, pos_y_combo_box_decor);
+    GUI.add(combo_box_decor);
+}
+
+void Combo_box_decor::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        combo_box_decor->setSize(width_combo_box_decor, height_combo_box_decor);
+        combo_box_decor->setPosition(pos_x_combo_box_decor, pos_y_combo_box_decor);
+        combo_box_decor->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        combo_box_decor->setSize(width_combo_box_decor * 1.28, height_combo_box_decor * 1.28);
+        combo_box_decor->setPosition(pos_x_combo_box_decor * 1.28, pos_y_combo_box_decor * 1.28);
+        combo_box_decor->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        combo_box_decor->setSize(width_combo_box_decor * 1.6, height_combo_box_decor * 1.7024);
+        combo_box_decor->setPosition(pos_x_combo_box_decor * 1.6, pos_y_combo_box_decor * 1.7024);
+        combo_box_decor->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        combo_box_decor->setSize(width_combo_box_decor * 2, height_combo_box_decor * 1.9918);
+        combo_box_decor->setPosition(pos_x_combo_box_decor * 2, pos_y_combo_box_decor * 1.9918);
+        combo_box_decor->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        combo_box_decor->setSize(width_combo_box_decor * 2.4, height_combo_box_decor * 1.79262);
+        combo_box_decor->setPosition(pos_x_combo_box_decor * 2.4, pos_y_combo_box_decor * 1.79262);
+        combo_box_decor->setTextSize(20 * 2.1);
+    }
+}
+
+void Combo_box_decor::set_options_decor() {
+    tgui::String str = combo_box_decor->getSelectedItem();
+    combo_box_decor->removeAllItems();
+    boost::filesystem::path path_to_folder("elements_of_decor");
+
+    for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
+        std::string item = i->path().filename().string();
+        combo_box_decor->addItem(item);
+    }
+    if (show_first_element) {
+        combo_box_decor->setSelectedItemByIndex(0);
+        show_first_element = false;
+    }
+    else {
+        combo_box_decor->setSelectedItem(str);
+    }
+}
+
 Label_weight::Label_weight(tgui::GuiSFML& GUI) {
     label_weight = tgui::Label::create();
     label_weight->setVisible(true);
@@ -528,8 +623,8 @@ void Slider_weight_setting::set_offset(std::string screen_size) {
 
 }
 
-Decorative_elements::Decorative_elements() {
-    if (!t_fone_menu.loadFromFile("decorative element/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
+Images_elements::Images_elements() {
+    if (!t_fone_menu.loadFromFile("images/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
     s_fone_menu.setTexture(t_fone_menu);
     s_fone_menu.setPosition(10,10); 
 }
@@ -542,5 +637,11 @@ void DisplayingSelectedItem::update_position(sf::RenderWindow& window,sf::Rectan
     shape.setPosition(dynamic_cast<gobj::Rectangle*>(it)->body_rect->GetPosition().x * 30.f, dynamic_cast<gobj::Rectangle*>(it)->body_rect->GetPosition().y * 30.f);
     shape.setRotation(57.29577f * dynamic_cast<gobj::Rectangle*>(it)->body_rect->GetAngle());
     window.draw(shape);
+}
+
+Decor_elements::Decor_elements(std::string file_name) {
+    if (!t_decor.loadFromFile("elements_of_decor/"+file_name)) { std::cout << "elements_of_decor error loading texture\n"; };
+    s_decor.setTexture(t_decor);
+    s_decor.setPosition(400, 300);
 }
 
