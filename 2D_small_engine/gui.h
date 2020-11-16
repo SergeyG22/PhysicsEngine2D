@@ -171,10 +171,12 @@ public:
     Decor_elements(std::string);
     Decor_elements() {};
     sf::Sprite& get_sprite_decor() { return s_decor; }
+    bool check = false;
 };
 
 struct DecorativeObjectsWorld {
     std::list<Decor_elements*>list_decor_elements;
+    Decor_elements* get_decor_object_world(int);
 };
 
 

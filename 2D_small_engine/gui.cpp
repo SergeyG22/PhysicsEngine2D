@@ -645,3 +645,8 @@ Decor_elements::Decor_elements(std::string file_name) {
     s_decor.setPosition(400, 300);
 }
 
+Decor_elements* DecorativeObjectsWorld::get_decor_object_world(int i) {
+    auto it = list_decor_elements.begin();
+    std::advance(it, i);
+    return *it;
+}

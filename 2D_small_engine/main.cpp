@@ -401,6 +401,9 @@ void init_circle(std::list<gobj::ObjectFactory*>::iterator::value_type it, Objec
 }
 
 
+// ПОПРАВИТЬ КОЛЛИЗИЮ МЕЖДУ ОБЬЕКТАМИ ДЕКОРА
+// СДЕЛАТЬ МАСШТАБИРОВАНИЕ И УДАЛЕНИЕ ДЕКОРА
+
 
 int main()
 {
@@ -425,9 +428,13 @@ int main()
                         mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
                         mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
                         if (it->get_sprite_decor().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                            it->check = true;
                             entity.transfer_objects.deltaX = mouse_coord.x - it->get_sprite_decor().getPosition().x;
                             entity.transfer_objects.deltaY = mouse_coord.y - it->get_sprite_decor().getPosition().y;
                             entity.transfer_objects.can_be_moved_decor_world = true;
+                        }
+                        else {
+                            it->check = false;
                         }
 
                     }
@@ -452,10 +459,10 @@ int main()
                             entity.transfer_objects.can_be_moved_objects_world = true;
 
                             if (get_typename(it) == "class gobj::Rectangle") {
-                               init_rectangle(it, entity);
+                                init_rectangle(it, entity);
                             }
                             else if (get_typename(it) == "class gobj::Circle") {
-                                init_circle(it,entity);
+                                init_circle(it, entity);
                             }
                         }
                     }
@@ -470,7 +477,7 @@ int main()
                         if (get_typename(it) == "class gobj::Rectangle") {
                             it->get_body_pointer()->SetGravityScale(1.0);
                         }
-                                else if (get_typename(it) == "class gobj::Circle") {
+                        else if (get_typename(it) == "class gobj::Circle") {
                             it->get_body_pointer()->SetGravityScale(1.0);
                         }
                     }
@@ -485,7 +492,7 @@ int main()
                                 it->get_sprite().setColor(sf::Color::White);
                             }
                             else {
-                                it->get_sprite().setColor(sf::Color::Red);                                
+                                it->get_sprite().setColor(sf::Color::Red);
                             }
 
                         }
@@ -493,6 +500,37 @@ int main()
 
                 }
             }
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Right) {
+                    for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+                        if (it->get_sprite_decor().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (it->get_sprite_decor().getColor() == sf::Color::Red) {
+                                it->get_sprite_decor().setColor(sf::Color::White);
+                            }
+                            else {
+                                it->get_sprite_decor().setColor(sf::Color::Red);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             if (event.type == sf::Event::MouseWheelScrolled) {
@@ -513,7 +551,7 @@ int main()
                                     dynamic_cast<gobj::Circle*>(it)->density = it->get_body_pointer()->GetFixtureList()->GetDensity();
                                     world.DestroyBody(it->get_body_pointer());
                                 }
-                                
+
                                 create_body_with_higher_density(it, pos, entity);
                             }
                             else if (event.mouseWheelScroll.delta < 0) {
@@ -532,8 +570,8 @@ int main()
 
                                 }
                                 create_body_with_less_density(it, pos, entity);
-        
-                               
+
+
                             }
                         }
 
@@ -541,6 +579,39 @@ int main()
                 }
 
             }
+
+            if (event.type == sf::Event::MouseWheelScrolled) {
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+                    for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+                        if (it->get_sprite_decor().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (event.mouseWheelScroll.delta > 0) {
+                                sf::Vector2f scale = it->get_sprite_decor().getScale();
+                                scale.x += 0.1;
+                                scale.y += 0.1;
+                                it->get_sprite_decor().setScale(scale);
+                            }
+                            else if (event.mouseWheelScroll.delta < 0) {
+                                sf::Vector2f scale = it->get_sprite_decor().getScale();
+                                scale.x -= 0.1;
+                                scale.y -= 0.1;
+                                it->get_sprite_decor().setScale(scale);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Middle) {
@@ -567,7 +638,7 @@ int main()
                                     if (entity.objects_world.get_object_world(i)->get_state()) {
                                         entity.label_weight.label_weight->setText("0");
                                     }
-                                    auto it = entity.objects_world.list_object.begin();                                
+                                    auto it = entity.objects_world.list_object.begin();
                                     std::advance(it, i);
                                     entity.objects_world.list_object.erase(it);
                                 }
@@ -586,6 +657,32 @@ int main()
                         }
                 }
             }
+
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Delete) {
+                    for (int i = 0; i < entity.decorative_objects_world.list_decor_elements.size(); ++i)
+                        if (entity.decorative_objects_world.get_decor_object_world(i)->get_sprite_decor().getGlobalBounds().contains(entity.transfer_objects.get_mouse_coordinte(entity.window).x, entity.transfer_objects.get_mouse_coordinte(entity.window).y)) {
+                            if (entity.decorative_objects_world.get_decor_object_world(i)->get_sprite_decor().getColor() == sf::Color::Red) {
+                                auto it = entity.decorative_objects_world.list_decor_elements.begin();
+                                std::advance(it, i);
+                                entity.decorative_objects_world.list_decor_elements.erase(it);
+                            }                      
+                        }
+
+                }
+            }
+        
+    
+
+
+
+
+
+
+
+
+
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tab) {
@@ -610,9 +707,29 @@ int main()
 
             }
 
+ 
             if (event.type == sf::Event::Closed)
                 entity.window.close();
         }
+
+        if (entity.transfer_objects.can_be_moved_decor_world) {
+            for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
+                sf::Vector2f coord;
+                coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                sf::Vector2f del;
+                del.x = entity.transfer_objects.deltaX;
+                del.y = entity.transfer_objects.deltaY;
+
+                if (it->get_sprite_decor().getGlobalBounds().contains(coord.x, coord.y)) {
+                    if (it->check) {
+                        it->get_sprite_decor().setPosition(coord.x - del.x, coord.y - del.y);
+                    }
+                }
+            }
+        }
+
+
 
         if (entity.transfer_objects.can_be_moved_objects_world) {
             for (auto const& it : entity.objects_world.list_object) {
@@ -646,20 +763,7 @@ int main()
 
         }
 
-        if (entity.transfer_objects.can_be_moved_decor_world) {
-            for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
-                sf::Vector2f coord;
-                coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
-                coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
-                sf::Vector2f del;
-                del.x = entity.transfer_objects.deltaX;
-                del.y = entity.transfer_objects.deltaY;
-
-                if (it->get_sprite_decor().getGlobalBounds().contains(coord.x, coord.y)) {
-                    it->get_sprite_decor().setPosition(coord.x - del.x, coord.y - del.y);
-                }
-            }
-        }
+        
 
         world.Step(1 / 120.f, 8, 3);
         entity.window.clear();
