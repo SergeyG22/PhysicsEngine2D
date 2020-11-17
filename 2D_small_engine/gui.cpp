@@ -623,10 +623,15 @@ void Slider_weight_setting::set_offset(std::string screen_size) {
 
 }
 
-Images_elements::Images_elements() {
+Images_elements::Images_elements(sf::RenderWindow& window) {
     if (!t_fone_menu.loadFromFile("images/menu.png")) { std::cout << "t_fone_menu error loading texture\n"; };
     s_fone_menu.setTexture(t_fone_menu);
     s_fone_menu.setPosition(10,10); 
+    if (!t_target.loadFromFile("images/target.png")) { std::cout << "t_target error loading texture\n"; };
+    s_target.setTexture(t_target);
+    int pos_x = window.getSize().x/2 - t_target.getSize().x/2;
+    int pos_y = window.getSize().y/2 - t_target.getSize().y/2;
+    s_target.setPosition(pos_x,pos_y);
 }
 
 DisplayingSelectedItem::DisplayingSelectedItem() {
@@ -639,10 +644,10 @@ void DisplayingSelectedItem::update_position(sf::RenderWindow& window,sf::Rectan
     window.draw(shape);
 }
 
-Decor_elements::Decor_elements(std::string file_name) {
+Decor_elements::Decor_elements(std::string file_name,float x, float y):x_pos(x),y_pos(y) {
     if (!t_decor.loadFromFile("elements_of_decor/"+file_name)) { std::cout << "elements_of_decor error loading texture\n"; };
     s_decor.setTexture(t_decor);
-    s_decor.setPosition(400, 300);
+    s_decor.setPosition(x_pos, y_pos);
 }
 
 Decor_elements* DecorativeObjectsWorld::get_decor_object_world(int i) {

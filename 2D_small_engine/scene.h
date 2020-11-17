@@ -151,6 +151,7 @@ struct TransferObjects {
 sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
  bool can_be_moved_objects_world = false;
  bool can_be_moved_decor_world = false;
+ bool can_be_moved_target = false;
  float deltaX=0;
  float deltaY=0;
 };

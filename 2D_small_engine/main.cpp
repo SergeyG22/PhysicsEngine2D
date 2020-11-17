@@ -31,7 +31,7 @@ struct ObjectsEntities {                                          //class for st
     sf::Clock system_rendering_clock;
     PhysicsPlayer physics_player{ world };
     tgui::GuiSFML GUI{ window };
-    Images_elements images_elements;
+    Images_elements images_elements{ window };
     Decor_elements decor_elements;
     Button_switching_fullscreen button_switching_fullscreen{ GUI };
     Button_screen_mode button_screen_mode{ GUI };
@@ -223,7 +223,11 @@ void create_body_with_less_density(std::list<gobj::ObjectFactory*>::iterator::va
 
 
 void add_decorative_object_to_world(ObjectsEntities& entity) {
-    entity.decorative_objects_world.list_decor_elements.push_back(new Decor_elements(entity.combo_box_decor.combo_box_decor->getSelectedItem().toAnsiString()));
+    int x_target_pos = entity.images_elements.get_sprite_target().getPosition().x;
+    int y_target_pos = entity.images_elements.get_sprite_target().getPosition().y;
+    x_target_pos += entity.decor_elements.t_decor.getSize().x/2;
+    y_target_pos += entity.decor_elements.t_decor.getSize().y/2;
+    entity.decorative_objects_world.list_decor_elements.push_back(new Decor_elements(entity.combo_box_decor.combo_box_decor->getSelectedItem().toAnsiString(),x_target_pos,y_target_pos));
 }
 
 
@@ -232,6 +236,8 @@ void add_object_to_world(ObjectsEntities& entity) {
     sf::Texture texture; //temporary texture for getting width and height
     int id_type_body = entity.combo_box_type_body.combo_box_type_body->getSelectedItemId().toInt();
     int id_visible_object = entity.combo_box_invisible_object.combo_box_invisible_object->getSelectedItemId().toInt();
+    int x_target_pos = entity.images_elements.get_sprite_target().getPosition().x;
+    int y_target_pos = entity.images_elements.get_sprite_target().getPosition().y;
 
     switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex())
     {
@@ -239,14 +245,16 @@ void add_object_to_world(ObjectsEntities& entity) {
     {       
         std::string path = "circle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();                                        
         if (!texture.loadFromFile(path)) { std::cout << "The texture path is not correct\n"; }
+        x_target_pos += texture.getSize().x / 2;
+        y_target_pos += texture.getSize().y / 2;
         switch (id_type_body)
         {
         case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(world, texture.getSize().x, texture.getSize().y, path, b2_staticBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, x_target_pos, y_target_pos, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Circle(world, texture.getSize().x, texture.getSize().y, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Circle(world, x_target_pos, y_target_pos, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -256,14 +264,16 @@ void add_object_to_world(ObjectsEntities& entity) {
     {
         std::string path = "rectangle/" + entity.combo_box_file_path_texture.combo_box_file_path_texture->getSelectedItem().toAnsiString();
         if (!texture.loadFromFile(path)) {  std::cout << "The texture path is not correct\n"; }
+        x_target_pos += texture.getSize().x / 2;
+        y_target_pos += texture.getSize().y / 2;
         switch (id_type_body)
         {
-        case 1: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 750, 200, path, b2_staticBody, id_visible_object));
+        case 1: {             
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, x_target_pos, y_target_pos, path, b2_staticBody, id_visible_object));
             break;
         }
         case 2: {
-            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, 750, 200, path, b2_dynamicBody, id_visible_object));
+            entity.objects_world.list_object.push_back(new gobj::Rectangle(world, texture.getSize().x, texture.getSize().y, x_target_pos, y_target_pos, path, b2_dynamicBody, id_visible_object));
             break;
         }
         }
@@ -401,8 +411,9 @@ void init_circle(std::list<gobj::ObjectFactory*>::iterator::value_type it, Objec
 }
 
 
-// ПОПРАВИТЬ КОЛЛИЗИЮ МЕЖДУ ОБЬЕКТАМИ ДЕКОРА
-// СДЕЛАТЬ МАСШТАБИРОВАНИЕ И УДАЛЕНИЕ ДЕКОРА
+// Сделать обьект , позволяющий создавать тела в разных участках экрана
+// Создать сценарий сохраняющий в текстовый файл положения элементов мира
+
 
 
 int main()
@@ -419,7 +430,6 @@ int main()
         while (entity.window.pollEvent(event)) {
             entity.GUI.handleEvent(event);            // event for TGUI
             entity.physics_player.keyboard_interaction(entity.graphics_player);
-
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Left) {
@@ -443,6 +453,12 @@ int main()
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.key.code == sf::Mouse::Left) {
                     entity.transfer_objects.can_be_moved_decor_world = false;
+                }
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.key.code == sf::Mouse::Left) {
+                    entity.transfer_objects.can_be_moved_target = false;
                 }
             }
 
@@ -518,18 +534,20 @@ int main()
                 }
             }
 
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.key.code == sf::Mouse::Left) {
+                    sf::Vector2f mouse_coord;
+                    mouse_coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                    mouse_coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                    if (entity.images_elements.get_sprite_target().getGlobalBounds().contains(mouse_coord.x, mouse_coord.y)) {
+                        entity.transfer_objects.deltaX = mouse_coord.x - entity.images_elements.get_sprite_target().getPosition().x;
+                        entity.transfer_objects.deltaY = mouse_coord.y - entity.images_elements.get_sprite_target().getPosition().y;
+                        entity.transfer_objects.can_be_moved_target = true;
+                    }
 
+                }
 
-
-
-
-
-
-
-
-
-
-
+            }
 
 
 
@@ -675,15 +693,6 @@ int main()
         
     
 
-
-
-
-
-
-
-
-
-
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Tab) {
                     if (debugging_view) {
@@ -710,9 +719,12 @@ int main()
  
             if (event.type == sf::Event::Closed)
                 entity.window.close();
+
         }
 
+
         if (entity.transfer_objects.can_be_moved_decor_world) {
+
             for (auto const& it : entity.decorative_objects_world.list_decor_elements) {
                 sf::Vector2f coord;
                 coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
@@ -727,6 +739,22 @@ int main()
                     }
                 }
             }
+
+
+        }
+
+
+        if (entity.transfer_objects.can_be_moved_target) {
+                sf::Vector2f coord;
+                coord.x = entity.transfer_objects.get_mouse_coordinte(entity.window).x;
+                coord.y = entity.transfer_objects.get_mouse_coordinte(entity.window).y;
+                sf::Vector2f del;
+                del.x = entity.transfer_objects.deltaX;
+                del.y = entity.transfer_objects.deltaY;
+
+                if (entity.images_elements.get_sprite_target().getGlobalBounds().contains(coord.x, coord.y)) {
+                    entity.images_elements.get_sprite_target().setPosition(coord.x - del.x, coord.y - del.y);
+                }
         }
 
 
@@ -771,6 +799,7 @@ int main()
         entity.physics_player.jump(world);
         entity.physics_player.update(entity.window, entity.graphics_player.get_sprite());
         entity.window.draw(entity.decor_elements.get_sprite_decor());
+        entity.window.draw(entity.images_elements.get_sprite_target());
         for (auto const& it : entity.objects_world.list_object) {
             it->update_position(entity.window);
         }
@@ -779,8 +808,10 @@ int main()
             entity.window.draw(it->get_sprite_decor());
         }
 
+        
         entity.window.draw(entity.images_elements.DisplayingItemRectangleShape.RectangleShape);
        
+
         if (entity.images_elements.menu_view) {
             entity.window.draw(entity.images_elements.get_sprite_fone());
         }

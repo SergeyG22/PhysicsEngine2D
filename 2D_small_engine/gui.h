@@ -165,12 +165,14 @@ public:
 };
 
 class Decor_elements {
-    sf::Texture t_decor;
     sf::Sprite s_decor;
+    float x_pos;
+    float y_pos;
 public:
-    Decor_elements(std::string);
+    Decor_elements(std::string,float,float);
     Decor_elements() {};
     sf::Sprite& get_sprite_decor() { return s_decor; }
+    sf::Texture t_decor;
     bool check = false;
 };
 
@@ -184,11 +186,14 @@ struct DecorativeObjectsWorld {
 class Images_elements
 {
    sf::Texture t_fone_menu;
-   sf::Sprite s_fone_menu; 
+   sf::Texture t_target;
+   sf::Sprite s_fone_menu;
+   sf::Sprite s_target;
 public:
   DisplayingSelectedItem DisplayingItemRectangleShape;
-  Images_elements();
+  Images_elements(sf::RenderWindow&);
   sf::Sprite& get_sprite_fone() { return s_fone_menu; }
+  sf::Sprite& get_sprite_target() { return s_target;  }
   bool menu_view = false;
 };
 
