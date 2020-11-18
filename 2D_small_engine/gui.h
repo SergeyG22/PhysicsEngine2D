@@ -1,12 +1,34 @@
 #pragma once
 #include "scene.h"
 
+
+struct Button_create_script {
+    tgui::Button::Ptr button_create_script;
+    tgui::Layout width_create_script = 260;
+    tgui::Layout height_create_script = 31;
+    tgui::Layout pos_x_create_script = 455;
+    tgui::Layout pos_y_create_script = 85;
+    void set_offset(std::string);
+    Button_create_script(tgui::GuiSFML&);
+};
+
+struct Button_loading_of_script {
+    tgui::Button::Ptr button_loading_script;
+    tgui::Layout width_loading_script = 260;
+    tgui::Layout height_loading_script = 31;
+    tgui::Layout pos_x_loading_script = 455;
+    tgui::Layout pos_y_loading_script = 125;
+    void set_offset(std::string);
+    Button_loading_of_script(tgui::GuiSFML&);
+};
+
+
 struct Button_screen_mode {
     tgui::Button::Ptr button_screen_mode;
     tgui::Layout width_button_screen = 260;
     tgui::Layout height_button_screen = 31;
     tgui::Layout pos_x_button_screen = 455;
-    tgui::Layout pos_y_button_screen = 245;
+    tgui::Layout pos_y_button_screen = 325;
     bool enable_fullscreen = true;
     void set_offset(std::string);
     Button_screen_mode(tgui::GuiSFML&);
@@ -17,7 +39,7 @@ struct Button_download_fone {
     tgui::Layout width_button_download_fone = 260;
     tgui::Layout height_button_download_fone = 31;
     tgui::Layout pos_x_button_download_fone = 455;
-    tgui::Layout pos_y_button_download_fone = 165;
+    tgui::Layout pos_y_button_download_fone = 245;
     void set_offset(std::string);
     Button_download_fone(tgui::GuiSFML&);
 };
@@ -27,7 +49,7 @@ struct Button_switching_fullscreen {
     tgui::Layout width_button_switching_fullscreen = 260;
     tgui::Layout height_button_switching_fullscreen = 31;
     tgui::Layout pos_x_button_switching_fullscreen = 455;
-    tgui::Layout pos_y_button_switching_fullscreen = 205;
+    tgui::Layout pos_y_button_switching_fullscreen = 285;
     void set_offset(std::string);
     Button_switching_fullscreen(tgui::GuiSFML&);
 };
@@ -37,7 +59,7 @@ struct Button_download_texture {
     tgui::Layout width_button_download = 260;
     tgui::Layout height_button_download = 31;
     tgui::Layout pos_x_button_download = 455;
-    tgui::Layout pos_y_button_download = 125;
+    tgui::Layout pos_y_button_download = 205;
     void set_offset(std::string);
     Button_download_texture(tgui::GuiSFML&);
 };
@@ -47,7 +69,7 @@ struct Button_settings_decoration {
     tgui::Layout width_settings_decoration = 260;
     tgui::Layout height_settings_decoration = 31;
     tgui::Layout pos_x_settings_decoration = 455;
-    tgui::Layout pos_y_settings_decoration = 85;
+    tgui::Layout pos_y_settings_decoration = 165;
     void set_offset(std::string);
     Button_settings_decoration(tgui::GuiSFML&);
 };
@@ -135,13 +157,26 @@ struct Combo_box_decor {
     bool show_first_element = true;
 };
 
+struct Combo_box_script {
+    tgui::ComboBox::Ptr combo_box_script;
+    tgui::Layout width_combo_box_script = 310;
+    tgui::Layout height_combo_box_script = 31;
+    tgui::Layout pos_x_combo_box_script = 65;
+    tgui::Layout pos_y_combo_box_script = 365;
+    tgui::Theme theme{ "themes/Black.txt" };
+    void set_offset(std::string);
+    void set_options_script();
+    Combo_box_script(tgui::GuiSFML&);
+    bool show_first_element;
+};
+
 
 struct Slider_weight_setting {
     tgui::Slider::Ptr slider_weight_setting;
     tgui::Layout width_slider_weight_setting = 210;
     tgui::Layout height_slider_weight_setting = 15;
     tgui::Layout pos_x_slider_weight_setting = 75;
-    tgui::Layout pos_y_slider_weight_setting = 385;
+    tgui::Layout pos_y_slider_weight_setting = 425;
     tgui::Theme theme{ "themes/Black.txt" };
     void set_offset(std::string);
     Slider_weight_setting(tgui::GuiSFML&);
@@ -152,7 +187,7 @@ struct Label_weight {
     tgui::Layout width_label_weight = 310;
     tgui::Layout height_label_weight = 150;
     tgui::Layout pos_x_label_weight = 295;
-    tgui::Layout pos_y_label_weight = 375;
+    tgui::Layout pos_y_label_weight = 415;
     Label_weight(tgui::GuiSFML&);
     void set_offset(std::string);
 };

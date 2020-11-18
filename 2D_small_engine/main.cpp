@@ -4,11 +4,16 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+#include <chrono>
 #include <algorithm>
+#include <fstream>
 #include "gui.h"
 #include "scene.h"
 #include "b2GLDraw.h"
 #include "window_function.h"
+#include "date.h"
+
 
 std::vector<sf::Vector2u>scr_size{ {800,600},{1020,768},{1280,1020},{1600,1200},{1920,1080} };
 bool debugging_view = false;
@@ -38,6 +43,8 @@ struct ObjectsEntities {                                          //class for st
     Button_download_fone button_download_fone{ GUI };
     Button_download_texture button_download_texture{ GUI };
     Button_settings_decoration button_settings_decoration{ GUI };
+    Button_create_script button_create_script { GUI };
+    Button_loading_of_script button_loading_script { GUI };
     Combo_box_filepath_fone combo_box_file_path_fone{ GUI };
     Combo_box_invisible_object combo_box_invisible_object{ GUI };
     Combo_box_figure combo_box_figure{ GUI };
@@ -45,6 +52,7 @@ struct ObjectsEntities {                                          //class for st
     Combo_box_typebody combo_box_type_body{ GUI };
     Combo_box_file_path_texture combo_box_file_path_texture{ GUI };
     Combo_box_decor combo_box_decor{ GUI };
+    Combo_box_script combo_box_script{ GUI };
     Slider_weight_setting slider_weight_setting {GUI};
     Label_weight label_weight{ GUI };
     GameBackground game_background;
@@ -82,16 +90,20 @@ void call_offset(ObjectsEntities& entity, std::string size) {
     entity.button_screen_mode.set_offset(size);
     entity.button_download_fone.set_offset(size);
     entity.button_download_texture.set_offset(size);
+    entity.button_settings_decoration.set_offset(size);
+    entity.button_create_script.set_offset(size);
+    entity.button_loading_script.set_offset(size);
     entity.combo_box_file_path_fone.set_offset(size);
     entity.combo_box_invisible_object.set_offset(size);
     entity.combo_box_figure.set_offset(size);   
     entity.combo_box_type_body.set_offset(size);
     entity.combo_box_file_path_texture.set_offset(size);
     entity.combo_box.set_offset(size);
-    entity.label_weight.set_offset(size);   
-    entity.slider_weight_setting.set_offset(size);
-    entity.button_settings_decoration.set_offset(size);
     entity.combo_box_decor.set_offset(size);
+    entity.combo_box_script.set_offset(size);
+    entity.label_weight.set_offset(size);   
+    entity.slider_weight_setting.set_offset(size);   
+    
 }
 
 void enable_fullscreen_mode(ObjectsEntities& entity) {
@@ -169,6 +181,8 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.button_screen_mode.button_screen_mode->setVisible(state);
     entity.button_switching_fullscreen.button_switching_fullscreen->setVisible(state);
     entity.button_settings_decoration.button_settings_decoration->setVisible(state);
+    entity.button_create_script.button_create_script->setVisible(state);
+    entity.button_loading_script.button_loading_script->setVisible(state);
     entity.combo_box.combo_box->setVisible(state);
     entity.combo_box_figure.combo_box_figure->setVisible(state);
     entity.combo_box_file_path_fone.combo_box_file_path_fone->setVisible(state);
@@ -176,6 +190,7 @@ void show_widgets(ObjectsEntities& entity, bool state) {
     entity.combo_box_file_path_texture.combo_box_file_path_texture->setVisible(state);
     entity.combo_box_type_body.combo_box_type_body->setVisible(state);
     entity.combo_box_decor.combo_box_decor->setVisible(state);
+    entity.combo_box_script.combo_box_script->setVisible(state);
     entity.slider_weight_setting.slider_weight_setting->setVisible(state);
     entity.label_weight.label_weight->setVisible(state);
 
@@ -302,7 +317,7 @@ void select_item(ObjectsEntities& entity) {
 
 }
 
-void updating_list_with_mouse(ObjectsEntities& entity) {
+void updating_list_combo_box_type_object(ObjectsEntities& entity) {
     switch (entity.combo_box_figure.combo_box_figure->getSelectedItemIndex()) {
     case 0: {
         entity.combo_box_file_path_texture.set_options_texture("circle");
@@ -318,11 +333,18 @@ void updating_list_with_mouse(ObjectsEntities& entity) {
 }
 
 void updating_list_combo_box_fone(ObjectsEntities& entity) {
+    entity.combo_box_file_path_fone.set_options_fone();
     entity.combo_box_file_path_fone.combo_box_file_path_fone->setSelectedItem(entity.combo_box_file_path_fone.combo_box_file_path_fone->getSelectedItem());
 }
 
 void updaiting_list_combo_box_decor(ObjectsEntities& entity) {
+    entity.combo_box_decor.set_options_decor();
     entity.combo_box_decor.combo_box_decor->setSelectedItem(entity.combo_box_decor.combo_box_decor->getSelectedItem());
+}
+
+void updaiting_list_combo_box_script(ObjectsEntities& entity) {
+    entity.combo_box_script.set_options_script();
+    entity.combo_box_script.combo_box_script->setSelectedItem(entity.combo_box_script.combo_box_script->getSelectedItem());
 }
 
 
@@ -370,19 +392,189 @@ void change_weight(ObjectsEntities& entity) {
 
 }
 
+
+void create_script(ObjectsEntities& entity) {
+    std::string str =date::format("%F %T", std::chrono::system_clock::now());
+    std::replace(str.begin(),str.end(),':','_');
+    std::ofstream outf("scripts/"+str+".txt");
+    if (!outf) { std::cout << "script creation error\n"; };
+    for (const auto& it : entity.objects_world.list_object) {
+        outf << "typebody = " << it->get_typebody() <<'\n';
+        outf << "typename = "<< get_typename(it) <<'\n';
+        if (get_typename(it) == "class gobj::Rectangle") {
+              outf << "height = " << dynamic_cast<gobj::Rectangle*>(it)->height_shape<<'\n';
+              outf << "width = " << dynamic_cast<gobj::Rectangle*>(it) ->width_shape<<'\n';
+        }
+        else if (get_typename(it) == "class gobj::Circle") {
+               outf << "radius = " << dynamic_cast<gobj::Circle*>(it)->radius << '\n';
+        }
+        outf << "x = " << it->get_sprite().getPosition().x << '\n';
+        outf << "y = " << it->get_sprite().getPosition().y << '\n';
+        outf << "state = " << it->get_state() << '\n';
+        outf << "angle = " << it->get_angle() << '\n';
+        outf << "filename = " << it->get_filepath() << '\n';
+        outf << "density = " << it->get_density() << '\n';
+        outf << "scale x = " << it->get_sprite().getScale().x<<'\n';
+        outf << "scale y = " << it->get_sprite().getScale().y<<'\n';
+        outf << "visible = " << it->get_visible_object() << '\n';
+        outf << "##################" <<'\n';
+    }
+    outf.close();
+}
+
+void loading_script(ObjectsEntities& entity) {
+   std::string name_script = entity.combo_box_script.combo_box_script->getSelectedItem().toAnsiString();
+   std::fstream in("scripts/" + name_script);
+   if (in.is_open()) {
+       ObjectProperty object;
+       
+       std::string line;         
+       for (const auto& it : entity.objects_world.list_object) {
+           if (get_typename(it) == "class gobj::Rectangle") {
+               world.DestroyBody(dynamic_cast<gobj::Rectangle*>(it)->body_rect);
+           }
+           else if (get_typename(it) == "class gobj::Circle") {
+               world.DestroyBody(dynamic_cast<gobj::Circle*>(it)->body_circle);             
+           }
+       }
+
+       std::cout << "list size = " << entity.objects_world.list_object.size() << '\n';
+       entity.objects_world.list_object.clear();
+
+       while (getline(in, line)) {
+
+           int INDEX_CURRENT_ELEMENT = 0;
+
+           if (!line.find("typebody = ")) {
+               boost::erase_all(line,"typebody = ");
+               object.typebody = std::stoi(line);
+           }
+           else if (!line.find("typename = ")) {
+               boost::erase_all(line,"typename = ");
+               object.type_name = line;
+           }
+
+           else if (!line.find("height = ")) {
+               boost::erase_all(line,"height = ");
+               object.height = std::stoi(line);
+           }
+
+           else if (!line.find("width = ")) {
+               boost::erase_all(line, "width = ");
+               object.width = std::stoi(line);
+           }
+
+           else if (!line.find("radius = ")) {
+               boost::erase_all(line, "radius = ");
+               object.radius = std::stof(line);
+           }
+
+           else if (!line.find("x = ")) {
+               boost::erase_all(line,"x = ");
+               object.x_position= std::stof(line);
+           }
+           else if (!line.find("y = ")) {
+               boost::erase_all(line,"y = ");
+               object.y_position = std::stof(line);
+           }
+           else if (!line.find("state = ")) {
+               boost::erase_all(line,"state = ");
+               object.state = std::stoi(line);
+           }
+           else if (!line.find("angle = ")) {
+               boost::erase_all(line,"angle = ");
+               object.angle = std::stof(line);
+           }
+           else if (!line.find("filename = ")) {
+               boost::erase_all(line, "filename = ");
+               object.file_name = line;
+           }
+           else if (!line.find("density = ")) {
+               boost::erase_all(line,"density = ");
+               object.density = std::stof(line);
+           }
+           else if (!line.find("scale x = ")) {
+               boost::erase_all(line,"scale x = ");
+               object.scale_x = std::stof(line);
+           }
+           else if (!line.find("scale y = ")) {
+               boost::erase_all(line,"scale y = ");
+               object.scale_y = std::stof(line);
+           }
+
+           else if (!line.find("visible = ")) {
+               boost::erase_all(line,"visible = ");
+               object.is_visible_object = std::stof(line);
+           }
+
+           else if (line == "##################") {
+               /*
+               std::cout << object.typebody<<'\n';  //+
+               std::cout << object.type_name <<'\n';//+
+               std::cout << object.width << '\n';   //+
+               std::cout << object.height << '\n';  //+
+               std::cout << object.radius << '\n';  //-
+               std::cout << object.scale_x << '\n'; //+
+               std::cout << object.scale_y << '\n'; //+
+               std::cout << object.state << '\n';  //+
+               std::cout << object.angle << '\n';  //+
+               std::cout << object.file_name << '\n'; //+
+               std::cout << object.density << '\n';   //+
+               std::cout << object.x_position << '\n';  //+
+               std::cout << object.y_position << '\n';  //+
+               std::cout << object.is_visible_object <<'\n'; //+
+               std::cout << "#####################\n";
+               */
+               if ((object.type_name == "class gobj::Rectangle") && (object.typebody == 0)) {
+                     entity.objects_world.list_object.push_back(new gobj::Rectangle(world,object.height,object.width,object.x_position,object.y_position,b2_staticBody));                     
+                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_angle(object.angle);
+                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_state_select_object(object.state);
+                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->get_sprite().setScale(object.scale_x, object.scale_y);
+               }
+               
+               else if ((object.type_name =="class gobj::Rectangle") && (object.typebody == 2)) {
+                   entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object.height ,object.width, object.x_position,object.y_position,object.file_name,b2_dynamicBody,object.is_visible_object));
+                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->get_sprite().setScale(object.scale_x,object.scale_y);
+                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_angle(object.angle);
+                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_state_select_object(object.state);
+                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_density(object.density);
+                   INDEX_CURRENT_ELEMENT++;
+               }
+               
+           }
+       }
+   }
+   else{
+       std::cout << "script loading error\n";
+   }
+   in.close();
+
+}
+
+
+
+
+
+
+
+
+
+
 void events_called_by_widgets(ObjectsEntities& entity) {
     entity.button_screen_mode.button_screen_mode->onClick(set_fullscreen_viewport, std::ref(entity));
     entity.button_download_texture.button_download_texture->onClick(add_object_to_world, std::ref(entity));
     entity.button_switching_fullscreen.button_switching_fullscreen->onClick(enable_fullscreen_mode, std::ref(entity));
     entity.button_settings_decoration.button_settings_decoration->onClick(add_decorative_object_to_world,std::ref(entity));
-   // entity.button_download_fone.button_download_fone->onClick(set_new_fone, std::ref(entity));
+    entity.button_create_script.button_create_script->onClick(create_script,std::ref(entity));
+    entity.button_loading_script.button_loading_script->onClick(loading_script,std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onItemSelect(set_new_fone, std::ref(entity));   
     entity.combo_box.combo_box->onItemSelect(set_screen_resolution, std::ref(entity));
     entity.combo_box_figure.combo_box_figure->onItemSelect(select_item, std::ref(entity));
-    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_with_mouse, std::ref(entity));
+    entity.combo_box_file_path_texture.combo_box_file_path_texture->onMouseEnter(updating_list_combo_box_type_object, std::ref(entity));
     entity.combo_box_decor.combo_box_decor->onMouseEnter(updaiting_list_combo_box_decor,std::ref(entity));
     entity.combo_box_file_path_fone.combo_box_file_path_fone->onMouseEnter(updating_list_combo_box_fone, std::ref(entity));
-    entity.slider_weight_setting.slider_weight_setting->onValueChange(change_weight,std::ref(entity));
+    entity.combo_box_script.combo_box_script->onMouseEnter(updaiting_list_combo_box_script,std::ref(entity));
+    entity.slider_weight_setting.slider_weight_setting->onValueChange(change_weight,std::ref(entity));  
 }
 
 void reset_state_all_objects(ObjectsEntities& entity) {
@@ -411,8 +603,6 @@ void init_circle(std::list<gobj::ObjectFactory*>::iterator::value_type it, Objec
 }
 
 
-// Сделать обьект , позволяющий создавать тела в разных участках экрана
-// Создать сценарий сохраняющий в текстовый файл положения элементов мира
 
 
 

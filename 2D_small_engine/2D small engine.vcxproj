@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="b2GLDraw.h" />
+    <ClInclude Include="date.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="scene.h" />

@@ -203,6 +203,139 @@ void Button_settings_decoration::set_offset(std::string screen_size) {
     }
 }
 
+Button_create_script::Button_create_script(tgui::GuiSFML& GUI) {
+    button_create_script = tgui::Button::create();
+    button_create_script->setVisible(false);
+    button_create_script->setTextSize(20);
+    button_create_script->setPosition(pos_x_create_script, pos_y_create_script);
+    button_create_script->setText(L"Создать сценарий");
+    button_create_script->setSize(width_create_script, height_create_script);
+    GUI.add(button_create_script);
+}
+
+void Button_create_script::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        button_create_script->setSize(width_create_script, height_create_script);
+        button_create_script->setPosition(pos_x_create_script, pos_y_create_script);
+        button_create_script->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        button_create_script->setSize(width_create_script * 1.28, height_create_script * 1.28);
+        button_create_script->setPosition(pos_x_create_script * 1.28, pos_y_create_script * 1.28);
+        button_create_script->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        button_create_script->setSize(width_create_script * 1.6, height_create_script * 1.7024);
+        button_create_script->setPosition(pos_x_create_script * 1.6, pos_y_create_script * 1.7024);
+        button_create_script->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        button_create_script->setSize(width_create_script * 2, height_create_script * 1.9918);
+        button_create_script->setPosition(pos_x_create_script * 2, pos_y_create_script * 1.9918);
+        button_create_script->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        button_create_script->setSize(width_create_script * 2.4, height_create_script * 1.79262);
+        button_create_script->setPosition(pos_x_create_script * 2.4, pos_y_create_script * 1.79262);
+        button_create_script->setTextSize(20 * 2.1);
+    }
+}
+
+Button_loading_of_script::Button_loading_of_script(tgui::GuiSFML& GUI) {
+    button_loading_script = tgui::Button::create();
+    button_loading_script->setVisible(false);
+    button_loading_script->setTextSize(20);
+    button_loading_script->setPosition(pos_x_loading_script, pos_y_loading_script);
+    button_loading_script->setText(L"Загрузить сценарий");
+    button_loading_script->setSize(width_loading_script, height_loading_script);
+    GUI.add(button_loading_script);
+}
+
+void Button_loading_of_script::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        button_loading_script->setSize(width_loading_script, height_loading_script);
+        button_loading_script->setPosition(pos_x_loading_script, pos_y_loading_script);
+        button_loading_script->setTextSize(20);
+    }
+    else if (screen_size == "1024x768") {
+        button_loading_script->setSize(width_loading_script * 1.28, height_loading_script * 1.28);
+        button_loading_script->setPosition(pos_x_loading_script * 1.28, pos_y_loading_script * 1.28);
+        button_loading_script->setTextSize(20 * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        button_loading_script->setSize(width_loading_script * 1.6, height_loading_script * 1.7024);
+        button_loading_script->setPosition(pos_x_loading_script * 1.6, pos_y_loading_script * 1.7024);
+        button_loading_script->setTextSize(20 * 1.65);
+    }
+    else  if (screen_size == "1600x1200") {
+        button_loading_script->setSize(width_loading_script * 2, height_loading_script * 1.9918);
+        button_loading_script->setPosition(pos_x_loading_script * 2, pos_y_loading_script * 1.9918);
+        button_loading_script->setTextSize(20 * 2);
+    }
+    else if (screen_size == "1920x1080") {
+        button_loading_script->setSize(width_loading_script * 2.4, height_loading_script * 1.79262);
+        button_loading_script->setPosition(pos_x_loading_script * 2.4, pos_y_loading_script * 1.79262);
+        button_loading_script->setTextSize(20 * 2.1);
+    }
+}
+
+Combo_box_script::Combo_box_script(tgui::GuiSFML& GUI) {
+    combo_box_script = tgui::ComboBox::create();
+    combo_box_script->setRenderer(theme.getRenderer("ComboBox"));
+    combo_box_script->setSize(width_combo_box_script, height_combo_box_script);
+    set_options_script();
+    combo_box_script->setTextSize(20);
+    combo_box_script->setVisible(false);
+    combo_box_script->setPosition(pos_x_combo_box_script, pos_y_combo_box_script);
+    GUI.add(combo_box_script);
+}
+
+void Combo_box_script::set_offset(std::string screen_size) {
+    if (screen_size == "800x600") {
+        combo_box_script->setSize(width_combo_box_script, height_combo_box_script);
+        combo_box_script->setTextSize(20);
+        combo_box_script->setPosition(pos_x_combo_box_script, pos_y_combo_box_script);
+    }
+    else if (screen_size == "1024x768") {
+        combo_box_script->setSize(width_combo_box_script * 1.28, height_combo_box_script * 1.28);
+        combo_box_script->setTextSize(20 * 1.28);
+        combo_box_script->setPosition(pos_x_combo_box_script * 1.28, pos_y_combo_box_script * 1.28);
+    }
+    else if (screen_size == "1280x1024") {
+        combo_box_script->setSize(width_combo_box_script * 1.6, height_combo_box_script * 1.7024);
+        combo_box_script->setTextSize(20 * 1.65);
+        combo_box_script->setPosition(pos_x_combo_box_script * 1.6, pos_y_combo_box_script * 1.7024);
+    }
+    else  if (screen_size == "1600x1200") {
+        combo_box_script->setSize(width_combo_box_script * 2, height_combo_box_script * 1.9918);
+        combo_box_script->setTextSize(20 * 2);
+        combo_box_script->setPosition(pos_x_combo_box_script * 2, pos_y_combo_box_script * 1.9918);
+    }
+    else if (screen_size == "1920x1080") {
+        combo_box_script->setSize(width_combo_box_script * 2.4, height_combo_box_script * 1.79262);
+        combo_box_script->setTextSize(20 * 2.1);
+        combo_box_script->setPosition(pos_x_combo_box_script * 2.4, pos_y_combo_box_script * 1.79262);
+    }
+}
+
+void Combo_box_script::set_options_script() {
+    tgui::String str = combo_box_script->getSelectedItem();
+    combo_box_script->removeAllItems();
+    boost::filesystem::path path_to_folder("scripts");
+
+    for (auto i = boost::filesystem::directory_iterator(path_to_folder); i != boost::filesystem::directory_iterator(); i++) {
+        std::string item = i->path().filename().string();
+        combo_box_script->addItem(item);
+    }
+    if (show_first_element) {
+        combo_box_script->setSelectedItemByIndex(0);
+        show_first_element = false;
+    }
+    else {
+        combo_box_script->setSelectedItem(str);
+    }
+}
+
 Combo_box_filepath_fone::Combo_box_filepath_fone(tgui::GuiSFML& GUI) {
     combo_box_file_path_fone = tgui::ComboBox::create();
     combo_box_file_path_fone->setRenderer(theme.getRenderer("ComboBox"));

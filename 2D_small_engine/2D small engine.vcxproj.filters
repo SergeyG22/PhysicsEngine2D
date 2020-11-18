@@ -44,5 +44,8 @@
     <ClInclude Include="window_function.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="date.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

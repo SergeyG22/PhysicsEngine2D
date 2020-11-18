@@ -1,0 +1,14 @@
+typebody = 0
+typename = class gobj::Rectangle
+height = 1900
+width = 25
+x = 0
+y = 1060
+state = 0
+angle = 0
+filename = 
+density = 10
+scale x = 1
+scale y = 1
+visible = 0
+##################

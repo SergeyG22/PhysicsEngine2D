@@ -66,38 +66,49 @@ struct ObjectFactory {
   virtual float set_angle(float) =0;
   virtual float get_angle() =0;
   virtual void set_state_select_object(bool) =0;
-  virtual void reset_state() = 0;
-  virtual bool get_state() = 0;
-  virtual b2Body* get_body_pointer() = 0;
+  virtual void reset_state() =0;
+  virtual bool get_state() =0;
+  virtual b2Body* get_body_pointer() =0;
+  virtual std::string get_filepath() =0;
+  virtual void set_density(float) =0;
+  virtual float get_density() =0;
+  virtual int get_typebody() = 0;
+  virtual int get_visible_object() = 0;
 };
 
 	class Rectangle :public Physics_parameters, public ObjectFactory {
 		float pos_x;
 		float pos_y;
 		float x_top_left;
-		float y_top_left;
-		float height_shape;
-		float width_shape;
+		float y_top_left;		
 		sf::Sprite s_rect;
 		sf::Texture t_rect;
 		float current_angle;		
-		bool select_mouse = false;		
+		bool select_mouse = false;
+		std::string filepath;
+		int is_object_visible;
 	public:	
+		float height_shape;
+		float width_shape;
+		float density = 10.0;
 		b2Body* body_rect;
 		b2PolygonShape bshape_rect;
 		b2BodyDef bdef_rect;
-		b2Body* get_body_pointer()   override { return body_rect; }		
+		b2Body* get_body_pointer()   override { return body_rect;}		
 		sf::Texture& get_texture()   override { return t_rect; }
 		sf::Sprite& get_sprite()     override { return s_rect; }
-		float density = 10.0;
+		int get_visible_object()     override { return  is_object_visible; }
+		float get_density()          override { return density; }
 		float set_angle(float angle) override { current_angle += angle; return current_angle; }
 		float get_angle()            override { return current_angle; }
 		void update_position(sf::RenderWindow&, float) override;
 		void update_position(sf::RenderWindow&)        override;
 		void set_state_select_object(bool condition) override { select_mouse = condition; };
 		void reset_state() override { select_mouse = false; }
+		void set_density(float d) override { density = d; };
 		bool get_state() override { return select_mouse; };
-
+		int get_typebody() { return bdef_rect.type; };
+		std::string get_filepath() override { return filepath; };		
 		Rectangle(b2World&, float, float, float, float, b2BodyType bdef);
 		Rectangle(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite() override {
@@ -113,22 +124,25 @@ struct ObjectFactory {
 		float pos_x;
 		float pos_y;
 		float x_top_left;
-		float y_top_left;
-		float height_circle;
-		float width_circle;
-		float radius;
+		float y_top_left;		
 		sf::Sprite s_circle;
 		sf::Texture t_circle;
 		float current_angle;		
-		bool select_mouse = false;		
+		bool select_mouse = false;	
+		std::string filepath;
+		int is_object_visible;
 	public:	
+		float radius;
+		float density = 10.0;
 		b2Body* body_circle;
 		b2CircleShape bshape_circle;
 		b2BodyDef bdef_circle;
-		b2Body* get_body_pointer()    override { return body_circle; }
+		b2Body* get_body_pointer()   override { return body_circle; }
 		sf::Texture& get_texture()   override { return t_circle; }
 		sf::Sprite& get_sprite()     override { return s_circle; }
-		float density = 10.0;
+		int get_visible_object()     override { return is_object_visible; }
+		void set_density(float d) override { density = d; };
+		float get_density()          override { return density; };
 		float set_angle(float angle) override { current_angle += angle; return current_angle; }
 		float get_angle()            override { return current_angle; }
 		void update_position(sf::RenderWindow&, float) override;
@@ -136,6 +150,8 @@ struct ObjectFactory {
 		void set_state_select_object(bool condition)   override {  select_mouse = condition; };
 		void reset_state() override { select_mouse = false; }
 		bool get_state() override { return select_mouse; }
+		int get_typebody() { return bdef_circle.type; };
+		std::string get_filepath() { return filepath; }
 		Circle(b2World&, float,float,float, b2BodyType bdef);
 		Circle(b2World& world, float x, float y, std::string, b2BodyType bdef, int);
 		sf::Vector2f upperleft_coord_sprite()  override {
@@ -156,6 +172,22 @@ sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
  float deltaY=0;
 };
 
+struct ObjectProperty {
+	int typebody;
+	std::string type_name;
+	float x_position;
+	float y_position;
+	bool state;
+	float angle;
+	std::string file_name;
+	float density;
+	float scale_x;
+	float scale_y;
+	float radius;
+	int height;
+	int width;
+	int is_visible_object;
+};
 
 struct ObjectsWorld {
 	void to_generate_objects_in_the_world(b2World&);

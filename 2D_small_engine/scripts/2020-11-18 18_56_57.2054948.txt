@@ -1,0 +1,42 @@
+typebody = 0
+typename = class gobj::Rectangle
+height = 1900
+width = 25
+x = 0
+y = 1060
+state = 0
+angle = 0
+filename = 
+density = 10
+scale x = 1
+scale y = 1
+visible = 0
+##################
+typebody = 2
+typename = class gobj::Rectangle
+height = 128
+width = 128
+x = 1555
+y = 957.75
+state = 0
+angle = 0
+filename = rectangle/128.png
+density = 12
+scale x = 1.2
+scale y = 1.2
+visible = 2
+##################
+typebody = 2
+typename = class gobj::Rectangle
+height = 128
+width = 128
+x = 424
+y = 951.35
+state = 1
+angle = 0
+filename = rectangle/128.png
+density = 13
+scale x = 1.3
+scale y = 1.3
+visible = 2
+##################
