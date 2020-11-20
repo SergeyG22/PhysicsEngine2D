@@ -203,8 +203,11 @@ class Decor_elements {
     sf::Sprite s_decor;
     float x_pos;
     float y_pos;
+    std::string filepath;
 public:
     Decor_elements(std::string,float,float);
+    Decor_elements(float x, float y, float scale_x, float scale_y, std::string file_name);
+    std::string get_filepath() { return filepath; }
     Decor_elements() {};
     sf::Sprite& get_sprite_decor() { return s_decor; }
     sf::Texture t_decor;

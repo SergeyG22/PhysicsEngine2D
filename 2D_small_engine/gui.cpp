@@ -777,11 +777,20 @@ void DisplayingSelectedItem::update_position(sf::RenderWindow& window,sf::Rectan
     window.draw(shape);
 }
 
-Decor_elements::Decor_elements(std::string file_name,float x, float y):x_pos(x),y_pos(y) {
+Decor_elements::Decor_elements(std::string file_name,float x, float y):x_pos(x),y_pos(y),filepath(file_name) {
     if (!t_decor.loadFromFile("elements_of_decor/"+file_name)) { std::cout << "elements_of_decor error loading texture\n"; };
     s_decor.setTexture(t_decor);
     s_decor.setPosition(x_pos, y_pos);
 }
+
+Decor_elements::Decor_elements( float x, float y,float scale_x,float scale_y, std::string file_name ):x_pos(x), y_pos(y),filepath(file_name) {
+    if (!t_decor.loadFromFile("elements_of_decor/" + filepath)) { std::cout << "elements_of_decor error loading texture\n"; };
+    s_decor.setScale(scale_x,scale_y);
+    s_decor.setTexture(t_decor);
+    s_decor.setPosition(x_pos, y_pos);
+}
+
+
 
 Decor_elements* DecorativeObjectsWorld::get_decor_object_world(int i) {
     auto it = list_decor_elements.begin();

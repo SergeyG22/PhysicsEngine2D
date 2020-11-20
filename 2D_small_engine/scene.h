@@ -109,8 +109,9 @@ struct ObjectFactory {
 		bool get_state() override { return select_mouse; };
 		int get_typebody() { return bdef_rect.type; };
 		std::string get_filepath() override { return filepath; };		
-		Rectangle(b2World&, float, float, float, float, b2BodyType bdef);
 		Rectangle(b2World& world, float h, float w, float x, float y, std::string, b2BodyType bdef, int);
+		Rectangle(b2World& world, b2BodyType bdef, float width, float height, float scale_x, float scale_y, bool state,
+			         float angle, std::string filename, float density, float x_position, float y_position, int visible);
 		sf::Vector2f upperleft_coord_sprite() override {
 			sf::Vector2f vec;
 			vec.x = x_top_left;
@@ -152,8 +153,9 @@ struct ObjectFactory {
 		bool get_state() override { return select_mouse; }
 		int get_typebody() { return bdef_circle.type; };
 		std::string get_filepath() { return filepath; }
-		Circle(b2World&, float,float,float, b2BodyType bdef);
 		Circle(b2World& world, float x, float y, std::string, b2BodyType bdef, int);
+		Circle(b2World& world, b2BodyType bdef, float radius, float scale_x, float scale_y, bool state,
+			float angle, std::string filename, float density, float x_position, float y_position, int visible);
 		sf::Vector2f upperleft_coord_sprite()  override {
 			sf::Vector2f vec;
 			vec.x = x_top_left;
@@ -175,6 +177,8 @@ sf::Vector2f get_mouse_coordinte(sf::RenderWindow&);
 struct ObjectProperty {
 	int typebody;
 	std::string type_name;
+	float x_body_position;
+	float y_body_position;
 	float x_position;
 	float y_position;
 	bool state;

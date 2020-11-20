@@ -116,16 +116,39 @@ gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, s
 	bdef_rect.position.Set(x / 30.f, y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, density);
-
 }
 
-gobj::Rectangle::Rectangle(b2World& world, float h, float w, float x, float y, b2BodyType bdef) :height_shape(h), width_shape(w), pos_x(x), pos_y(y) {
+gobj::Rectangle::Rectangle(b2World& world, b2BodyType bdef, float width, float height, float scale_x, float scale_y, bool state,
+	float ang, std::string filename, float dens, float x_position, float y_position, int visible) :height_shape(height), width_shape(width),
+	pos_x(x_position), pos_y(y_position), filepath(filename), is_object_visible(visible), density(dens),current_angle(ang* 57.29577f),select_mouse(state)
+{
+	s_rect.setOrigin(height_shape / 2, width_shape / 2);
+	s_rect.setScale(scale_x,scale_y);
+	if (!t_rect.loadFromFile(filepath)) {
+		std::cout << "The texture path is not correct\n";
+	}
+	s_rect.setTexture(t_rect);
+	switch (is_object_visible) {
+	case 1: {
+		s_rect.setColor(sf::Color::Transparent);
+		break;
+	}
+	case 2:
+		s_rect.setColor(sf::Color::White);
+		break;
+	}
+
+	bshape_rect.SetAsBox(height_shape / 2 / SCALE * scale_x, width_shape / 2 / SCALE * scale_y);
 	bdef_rect.type = bdef;
-	bshape_rect.SetAsBox(height_shape / SCALE, width_shape / SCALE);
-	bdef_rect.position.Set(x / 30.f, y / 30.f);
+	bdef_rect.position.Set(pos_x / 30.f, pos_y / 30.f);
 	body_rect = world.CreateBody(&bdef_rect);
 	body_rect->CreateFixture(&bshape_rect, density);
+	body_rect->SetTransform(body_rect->GetPosition(),ang);
 }
+
+
+
+
 
 bool gobj::Rectangle::constructor_test(b2World& world, float h, float w, float x, float y, std::string path_to_file ) {
 		if (!t_rect.loadFromFile(path_to_file)) {
@@ -176,13 +199,34 @@ gobj::Circle::Circle(b2World& world, float x, float y, std::string path_to_file,
 	body_circle->CreateFixture(&bshape_circle, density);
 }
 
-gobj::Circle::Circle(b2World& world, float radius_circle, float x, float y, b2BodyType bdef):radius(radius_circle), pos_x(x), pos_y(y) {
+gobj::Circle::Circle(b2World& world, b2BodyType bdef, float rad, float scale_x, float scale_y, bool state,
+	float ang, std::string filename, float dens, float x_position, float y_position, int visible) : radius(rad),
+	pos_x(x_position), pos_y(y_position), filepath(filename), is_object_visible(visible), density(dens), current_angle(ang * 57.29577f), select_mouse(state)
+{
+	if (!t_circle.loadFromFile(filepath)) {
+		std::cout << "The texture path is not correct\n";
+	}
+	s_circle.setScale(scale_x,scale_y);
+	s_circle.setTexture(t_circle);
+	s_circle.setOrigin(t_circle.getSize().x / 2, t_circle.getSize().y / 2);
+	switch (is_object_visible) {
+	case 1: {
+		s_circle.setColor(sf::Color::Transparent);
+		break;
+	}
+	case 2:
+		s_circle.setColor(sf::Color::White);
+		break;
+	}
+
 	bdef_circle.type = bdef;
-	bshape_circle.m_radius = radius / 2 / SCALE;
-	bdef_circle.position.Set(x / 30.f, y / 30.f);
+	bshape_circle.m_radius = t_circle.getSize().x / 2 / SCALE * scale_x;
+	bdef_circle.position.Set(pos_x / 30.f, pos_y / 30.f);
 	body_circle = world.CreateBody(&bdef_circle);
 	body_circle->CreateFixture(&bshape_circle, density);
+	body_circle->SetTransform(body_circle->GetPosition(), ang);
 }
+
 
 void gobj::Circle::update_position(sf::RenderWindow& window) {
 	s_circle.setPosition(body_circle->GetPosition().x * SCALE, body_circle->GetPosition().y * SCALE);
@@ -203,9 +247,9 @@ sf::Vector2f TransferObjects::get_mouse_coordinte(sf::RenderWindow& window) {
 }
 
 void ObjectsWorld::to_generate_objects_in_the_world(b2World& world) {
-	list_object = { new gobj::Rectangle(world, 1900, 25, 0, 1060,b2_staticBody) };
-//		            new gobj::Rectangle(world, 20, 1060, 0, 0, b2_staticBody),
-//		            new gobj::Rectangle(world, 20, 1060, 1900, 0,b2_staticBody) };
+	list_object = { new gobj::Rectangle(world, 1900, 25, 950, 1060,"rectangle/wall_floor.png",b2_staticBody,1),
+		            new gobj::Rectangle(world, 20, 1060, 1900, 530,"rectangle/wall_left.png",b2_staticBody,1),
+		            new gobj::Rectangle(world, 20, 1060, 10, 530,"rectangle/wall_right.png",b2_staticBody,1) };
 }		                                           
 
 gobj::ObjectFactory* ObjectsWorld::get_object_world(int n) {

@@ -5,6 +5,7 @@
 #include <TGUI/Widgets/Button.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 #include <chrono>
 #include <algorithm>
 #include <fstream>
@@ -408,10 +409,12 @@ void create_script(ObjectsEntities& entity) {
         else if (get_typename(it) == "class gobj::Circle") {
                outf << "radius = " << dynamic_cast<gobj::Circle*>(it)->radius << '\n';
         }
-        outf << "x = " << it->get_sprite().getPosition().x << '\n';
-        outf << "y = " << it->get_sprite().getPosition().y << '\n';
+        outf << "x sprite position = " << it->get_sprite().getPosition().x << '\n';
+        outf << "y sprite position = " << it->get_sprite().getPosition().y << '\n';
+        outf << "x body position = " << it->get_body_pointer()->GetPosition().x << '\n';
+        outf << "y body position = " << it->get_body_pointer()->GetPosition().y << '\n';
         outf << "state = " << it->get_state() << '\n';
-        outf << "angle = " << it->get_angle() << '\n';
+        outf << "angle = " << it->get_body_pointer()->GetAngle()<< '\n';
         outf << "filename = " << it->get_filepath() << '\n';
         outf << "density = " << it->get_density() << '\n';
         outf << "scale x = " << it->get_sprite().getScale().x<<'\n';
@@ -419,6 +422,15 @@ void create_script(ObjectsEntities& entity) {
         outf << "visible = " << it->get_visible_object() << '\n';
         outf << "##################" <<'\n';
     }
+    for (const auto& it : entity.decorative_objects_world.list_decor_elements) {
+        outf << "x sprite position = " << it->get_sprite_decor().getPosition().x << '\n';
+        outf << "y sprite position = " << it->get_sprite_decor().getPosition().y << '\n';
+        outf << "scale x = " << it->get_sprite_decor().getScale().x << '\n';
+        outf << "scale y = " << it->get_sprite_decor().getScale().y << '\n';
+        outf << "filename = " << it->get_filepath() << '\n';
+        outf << "####DECOR####"<<'\n';
+    }
+
     outf.close();
 }
 
@@ -426,8 +438,7 @@ void loading_script(ObjectsEntities& entity) {
    std::string name_script = entity.combo_box_script.combo_box_script->getSelectedItem().toAnsiString();
    std::fstream in("scripts/" + name_script);
    if (in.is_open()) {
-       ObjectProperty object;
-       
+       ObjectProperty object;      
        std::string line;         
        for (const auto& it : entity.objects_world.list_object) {
            if (get_typename(it) == "class gobj::Rectangle") {
@@ -438,24 +449,23 @@ void loading_script(ObjectsEntities& entity) {
            }
        }
 
-       std::cout << "list size = " << entity.objects_world.list_object.size() << '\n';
        entity.objects_world.list_object.clear();
+       entity.decorative_objects_world.list_decor_elements.clear();
 
        while (getline(in, line)) {
 
-           int INDEX_CURRENT_ELEMENT = 0;
-
            if (!line.find("typebody = ")) {
-               boost::erase_all(line,"typebody = ");
+               boost::erase_all(line, "typebody = ");
                object.typebody = std::stoi(line);
            }
+
            else if (!line.find("typename = ")) {
-               boost::erase_all(line,"typename = ");
+               boost::erase_all(line, "typename = ");
                object.type_name = line;
            }
 
            else if (!line.find("height = ")) {
-               boost::erase_all(line,"height = ");
+               boost::erase_all(line, "height = ");
                object.height = std::stoi(line);
            }
 
@@ -463,27 +473,36 @@ void loading_script(ObjectsEntities& entity) {
                boost::erase_all(line, "width = ");
                object.width = std::stoi(line);
            }
-
            else if (!line.find("radius = ")) {
                boost::erase_all(line, "radius = ");
-               object.radius = std::stof(line);
+               object.radius = boost::lexical_cast<float>(line);
            }
 
-           else if (!line.find("x = ")) {
-               boost::erase_all(line,"x = ");
-               object.x_position= std::stof(line);
+           else if (!line.find("x sprite position = ")) {
+               boost::erase_all(line, "x sprite position = ");
+               object.x_position = boost::lexical_cast<float>(line);
+            }
+            else if (!line.find("y sprite position = ")) {
+                boost::erase_all(line, "y sprite position = ");
+                object.y_position = boost::lexical_cast<float>(line);
+            }
+
+            else if (!line.find("x body position = ")) {
+               boost::erase_all(line, "x body position = ");
+               object.x_body_position = boost::lexical_cast<float>(line);
            }
-           else if (!line.find("y = ")) {
-               boost::erase_all(line,"y = ");
-               object.y_position = std::stof(line);
+            else if (!line.find("y body position = ")) {
+               boost::erase_all(line, "y body position = ");
+               object.y_body_position = boost::lexical_cast<float>(line);
            }
+
            else if (!line.find("state = ")) {
                boost::erase_all(line,"state = ");
                object.state = std::stoi(line);
            }
            else if (!line.find("angle = ")) {
                boost::erase_all(line,"angle = ");
-               object.angle = std::stof(line);
+               object.angle = boost::lexical_cast<float>(line);
            }
            else if (!line.find("filename = ")) {
                boost::erase_all(line, "filename = ");
@@ -491,57 +510,49 @@ void loading_script(ObjectsEntities& entity) {
            }
            else if (!line.find("density = ")) {
                boost::erase_all(line,"density = ");
-               object.density = std::stof(line);
+               object.density = boost::lexical_cast<float>(line);
            }
            else if (!line.find("scale x = ")) {
                boost::erase_all(line,"scale x = ");
-               object.scale_x = std::stof(line);
+               object.scale_x = boost::lexical_cast<float>(line);
            }
            else if (!line.find("scale y = ")) {
                boost::erase_all(line,"scale y = ");
-               object.scale_y = std::stof(line);
+               object.scale_y = boost::lexical_cast<float>(line);
            }
 
            else if (!line.find("visible = ")) {
                boost::erase_all(line,"visible = ");
-               object.is_visible_object = std::stof(line);
+               object.is_visible_object = std::stoi(line);
            }
 
-           else if (line == "##################") {
-               /*
-               std::cout << object.typebody<<'\n';  //+
-               std::cout << object.type_name <<'\n';//+
-               std::cout << object.width << '\n';   //+
-               std::cout << object.height << '\n';  //+
-               std::cout << object.radius << '\n';  //-
-               std::cout << object.scale_x << '\n'; //+
-               std::cout << object.scale_y << '\n'; //+
-               std::cout << object.state << '\n';  //+
-               std::cout << object.angle << '\n';  //+
-               std::cout << object.file_name << '\n'; //+
-               std::cout << object.density << '\n';   //+
-               std::cout << object.x_position << '\n';  //+
-               std::cout << object.y_position << '\n';  //+
-               std::cout << object.is_visible_object <<'\n'; //+
-               std::cout << "#####################\n";
-               */
+           else if (line == "##################") {              
                if ((object.type_name == "class gobj::Rectangle") && (object.typebody == 0)) {
-                     entity.objects_world.list_object.push_back(new gobj::Rectangle(world,object.height,object.width,object.x_position,object.y_position,b2_staticBody));                     
-                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_angle(object.angle);
-                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_state_select_object(object.state);
-                     entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->get_sprite().setScale(object.scale_x, object.scale_y);
+                   entity.objects_world.list_object.push_back(new gobj::Rectangle(world, b2_staticBody, object.width, object.height, object.scale_x, object.scale_y,
+                       object.state, object.angle, object.file_name, object.density,object.x_position,object.y_position,object.is_visible_object));
                }
                
                else if ((object.type_name =="class gobj::Rectangle") && (object.typebody == 2)) {
-                   entity.objects_world.list_object.push_back(new gobj::Rectangle(world, object.height ,object.width, object.x_position,object.y_position,object.file_name,b2_dynamicBody,object.is_visible_object));
-                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->get_sprite().setScale(object.scale_x,object.scale_y);
-                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_angle(object.angle);
-                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_state_select_object(object.state);
-                   entity.objects_world.get_object_world(INDEX_CURRENT_ELEMENT)->set_density(object.density);
-                   INDEX_CURRENT_ELEMENT++;
+                   entity.objects_world.list_object.push_back(new gobj::Rectangle(world, b2_dynamicBody, object.width, object.height, object.scale_x, object.scale_y,
+                       object.state, object.angle, object.file_name, object.density, object.x_position, object.y_position, object.is_visible_object));
                }
-               
+
+               else if ((object.type_name == "class gobj::Circle") && (object.typebody == 0)) {
+                   entity.objects_world.list_object.push_back(new gobj::Circle(world, b2_staticBody, object.radius, object.scale_x, object.scale_y, object.state,
+                       object.angle, object.file_name, object.density, object.x_position, object.y_position, object.is_visible_object));
+               }
+               else if ((object.type_name == "class gobj::Circle") && (object.typebody == 2)) {
+                   entity.objects_world.list_object.push_back(new gobj::Circle(world, b2_dynamicBody, object.radius, object.scale_x, object.scale_y, object.state,
+                       object.angle, object.file_name, object.density, object.x_position, object.y_position, object.is_visible_object));
+               }              
            }
+           else if (line == "####DECOR####") {
+               entity.decorative_objects_world.list_decor_elements.push_back(new Decor_elements(object.x_position,object.y_position,object.scale_x,object.scale_y,object.file_name));
+               //( float x, float y,float scale_x,float scale_y, std::string file_name )
+           }
+
+
+
        }
    }
    else{
@@ -550,10 +561,6 @@ void loading_script(ObjectsEntities& entity) {
    in.close();
 
 }
-
-
-
-
 
 
 
@@ -812,15 +819,6 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.key.code == sf::Mouse::Middle) {
                     for (const auto& it : entity.objects_world.list_object) {
@@ -1018,6 +1016,25 @@ int main()
     return 0;
 }
 
+
+
+/*
+ std::cout << object.typebody<<'\n';  //+
+ std::cout << object.type_name <<'\n';//
+ std::cout << object.width << '\n';   //
+ std::cout << object.height << '\n';  //
+ std::cout << object.radius << '\n';  //
+ std::cout << object.scale_x << '\n'; //
+ std::cout << object.scale_y << '\n'; //
+ std::cout << object.state << '\n';  //
+ std::cout << object.angle << '\n';  //
+ std::cout << object.file_name << '\n'; //
+ std::cout << object.density << '\n';   //
+ std::cout << object.x_position << '\n';  //
+ std::cout << object.y_position << '\n';  //
+ std::cout << object.is_visible_object <<'\n'; //
+ std::cout << "#####################\n";
+ */
 
 
 
