@@ -430,7 +430,11 @@ void create_script(ObjectsEntities& entity) {
         outf << "filename = " << it->get_filepath() << '\n';
         outf << "####DECOR####"<<'\n';
     }
-
+    outf << "x sprite position = " << entity.images_elements.get_sprite_target().getPosition().x<<'\n';
+    outf << "y sprite position = " << entity.images_elements.get_sprite_target().getPosition().y<<'\n';
+    outf << "####TARGET####" << '\n';
+    outf << "filename = " << entity.game_background.get_filename() <<'\n';
+    outf << "####BACKGROUND####" << '\n';
     outf.close();
 }
 
@@ -548,10 +552,16 @@ void loading_script(ObjectsEntities& entity) {
            }
            else if (line == "####DECOR####") {
                entity.decorative_objects_world.list_decor_elements.push_back(new Decor_elements(object.x_position,object.y_position,object.scale_x,object.scale_y,object.file_name));
-               //( float x, float y,float scale_x,float scale_y, std::string file_name )
            }
-
-
+           else if (line == "####TARGET####") {
+               entity.images_elements.get_sprite_target().setPosition(object.x_position,object.y_position);
+           }
+           else if (line == "####BACKGROUND####") {
+               entity.game_background.upload_background(object.file_name);
+               std::string filename = object.file_name;
+               boost::erase_all(filename,"background/");
+               entity.combo_box_file_path_fone.combo_box_file_path_fone->setSelectedItem(filename);
+           }
 
        }
    }

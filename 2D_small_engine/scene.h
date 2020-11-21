@@ -17,8 +17,10 @@ class GameBackground: public sf::Drawable
 	sf::Texture background_texture;
 	sf::Sprite background_sprite;
 	virtual void draw(sf::RenderTarget&,sf::RenderStates)const;
+	std::string filepath;
 public:
 	bool upload_background(std::string);
+	std::string get_filename() { return filepath; };
 	sf::Sprite& get_sprite() { return background_sprite; }
 	void set_scale_background();
 };

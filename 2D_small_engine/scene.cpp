@@ -7,6 +7,7 @@
 
 bool GameBackground::upload_background(std::string path_to_image) {
 	if (!background_texture.loadFromFile(path_to_image)) {  return false; }
+	filepath = path_to_image;
 	background_sprite.setTexture(background_texture);
 }
 

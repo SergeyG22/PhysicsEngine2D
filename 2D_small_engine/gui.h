@@ -224,12 +224,12 @@ struct DecorativeObjectsWorld {
 class Images_elements
 {
    sf::Texture t_fone_menu;
-   sf::Texture t_target;
    sf::Sprite s_fone_menu;
    sf::Sprite s_target;
 public:
   DisplayingSelectedItem DisplayingItemRectangleShape;
   Images_elements(sf::RenderWindow&);
+  sf::Texture t_target;
   sf::Sprite& get_sprite_fone() { return s_fone_menu; }
   sf::Sprite& get_sprite_target() { return s_target;  }
   bool menu_view = false;
