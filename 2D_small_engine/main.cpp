@@ -1028,23 +1028,6 @@ int main()
 
 
 
-/*
- std::cout << object.typebody<<'\n';  //+
- std::cout << object.type_name <<'\n';//
- std::cout << object.width << '\n';   //
- std::cout << object.height << '\n';  //
- std::cout << object.radius << '\n';  //
- std::cout << object.scale_x << '\n'; //
- std::cout << object.scale_y << '\n'; //
- std::cout << object.state << '\n';  //
- std::cout << object.angle << '\n';  //
- std::cout << object.file_name << '\n'; //
- std::cout << object.density << '\n';   //
- std::cout << object.x_position << '\n';  //
- std::cout << object.y_position << '\n';  //
- std::cout << object.is_visible_object <<'\n'; //
- std::cout << "#####################\n";
- */
 
 
 
