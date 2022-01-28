@@ -1,5 +1,6 @@
-# 2D_small_engine
+### PhysicEngine2D
+A 2D graphics engine that includes a physical world with the ability to interactively edit scenes
+and objects, as well as create and save scenarios.
+
 ![Image alt](https://github.com/SergeyG22/2D_small_engine/blob/master/screenshot.jpg)
 
-Графический 2D движок включающий в себя физический мир с возможностью интерактивного редактирования сцен
-и объектов, а так-же созданием и сохранением сценариев.
