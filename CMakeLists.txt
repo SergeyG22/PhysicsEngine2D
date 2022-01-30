@@ -32,7 +32,7 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/boostorg/filesystem.git
 	GIT_TAG master
 )
-FetchContent_MakeAvailable(BOOST_ALGORITHM)
+FetchContent_MakeAvailable(BOOST_FILESYSTEM)
 
 FetchContent_Declare(
         BOOST_LEXICAL_CAST
